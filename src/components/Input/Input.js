@@ -2,7 +2,6 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 
@@ -28,10 +27,11 @@ const input = ( props ) => {
         case ( 'textarea' ):
 
             inputElement =
-            <TextareaAutosize style={{ marginTop:'20px'}}
+            <TextField style={{ marginTop:'20px'}}
             {...props.elementConfig}
             value={props.value}
             onChange={props.changed}
+            multiline={"true"}
             />;
 
             break;

@@ -6,6 +6,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
+import Button from "components/CustomButtons/Button.js";
+import ArrowBack from '@material-ui/icons/ArrowBack';
+import Save from '@material-ui/icons/Save';
+
+
 
 const styles = {
   cardCategoryWhite: {
@@ -51,7 +56,7 @@ const NewUser = ( props ) =>
         }
 return (
 
-  <form >
+  <form onSubmit={ props.handleSubmitNewUser }>
 
 
 
@@ -81,7 +86,7 @@ return (
               ))}
               </div>
 
-                      <button className="btn btn-primary" disabled={!props.formIsValid} type="submit" >Guardar </button>
+                      <Button style={{ marginTop:'25px'}} color="info" ><ArrowBack />Volver</Button><Button style={{ marginTop:'25px'}} color="primary"  disabled={!props.formIsValid} type="submit" ><Save /> Guardar</Button>
 
 
         </CardBody>

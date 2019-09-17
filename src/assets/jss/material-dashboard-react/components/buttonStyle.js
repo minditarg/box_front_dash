@@ -271,7 +271,7 @@ const buttonStyle = {
     }
   },
   disabled: {
-    opacity: "0.65",
+    opacity: "0.40",
     pointerEvents: "none"
   },
   lg: {

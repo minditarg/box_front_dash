@@ -23,6 +23,7 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -109,7 +110,7 @@ return (
             {props.users.map((value, index) => {
               const labelId = `checkbox-list-label-${index}`;
 
-              return (
+              return ([
                 <ListItem key={index} role={undefined} dense button onClick={() => props.handleToggle(value)}>
                   <ListItemIcon>
                     <Checkbox
@@ -159,8 +160,9 @@ return (
                     </IconButton>
 
                   </ListItemSecondaryAction>
-                </ListItem>
-              );
+                </ListItem>,
+                <Divider />
+              ]);
             })}
           </List>
         </CardBody>

@@ -1,8 +1,10 @@
 import React from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch ,Link} from 'react-router-dom';
 // core components
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Typography from '@material-ui/core/Typography';
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import axios from "axios";
@@ -101,7 +103,9 @@ const newUserFormAlt = {
         },
         value: '',
         validation: {
-            required: true
+          minLength:5,
+            required: true,
+
         },
         valid: false,
         touched: false
@@ -127,8 +131,9 @@ const newUserFormAlt = {
         elementType: 'textarea',
         elementConfig: {
             type: 'text',
-            placeholder: 'descripcion',
-            fullWidth: true,
+            label:'Descripción',
+            multilevel: true,
+
             rows:4
         },
         value: '',
@@ -212,7 +217,7 @@ export default function Users(props) {
     if (botonesAcciones[value].enabled) {
 
       setMenuContext(null);
-      props.history.push('/users/newuser');
+      props.history.push(props.match.url + '/crearusuario');
 
 
     }
@@ -307,18 +312,18 @@ export default function Users(props) {
         let isValid = true;
         let textValid = null;
 
-        if (rules.required) {
-            isValid = value.toString().trim() !== '' && isValid;
+        if (rules.required && isValid) {
+            isValid = value.toString().trim() !== '';
             textValid = 'El campo es requerido'
         }
 
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid;
-            textValid = 'No supera la cantidad de caracteres minimos'
+        if (rules.minLength && isValid) {
+            isValid = value.length >= rules.minLength;
+            textValid = 'La cantidad de caracteres minimos es ' + rules.minLength
         }
 
-        if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid;
+        if (rules.maxLength && isValid) {
+            isValid = value.length <= rules.maxLength ;
             textValid = 'Supera el maximo de caracteres';
         }
 
@@ -342,23 +347,50 @@ export default function Users(props) {
 
         let formIsValidAlt2 = true;
         for (let inputIdentifier in updatedOrderForm) {
-            formIsValidAlt2 = updatedOrderForm[inputIdentifier].valid && formIsValid;
+            formIsValidAlt2 = updatedOrderForm[inputIdentifier].valid && formIsValidAlt2;
         }
         setNewUserForm(updatedOrderForm);
         setFormIsValid(formIsValidAlt2);
     }
 
 
+    const handleSubmitNewUser = (event, index) => {
+        event.preventDefault();
+        axios.post(`/signup-json`, { username: newUserForm.username.value, password: newUserForm.password.value,nombre:newUserForm.nombre.value,id_users_type:newUserForm.tipoUser.value})
+            .then(res => {
+
+                let estadoAlt = null
+                if (res.data.success == 0) {
+                    estadoAlt = false
+                }
+                if (res.data.success == 1) {
+                    estadoAlt = true
+                }
+
+            console.log(res);
+
+
+            })
+
+    }
 
 
 
-
-
+    console.log(props.location);
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
+      <Breadcrumbs aria-label="breadcrumb">
+         <Link color="inherit" href="/" >
+           Material-UI
+         </Link>
+         <Link color="inherit" href="/getting-started/installation/" >
+           Core
+         </Link>
+         <Typography color="textPrimary">Breadcrumb</Typography>
+       </Breadcrumbs>
       <Switch>
-            <Route path="/admin/usuarios" exact  render={() =>
+            <Route path={ props.match.url } exact  render={() =>
 
               <ListUsers
                   menuHandleOpen={(event) => menuHandleOpen(event)}
@@ -378,13 +410,13 @@ export default function Users(props) {
 
 
             } />
-            <Route path="/admin/usuarios/newuser"  render={() =>
+            <Route path={ props.match.url + "/crearusuario"}  render={() =>
 
              <NewUser
              orderForm={newUserForm}
              formIsValid={formIsValid}
 
-
+             handleSubmitNewUser={(event) => {handleSubmitNewUser(event)}}
              inputChangedHandler={ (event,inputIdentifier)=> inputChangedHandler(event,inputIdentifier)}
 
              />
