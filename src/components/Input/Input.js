@@ -9,7 +9,6 @@ import FormControl from '@material-ui/core/FormControl';
 const input = ( props ) => {
     let inputElement = null;
     let textValidation = null
-    console.log(props);
     if (props.invalid && props.shouldValidate && props.touched) {
       textValidation =  props.textValid
 

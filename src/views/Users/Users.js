@@ -44,10 +44,10 @@ const styles = {
 };
 
 
-const usersAlt = [];
-const checkedAlt = [];
-const menuContextAlt = null;
-const botonesAccionesAlt = {
+const usersConst = [];
+const checkedConst = [];
+const menuContextConst = null;
+const botonesAccionesConst = {
   nuevo: {
 
     enabled: true,
@@ -64,8 +64,8 @@ const botonesAccionesAlt = {
     texto: 'Eliminar'
   }
 };
-const modalOpenAlt = false;
-const newUserFormAlt = {
+const modalOpenConst = false;
+const newUserFormConst = {
   nombre: {
       elementType: 'input',
       elementConfig: {
@@ -147,26 +147,31 @@ const newUserFormAlt = {
 
 };
 
-const formIsValidAlt = false;
-const successSubmitAlt = null
-
+const formIsValidConst = false;
+const successSubmitConst = null;
+const actionUpdateUsersConst = false;
 
 
 
 const useStyles = makeStyles(styles);
 
 export default function Users(props) {
+ var resetFormFlag = false;
+
   const classes = useStyles();
-  const [users, setUsers] = React.useState(usersAlt);
-  const [checked, setChecked] = React.useState(checkedAlt);
-  const [menuContext, setMenuContext] = React.useState(menuContextAlt);
-  const [botonesAcciones, setBotonesAcciones] = React.useState({ ...botonesAccionesAlt});
-  const [modalOpen, setModalOpen] = React.useState(modalOpenAlt);
-  const [newUserForm, setNewUserForm] = React.useState(newUserFormAlt);
-  const [formIsValid, setFormIsValid] = React.useState(formIsValidAlt);
-   const [successSubmit, setSuccessSubmit] = React.useState(successSubmitAlt);
-    const [updateUsers, setUpdateUsers] = React.useState(false);
-  
+  const [users, setUsers] = React.useState(JSON.parse(JSON.stringify(usersConst)));
+  const [checked, setChecked] = React.useState(JSON.parse(JSON.stringify(checkedConst)));
+  const [menuContext, setMenuContext] = React.useState(JSON.parse(JSON.stringify(menuContextConst)));
+  const [botonesAcciones, setBotonesAcciones] = React.useState(JSON.parse(JSON.stringify(botonesAccionesConst)));
+  const [modalOpen, setModalOpen] = React.useState(JSON.parse(JSON.stringify(modalOpenConst)));
+  const [newUserForm, setNewUserForm] = React.useState(JSON.parse(JSON.stringify(newUserFormConst)));
+
+
+
+  const [formIsValid, setFormIsValid] = React.useState(JSON.parse(JSON.stringify(formIsValidConst)));
+   const [successSubmit, setSuccessSubmit] = React.useState(JSON.parse(JSON.stringify(successSubmitConst)));
+    const [actionUpdateUsers, setActionUpdateUsers] = React.useState(JSON.parse(JSON.stringify(actionUpdateUsersConst)));
+
   const deleteUser = value => {
 
     const currentIndex = users.indexOf(value);
@@ -248,21 +253,26 @@ export default function Users(props) {
         if (res.data.success == 1) {
           let resultado = [...res.data.result];
         setUsers(resultado);
-        setChecked([]);
-        setMenuContext(null);
-         
-       
-        
+        setChecked(JSON.parse(JSON.stringify(checkedConst)));
+        setMenuContext(JSON.parse(JSON.stringify(menuContextConst)));
+        setBotonesAcciones(JSON.parse(JSON.stringify(botonesAccionesConst)))
+
+
         }
       })
 
-     //this.state.newUserForm.tipoUser.elementConfig.options
+    }
 
-      axios.get('/list-users_type')
+    const getUsersType = () =>
+    {
+      console.log("paso tercero bis")
+         axios.get('/list-users_type')
       .then(res => {
+
         if (res.data.success == 1) {
+          console.log("paso tercero");
           let resultadoUserType = [...res.data.result];
-          let newUserFormAlt2 = {...newUserForm};
+          let newUserFormAlt = JSON.parse(JSON.stringify(newUserForm));
 
           /*
           let auxiliar = resultadoUserType.map((element) => {
@@ -281,27 +291,20 @@ export default function Users(props) {
 
           newUserFormAlt.tipoUser.elementConfig.options = a;
 
-          setNewUserForm(newUserFormAlt2);
+          setNewUserForm(newUserFormAlt);
 
         }
       })
     }
-  /*
-      {
-        value:1,
-        displayValue:'admin'
-      },
-      {
-        value:2,
-        displayValue:'pañol'
-      }
-  }*/
+
 
   React.useEffect(() => {
 
     getUsersAdmin();
+    getUsersType();
 
   }, []);
+
 
 
     const checkValidity = (value, rules) => {
@@ -341,17 +344,17 @@ export default function Users(props) {
         updatedFormElement.touched = true;
         updatedOrderForm[inputIdentifier] = updatedFormElement;
 
-        let formIsValidAlt2 = true;
+        let formIsValidAlt = true;
         for (let inputIdentifier in updatedOrderForm) {
-            formIsValidAlt2 = updatedOrderForm[inputIdentifier].valid && formIsValidAlt2;
+            formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
         }
         setNewUserForm(updatedOrderForm);
-        setFormIsValid(formIsValidAlt2);
+        setFormIsValid(formIsValidAlt);
     }
 
 
     const handleSubmitNewUser = (event) => {
-     
+
         event.preventDefault();
         axios.post(`/signup-json`, { username: newUserForm.username.value, password: newUserForm.password.value,nombre:newUserForm.nombre.value,id_users_type:newUserForm.tipoUser.value})
             .then(res => {
@@ -365,39 +368,33 @@ export default function Users(props) {
                 }
 
                 if(estadoAlt){
-                              
+
                   setSuccessSubmit(true);
-                  setNewUserForm(newUserFormAlt);
-                  setFormIsValid(false);            
-                  setUpdateUsers(true);                
+                  setNewUserForm(JSON.parse(JSON.stringify(newUserFormConst)));
+                  setFormIsValid(false);
+                  setActionUpdateUsers(true);
                   }
             })
 
     }
 
-    const resetNewFormOnLoad = () => {
-       setSuccessSubmit(null);
-      setNewUserForm(newUserFormAlt);
-      setFormIsValid(false);
-
-    }
 
     const reloadUsers = () => {
-        if(updateUsers)
+        if(actionUpdateUsers)
           getUsersAdmin();
 
-          setUpdateUsers(false);
+          setActionUpdateUsers(false);
     }
 
-    
 
 
 
-   
+
+
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
-    
+
       <Switch>
             <Route path={ props.match.url } exact  render={() =>
 
@@ -429,10 +426,9 @@ export default function Users(props) {
 
              handleSubmitNewUser={(event) => {handleSubmitNewUser(event)}}
              inputChangedHandler={ (event,inputIdentifier)=> inputChangedHandler(event,inputIdentifier)}
-             resetNewFormOnLoad={ () => resetNewFormOnLoad() }
-             />
 
-            } />
+           />}
+            />
         </Switch>
 
 

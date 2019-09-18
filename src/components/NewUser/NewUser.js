@@ -58,18 +58,12 @@ const NewUser = ( props ) =>
         }
 
 
-  React.useEffect(() => {
 
-
-    
-    props.resetNewFormOnLoad();
-
-  }, []);      
 return (
 
   <form onSubmit={(event) => {
     props.handleSubmitNewUser(event)
-     
+
  }}>
 
 
@@ -106,7 +100,7 @@ return (
                       touched={formElement.config.touched}
                       changed={(event) => props.inputChangedHandler(event, formElement.id)}
                        />
-              ))}             
+              ))}
               </div>
 
                       <Button style={{ marginTop:'25px'}} color="info" onClick={()=> props.history.push('/admin/usuarios')} ><ArrowBack />Volver</Button><Button style={{ marginTop:'25px'}} color="primary"  disabled={!props.formIsValid} type="submit" ><Save /> Guardar</Button>
