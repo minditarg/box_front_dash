@@ -132,8 +132,6 @@ const newUserFormConst = {
         elementConfig: {
             type: 'text',
             label:'Descripción',
-            multilevel: true,
-
             rows:4
         },
         value: '',
@@ -165,9 +163,6 @@ export default function Users(props) {
   const [botonesAcciones, setBotonesAcciones] = React.useState(JSON.parse(JSON.stringify(botonesAccionesConst)));
   const [modalOpen, setModalOpen] = React.useState(JSON.parse(JSON.stringify(modalOpenConst)));
   const [newUserForm, setNewUserForm] = React.useState(JSON.parse(JSON.stringify(newUserFormConst)));
-
-
-
   const [formIsValid, setFormIsValid] = React.useState(JSON.parse(JSON.stringify(formIsValidConst)));
    const [successSubmit, setSuccessSubmit] = React.useState(JSON.parse(JSON.stringify(successSubmitConst)));
     const [actionUpdateUsers, setActionUpdateUsers] = React.useState(JSON.parse(JSON.stringify(actionUpdateUsersConst)));
@@ -225,9 +220,12 @@ export default function Users(props) {
     if (botonesAcciones[value].enabled) {
 
       setMenuContext(null);
-      if(value == 'nuevo')
+      if(value == 'nuevo') {
+        setSuccessSubmit(false);
+        resetNewForm();
+        setFormIsValid(false);
       props.history.push(props.match.url + '/nuevousuario');
-
+    }
 
     }
   }
@@ -265,12 +263,12 @@ export default function Users(props) {
 
     const getUsersType = () =>
     {
-      console.log("paso tercero bis")
+
          axios.get('/list-users_type')
       .then(res => {
 
         if (res.data.success == 1) {
-          console.log("paso tercero");
+
           let resultadoUserType = [...res.data.result];
           let newUserFormAlt = JSON.parse(JSON.stringify(newUserForm));
 
@@ -304,6 +302,22 @@ export default function Users(props) {
     getUsersType();
 
   }, []);
+
+  React.useEffect(() => {
+
+    if(props.location.pathname == '/admin/usuarios')
+      reloadUsers();
+
+      if(props.location.pathname == '/admin/usuarios/nuevousuario' && actionUpdateUsers)
+        {
+
+          setSuccessSubmit(false);
+          resetNewForm();
+          setFormIsValid(false);
+
+        }
+
+  }, [props.location]);
 
 
 
@@ -370,7 +384,7 @@ export default function Users(props) {
                 if(estadoAlt){
 
                   setSuccessSubmit(true);
-                  setNewUserForm(JSON.parse(JSON.stringify(newUserFormConst)));
+                  resetNewForm();
                   setFormIsValid(false);
                   setActionUpdateUsers(true);
                   }
@@ -378,6 +392,14 @@ export default function Users(props) {
 
     }
 
+    const resetNewForm = ()=> {
+    let newUserFormAlt = JSON.parse(JSON.stringify(newUserForm));
+      for(let key in newUserFormAlt){
+        newUserFormAlt[key].value = ''
+      }
+      setNewUserForm(newUserFormAlt);
+
+    }
 
     const reloadUsers = () => {
         if(actionUpdateUsers)
@@ -404,7 +426,6 @@ export default function Users(props) {
                   menuHandleItemClick={(keyName) => menuHandleItemClick(keyName)}
                   handleToggle={(value) => handleToggle(value)}
                   deleteUser={(value) => deleteUser(value)}
-                  reloadUsers={reloadUsers}
 
                   menuContext={menuContext}
                   botonesAcciones={botonesAcciones}
