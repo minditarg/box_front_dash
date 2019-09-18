@@ -120,4 +120,25 @@ const dashboardRoutes = [
   }
 ];
 
-export default dashboardRoutes;
+
+export const breadcrumRoutes = [
+{
+  path:"/admin/usuarios",
+  name:"Usuarios",
+  to:"/admin/usuarios",
+  children:[
+    {
+      path:"/nuevousuario",
+      name:"Nuevo",
+      to:"/admin/usuarios/nuevousuario"
+    }
+  ]
+}
+
+
+
+
+
+]
+
+export default dashboardRoutes

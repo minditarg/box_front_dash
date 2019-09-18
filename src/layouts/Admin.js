@@ -1,5 +1,6 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
+import axios from 'axios';
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
@@ -12,6 +13,7 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
+import { breadcrumRoutes } from "routes.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
@@ -42,6 +44,7 @@ const useStyles = makeStyles(styles);
 
 export default function Admin({ ...rest }) {
   // styles
+  console.log(rest)
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
@@ -92,10 +95,34 @@ export default function Admin({ ...rest }) {
       window.removeEventListener("resize", resizeFunction);
     };
   }, [mainPanel]);
+
+
+  React.useEffect(() => {
+
+     axios.get('/me')
+        .then(res => {
+          if (res.data.success == 1) {
+
+          } else if (res.data.success == 3) {
+            rest.history.replace('/');
+          }
+
+        })
+
+    
+  }, []);
+
+
+    
+
+
+
+
   return (
 
     <div className={classes.wrapper}>
       <Sidebar
+     
         routes={routes}
         logoText={"Creative Tim"}
         logo={logo}
@@ -107,6 +134,7 @@ export default function Admin({ ...rest }) {
       />
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
+          breadcrumRoutes={breadcrumRoutes}
           routes={routes}
           handleDrawerToggle={handleDrawerToggle}
           {...rest}

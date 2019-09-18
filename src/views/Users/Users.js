@@ -3,7 +3,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Route, Switch ,Link} from 'react-router-dom';
 // core components
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+
 import Typography from '@material-ui/core/Typography';
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -148,6 +148,7 @@ const newUserFormAlt = {
 };
 
 const formIsValidAlt = false;
+const successSubmitAlt = null
 
 
 
@@ -159,11 +160,13 @@ export default function Users(props) {
   const [users, setUsers] = React.useState(usersAlt);
   const [checked, setChecked] = React.useState(checkedAlt);
   const [menuContext, setMenuContext] = React.useState(menuContextAlt);
-  const [botonesAcciones, setBotonesAcciones] = React.useState(botonesAccionesAlt);
+  const [botonesAcciones, setBotonesAcciones] = React.useState({ ...botonesAccionesAlt});
   const [modalOpen, setModalOpen] = React.useState(modalOpenAlt);
   const [newUserForm, setNewUserForm] = React.useState(newUserFormAlt);
   const [formIsValid, setFormIsValid] = React.useState(formIsValidAlt);
-
+   const [successSubmit, setSuccessSubmit] = React.useState(successSubmitAlt);
+    const [updateUsers, setUpdateUsers] = React.useState(false);
+  
   const deleteUser = value => {
 
     const currentIndex = users.indexOf(value);
@@ -217,7 +220,8 @@ export default function Users(props) {
     if (botonesAcciones[value].enabled) {
 
       setMenuContext(null);
-      props.history.push(props.match.url + '/crearusuario');
+      if(value == 'nuevo')
+      props.history.push(props.match.url + '/nuevousuario');
 
 
     }
@@ -244,6 +248,11 @@ export default function Users(props) {
         if (res.data.success == 1) {
           let resultado = [...res.data.result];
         setUsers(resultado);
+        setChecked([]);
+        setMenuContext(null);
+         
+       
+        
         }
       })
 
@@ -289,19 +298,6 @@ export default function Users(props) {
   }*/
 
   React.useEffect(() => {
-
-
-      axios.get('/me')
-        .then(res => {
-          if (res.data.success == 1) {
-
-          } else if (res.data.success == 3) {
-            props.history.replace('/');
-          }
-
-        })
-
-
 
     getUsersAdmin();
 
@@ -354,7 +350,8 @@ export default function Users(props) {
     }
 
 
-    const handleSubmitNewUser = (event, index) => {
+    const handleSubmitNewUser = (event) => {
+     
         event.preventDefault();
         axios.post(`/signup-json`, { username: newUserForm.username.value, password: newUserForm.password.value,nombre:newUserForm.nombre.value,id_users_type:newUserForm.tipoUser.value})
             .then(res => {
@@ -367,28 +364,40 @@ export default function Users(props) {
                     estadoAlt = true
                 }
 
-            console.log(res);
-
-
+                if(estadoAlt){
+                              
+                  setSuccessSubmit(true);
+                  setNewUserForm(newUserFormAlt);
+                  setFormIsValid(false);            
+                  setUpdateUsers(true);                
+                  }
             })
 
     }
 
+    const resetNewFormOnLoad = () => {
+       setSuccessSubmit(null);
+      setNewUserForm(newUserFormAlt);
+      setFormIsValid(false);
+
+    }
+
+    const reloadUsers = () => {
+        if(updateUsers)
+          getUsersAdmin();
+
+          setUpdateUsers(false);
+    }
+
+    
 
 
-    console.log(props.location);
+
+   
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
-      <Breadcrumbs aria-label="breadcrumb">
-         <Link color="inherit" href="/" >
-           Material-UI
-         </Link>
-         <Link color="inherit" href="/getting-started/installation/" >
-           Core
-         </Link>
-         <Typography color="textPrimary">Breadcrumb</Typography>
-       </Breadcrumbs>
+    
       <Switch>
             <Route path={ props.match.url } exact  render={() =>
 
@@ -398,6 +407,7 @@ export default function Users(props) {
                   menuHandleItemClick={(keyName) => menuHandleItemClick(keyName)}
                   handleToggle={(value) => handleToggle(value)}
                   deleteUser={(value) => deleteUser(value)}
+                  reloadUsers={reloadUsers}
 
                   menuContext={menuContext}
                   botonesAcciones={botonesAcciones}
@@ -410,15 +420,16 @@ export default function Users(props) {
 
 
             } />
-            <Route path={ props.match.url + "/crearusuario"}  render={() =>
+            <Route path={ props.match.url + "/nuevousuario"}  render={() =>
 
              <NewUser
              orderForm={newUserForm}
              formIsValid={formIsValid}
+             successSubmit={successSubmit}
 
              handleSubmitNewUser={(event) => {handleSubmitNewUser(event)}}
              inputChangedHandler={ (event,inputIdentifier)=> inputChangedHandler(event,inputIdentifier)}
-
+             resetNewFormOnLoad={ () => resetNewFormOnLoad() }
              />
 
             } />
