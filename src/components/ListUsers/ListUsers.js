@@ -66,7 +66,7 @@ const ListUsers = ( props ) =>
 {
   const classes = useStyles();
 
-  
+
 return (
 
   <Card>
@@ -156,8 +156,8 @@ return (
                     }
                     />
                   <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="comments" onClick={(event) => { props.deleteUser(value) } }>
-                      <CommentIcon />
+                    <IconButton edge="end" aria-label="comments" onClick={(event) => { props.editSingleUser(value.id) } }>
+                      <EditIcon />
 
                     </IconButton>
 

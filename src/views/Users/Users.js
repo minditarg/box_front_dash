@@ -10,6 +10,7 @@ import GridContainer from "components/Grid/GridContainer.js";
 import axios from "axios";
 import ListUsers from "../../components/ListUsers/ListUsers";
 import NewUser from "../../components/NewUser/NewUser";
+import EditUser from "../../components/EditUser/EditUser";
 
 
 
@@ -45,6 +46,7 @@ const styles = {
 
 
 const usersConst = [];
+const userEditConst = null;
 const checkedConst = [];
 const menuContextConst = null;
 const botonesAccionesConst = {
@@ -145,8 +147,75 @@ const newUserFormConst = {
 
 };
 
+const editUserFormConst = {
+  nombre: {
+      elementType: 'input',
+      elementConfig: {
+          type: 'text',
+          label: 'Nombre',
+          fullWidth: true
+      },
+      value: '',
+      validation: {
+          required: true
+      },
+      valid: false,
+      touched: false
+  },
+    username: {
+        elementType: 'input',
+        elementConfig: {
+            type: 'text',
+            label: 'usuario',
+            fullWidth: true
+        },
+        value: '',
+        validation: {
+            required: true
+        },
+        valid: false,
+        touched: false
+    },
+
+    tipoUser: {
+        elementType: 'select',
+        elementConfig: {
+            label:'Tipo de usuario',
+             options: [
+
+            ],
+            fullWidth: true
+        },
+        value: '',
+        validation: {
+            required:true
+        },
+
+        valid: false,
+        touched: false
+    },
+    descripcion: {
+        elementType: 'textarea',
+        elementConfig: {
+            type: 'text',
+            label:'Descripción',
+            rows:4
+        },
+        value: '',
+        validation: {
+            required: true
+        },
+        valid: false,
+        touched: false
+    },
+
+
+};
+
 const formIsValidConst = false;
+const editFormIsValidConst = false;
 const successSubmitConst = null;
+const successSubmitEditConst = null;
 const actionUpdateUsersConst = false;
 
 
@@ -154,27 +223,26 @@ const actionUpdateUsersConst = false;
 const useStyles = makeStyles(styles);
 
 export default function Users(props) {
- var resetFormFlag = false;
+
 
   const classes = useStyles();
   const [users, setUsers] = React.useState(JSON.parse(JSON.stringify(usersConst)));
+  const [userEdit, setUserEdit] = React.useState(JSON.parse(JSON.stringify(userEditConst)));
   const [checked, setChecked] = React.useState(JSON.parse(JSON.stringify(checkedConst)));
   const [menuContext, setMenuContext] = React.useState(JSON.parse(JSON.stringify(menuContextConst)));
   const [botonesAcciones, setBotonesAcciones] = React.useState(JSON.parse(JSON.stringify(botonesAccionesConst)));
   const [modalOpen, setModalOpen] = React.useState(JSON.parse(JSON.stringify(modalOpenConst)));
   const [newUserForm, setNewUserForm] = React.useState(JSON.parse(JSON.stringify(newUserFormConst)));
+  const [editUserForm, setEditUserForm] = React.useState(JSON.parse(JSON.stringify(editUserFormConst)));
+  const [editFormIsValid, setEditFormIsValid] = React.useState(JSON.parse(JSON.stringify(editUserFormConst)));
   const [formIsValid, setFormIsValid] = React.useState(JSON.parse(JSON.stringify(formIsValidConst)));
    const [successSubmit, setSuccessSubmit] = React.useState(JSON.parse(JSON.stringify(successSubmitConst)));
+   const [successSubmitEdit, setSuccessSubmitEdit] = React.useState(JSON.parse(JSON.stringify(successSubmitEditConst)));
     const [actionUpdateUsers, setActionUpdateUsers] = React.useState(JSON.parse(JSON.stringify(actionUpdateUsersConst)));
 
-  const deleteUser = value => {
+  const editSingleUser = value => {
 
-    const currentIndex = users.indexOf(value);
-    const newUsers = [ ...users];
-
-    newUsers.splice(currentIndex, 1);
-
-    setUsers(newUsers);
+  props.history.push(props.match.url + '/editarusuario/' + value);
 
   }
 
@@ -220,11 +288,17 @@ export default function Users(props) {
     if (botonesAcciones[value].enabled) {
 
       setMenuContext(null);
+
       if(value == 'nuevo') {
         setSuccessSubmit(false);
         resetNewForm();
         setFormIsValid(false);
       props.history.push(props.match.url + '/nuevousuario');
+    }
+    if(value == 'editar' && checked.length == 1) {
+      let idUser = checked[0].id;
+      props.history.push(props.match.url + '/editarusuario/' + idUser);
+
     }
 
     }
@@ -261,22 +335,15 @@ export default function Users(props) {
 
     }
 
-    const getUsersType = () =>
+    const getUsersType = (tipo,formulario) =>
     {
 
-         axios.get('/list-users_type')
+    axios.get('/list-users_type')
       .then(res => {
 
         if (res.data.success == 1) {
 
           let resultadoUserType = [...res.data.result];
-          let newUserFormAlt = JSON.parse(JSON.stringify(newUserForm));
-
-          /*
-          let auxiliar = resultadoUserType.map((element) => {
-            return { value:element.id, displayValue:element.desc}
-          })
-          */
 
           let a = [];
           resultadoUserType.forEach(function(entry){
@@ -286,10 +353,17 @@ export default function Users(props) {
             });
           })
 
+          if(tipo == 'new'){
+            formulario.tipoUser.elementConfig.options.push(...a);
+            setNewUserForm(formulario);
+          }
 
-          newUserFormAlt.tipoUser.elementConfig.options = a;
+          if(tipo == 'edit') {
+            formulario.tipoUser.elementConfig.options.push(...a);
+            setEditUserForm(formulario);
+          }
 
-          setNewUserForm(newUserFormAlt);
+
 
         }
       })
@@ -299,7 +373,6 @@ export default function Users(props) {
   React.useEffect(() => {
 
     getUsersAdmin();
-    getUsersType();
 
   }, []);
 
@@ -308,14 +381,7 @@ export default function Users(props) {
     if(props.location.pathname == '/admin/usuarios')
       reloadUsers();
 
-      if(props.location.pathname == '/admin/usuarios/nuevousuario' && actionUpdateUsers)
-        {
 
-          setSuccessSubmit(false);
-          resetNewForm();
-          setFormIsValid(false);
-
-        }
 
   }, [props.location]);
 
@@ -392,12 +458,40 @@ export default function Users(props) {
 
     }
 
-    const resetNewForm = ()=> {
+    const handleSubmitEditUser = (event) => {
+
+        event.preventDefault();
+        axios.post(`/signup-json`, { username: newUserForm.username.value, password: newUserForm.password.value,nombre:newUserForm.nombre.value,id_users_type:newUserForm.tipoUser.value})
+            .then(res => {
+
+                let estadoAlt = null
+                if (res.data.success == 0) {
+                    estadoAlt = false
+                }
+                if (res.data.success == 1) {
+                    estadoAlt = true
+                }
+
+                if(estadoAlt){
+
+                  setSuccessSubmit(true);
+                  resetNewForm();
+                  setFormIsValid(false);
+                  setActionUpdateUsers(true);
+                  }
+            })
+
+    }
+
+    const resetNewForm = (all)=> {
     let newUserFormAlt = JSON.parse(JSON.stringify(newUserForm));
       for(let key in newUserFormAlt){
         newUserFormAlt[key].value = ''
       }
-      setNewUserForm(newUserFormAlt);
+      if(all)
+      setSuccessSubmit(false);
+      setFormIsValid(false);
+      getUsersType("new",newUserFormAlt);
 
     }
 
@@ -409,6 +503,31 @@ export default function Users(props) {
     }
 
 
+
+    const getUserEdit = (id) => {
+      axios.get('/list-users/' + id)
+            .then(resultado => {
+                if(resultado.data.success == 1) {
+
+                    if(resultado.data.result.length > 0) {
+                      setUserEdit(resultado.data.result[0]);
+                      let editUserFormAlt = JSON.parse(JSON.stringify(editUserForm));
+                        editUserFormAlt.username.value = resultado.data.result[0].username;
+                        editUserFormAlt.nombre.value = resultado.data.result[0].nombre;
+                        editUserFormAlt.tipoUser.value = resultado.data.result[0].id_users_type.toString();
+
+                        getUsersType("edit",editUserFormAlt);
+
+                    }
+                      else
+                  {
+                      setUserEdit(null);
+                  }
+                }
+
+            })
+
+    }
 
 
 
@@ -425,7 +544,7 @@ export default function Users(props) {
                   menuHandleClose={(event) => menuHandleClose(event)}
                   menuHandleItemClick={(keyName) => menuHandleItemClick(keyName)}
                   handleToggle={(value) => handleToggle(value)}
-                  deleteUser={(value) => deleteUser(value)}
+                  editSingleUser={(value) => editSingleUser(value)}
 
                   menuContext={menuContext}
                   botonesAcciones={botonesAcciones}
@@ -447,9 +566,26 @@ export default function Users(props) {
 
              handleSubmitNewUser={(event) => {handleSubmitNewUser(event)}}
              inputChangedHandler={ (event,inputIdentifier)=> inputChangedHandler(event,inputIdentifier)}
+             resetNewForm={resetNewForm}
 
            />}
             />
+
+            <Route path={ props.match.url + "/editarusuario/:iduser"}  render={() =>
+
+             <EditUser
+             orderForm={editUserForm}
+             formIsValid={editFormIsValid}
+             successSubmitEdit={successSubmitEdit}
+
+
+             handleSubmitEditUser={(event) => {handleSubmitEditUser(event)}}
+             inputChangedHandler={ (event,inputIdentifier)=> inputChangedHandler(event,inputIdentifier)}
+             getUserEdit={(id) => { getUserEdit(id)}}
+
+           />}
+            />
+
         </Switch>
 
 

@@ -98,7 +98,7 @@ export default function Admin({ ...rest }) {
 
 
   React.useEffect(() => {
-
+/*
      axios.get('/me')
         .then(res => {
           if (res.data.success == 1) {
@@ -108,12 +108,12 @@ export default function Admin({ ...rest }) {
           }
 
         })
+*/
 
-    
   }, []);
 
 
-    
+
 
 
 
@@ -122,7 +122,7 @@ export default function Admin({ ...rest }) {
 
     <div className={classes.wrapper}>
       <Sidebar
-     
+
         routes={routes}
         logoText={"Creative Tim"}
         logo={logo}

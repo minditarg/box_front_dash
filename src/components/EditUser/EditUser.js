@@ -46,7 +46,7 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-const NewUser = ( props ) =>
+const EditUser = ( props ) =>
 {
   const classes = useStyles();
     const formElementsArray = [];
@@ -57,15 +57,14 @@ const NewUser = ( props ) =>
             });
         }
 
-        React.useEffect(() => {
-                props.resetNewForm(true);
-        }, []);
-
+  React.useEffect(() => {
+          props.getUserEdit(props.match.params.iduser);
+  }, []);
 
 return (
 
   <form onSubmit={(event) => {
-    props.handleSubmitNewUser(event)
+    props.handleSubmitEditUser(event)
 
  }}>
 
@@ -81,10 +80,10 @@ return (
       </p>
     </CardHeader>
     <CardBody>
-      { props.successSubmit &&
+      { props.successSubmitEdit &&
             <SnackbarContent
                 message={
-                'El usuario se ha guardado con éxito'
+                'El usuario se ha modificado con éxito'
                 }
                 close
                 color="success"
@@ -106,7 +105,7 @@ return (
               ))}
               </div>
 
-                      <Button style={{ marginTop:'25px'}} color="info" onClick={()=> props.history.push('/admin/usuarios')} ><ArrowBack />Volver</Button><Button style={{ marginTop:'25px'}} color="primary"  disabled={!props.formIsValid} type="submit" ><Save /> Guardar</Button>
+                      <Button style={{ marginTop:'25px'}} color="info" onClick={()=> props.history.push('/admin/usuarios')} ><ArrowBack />Volver</Button><Button style={{ marginTop:'25px'}} color="primary"  disabled={!props.editFormIsValid} type="submit" ><Save /> Guardar</Button>
 
 
         </CardBody>
@@ -123,4 +122,4 @@ return (
 
 )};
 
-export default withRouter(NewUser);
+export default withRouter(EditUser);
