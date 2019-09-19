@@ -1,5 +1,5 @@
 import React from 'react';
-import Input from '../Input/Input';
+import Input from 'components/Input/Input';
 import { Route, Switch ,Link, withRouter} from 'react-router-dom';
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,7 +10,7 @@ import Card from "components/Card/Card.js";
 import Button from "components/CustomButtons/Button.js";
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
-import SnackbarContent from "../../components/Snackbar/SnackbarContent.js";
+import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 
 
 
@@ -46,7 +46,7 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-const EditUser = ( props ) =>
+const NewUser = ( props ) =>
 {
   const classes = useStyles();
     const formElementsArray = [];
@@ -57,14 +57,15 @@ const EditUser = ( props ) =>
             });
         }
 
-  React.useEffect(() => {
-          props.getUserEdit(props.match.params.iduser);
-  }, []);
+        React.useEffect(() => {
+                props.resetNewForm(true);
+        }, []);
+
 
 return (
 
   <form onSubmit={(event) => {
-    props.handleSubmitEditUser(event)
+    props.handleSubmitNewUser(event)
 
  }}>
 
@@ -80,10 +81,10 @@ return (
       </p>
     </CardHeader>
     <CardBody>
-      { props.successSubmitEdit &&
+      { props.successSubmit &&
             <SnackbarContent
                 message={
-                'El usuario se ha modificado con éxito'
+                'El usuario se ha guardado con éxito'
                 }
                 close
                 color="success"
@@ -105,7 +106,7 @@ return (
               ))}
               </div>
 
-                      <Button style={{ marginTop:'25px'}} color="info" onClick={()=> props.history.push('/admin/usuarios')} ><ArrowBack />Volver</Button><Button style={{ marginTop:'25px'}} color="primary"  disabled={!props.editFormIsValid} type="submit" ><Save /> Guardar</Button>
+                      <Button style={{ marginTop:'25px'}} color="info" onClick={()=> props.history.push('/admin/usuarios')} ><ArrowBack />Volver</Button><Button style={{ marginTop:'25px'}} color="primary"  disabled={!props.formIsValid} type="submit" ><Save /> Guardar</Button>
 
 
         </CardBody>
@@ -122,4 +123,4 @@ return (
 
 )};
 
-export default withRouter(EditUser);
+export default withRouter(NewUser);

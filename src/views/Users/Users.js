@@ -8,9 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import axios from "axios";
-import ListUsers from "../../components/ListUsers/ListUsers";
-import NewUser from "../../components/NewUser/NewUser";
-import EditUser from "../../components/EditUser/EditUser";
+import ListUsers from "./components/ListUsers";
+import NewUser from "./components/NewUser";
+import EditUser from "./components/EditUser";
 
 
 //import MaterialTable from "material-table";
@@ -355,12 +355,12 @@ export default function Users(props) {
           })
 
           if(tipo == 'new'){
-            formulario.tipoUser.elementConfig.options.push(...a);
+            formulario.tipoUser.elementConfig.options=[...a];
             setNewUserForm(formulario);
           }
 
           if(tipo == 'edit') {
-            formulario.tipoUser.elementConfig.options.push(...a);
+            formulario.tipoUser.elementConfig.options=[...a];
             setEditUserForm(formulario);
           }
 
@@ -433,6 +433,29 @@ export default function Users(props) {
         setFormIsValid(formIsValidAlt);
     }
 
+    const inputEditChangedHandler = (event, inputIdentifier) => {
+        let checkValid;
+        const updatedOrderForm = {
+            ...editUserForm
+        };
+        const updatedFormElement = {
+            ...updatedOrderForm[inputIdentifier]
+        };
+        updatedFormElement.value = event.target.value;
+        checkValid =  checkValidity(updatedFormElement.value, updatedFormElement.validation);
+        updatedFormElement.valid = checkValid.isValid;
+        updatedFormElement.textValid = checkValid.textValid;
+        updatedFormElement.touched = true;
+        updatedOrderForm[inputIdentifier] = updatedFormElement;
+
+        let formIsValidAlt = true;
+        for (let inputIdentifier in updatedOrderForm) {
+            formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
+        }
+        setEditUserForm(updatedOrderForm);
+        setEditFormIsValid(formIsValidAlt);
+    }
+
 
     const handleSubmitNewUser = (event) => {
 
@@ -462,7 +485,7 @@ export default function Users(props) {
     const handleSubmitEditUser = (event) => {
 
         event.preventDefault();
-        axios.post(`/signup-json`, { username: newUserForm.username.value, password: newUserForm.password.value,nombre:newUserForm.nombre.value,id_users_type:newUserForm.tipoUser.value})
+        axios.post(`/update-user`, { id:userEdit.id,nombre: editUserForm.nombre.value, id_users_type: editUserForm.tipoUser.value})
             .then(res => {
 
                 let estadoAlt = null
@@ -475,10 +498,8 @@ export default function Users(props) {
 
                 if(estadoAlt){
 
-                  setSuccessSubmit(true);
-                  resetNewForm();
-                  setFormIsValid(false);
-                  setActionUpdateUsers(true);
+                  setSuccessSubmitEdit(true);
+                  setEditFormIsValid(false);
                   }
             })
 
@@ -493,6 +514,18 @@ export default function Users(props) {
       setSuccessSubmit(false);
       setFormIsValid(false);
       getUsersType("new",newUserFormAlt);
+
+    }
+
+    const resetEditForm = (all)=> {
+    let editUserFormAlt = JSON.parse(JSON.stringify(editUserForm));
+      for(let key in editUserFormAlt){
+        editUserFormAlt[key].value = ''
+      }
+      if(all)
+      setSuccessSubmitEdit(false);
+      setEditFormIsValid(false);
+      getUsersType("edit",editUserFormAlt);
 
     }
 
@@ -516,6 +549,11 @@ export default function Users(props) {
                         editUserFormAlt.username.value = resultado.data.result[0].username;
                         editUserFormAlt.nombre.value = resultado.data.result[0].nombre;
                         editUserFormAlt.tipoUser.value = resultado.data.result[0].id_users_type.toString();
+                        for(let key in editUserFormAlt){
+                          editUserFormAlt[key].touched = true;
+                          editUserFormAlt[key].valid = true;
+
+                        }
 
                         getUsersType("edit",editUserFormAlt);
 
@@ -555,7 +593,7 @@ export default function Users(props) {
 
 
               />
-              
+
 
 
             } />
@@ -577,13 +615,14 @@ export default function Users(props) {
 
              <EditUser
              orderForm={editUserForm}
-             formIsValid={editFormIsValid}
+             editFormIsValid={editFormIsValid}
              successSubmitEdit={successSubmitEdit}
 
 
              handleSubmitEditUser={(event) => {handleSubmitEditUser(event)}}
-             inputChangedHandler={ (event,inputIdentifier)=> inputChangedHandler(event,inputIdentifier)}
+             inputEditChangedHandler={ (event,inputIdentifier)=> inputEditChangedHandler(event,inputIdentifier)}
              getUserEdit={(id) => { getUserEdit(id)}}
+             resetEditForm={resetEditForm}
 
            />}
             />
