@@ -34,6 +34,7 @@ import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 import Users from "views/Users/Users.js";
+import Materiales from "views/Materiales/Materiales";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 
@@ -102,20 +103,28 @@ const dashboardRoutes = [
     component: RTLPage,
     layout: "/rtl"
   },
-  {
+  /*{
     path: "/upgrade-to-pro",
     name: "Upgrade To PRO",
     rtlName: "التطور للاحترافية",
     icon: Unarchive,
     component: UpgradeToPro,
     layout: "/admin"
-  },
+  },*/
   {
     path: "/usuarios",
     name: "Usuarios",
     rtlName: "التطور للاحترافية",
     icon: Person,
     component: Users,
+    layout: "/admin"
+  },
+  {
+    path: "/materiales",
+    name: "Materiales",
+    rtlName: "التطور للاحترافية",
+    icon: Person,
+    component: Materiales,
     layout: "/admin"
   }
 ];
