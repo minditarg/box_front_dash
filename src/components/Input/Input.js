@@ -30,7 +30,7 @@ const input = ( props ) => {
             {...props.elementConfig}
             value={props.value}
             onChange={props.changed}
-            multiline={"true"}
+            multiline={true}
             />;
 
             break;

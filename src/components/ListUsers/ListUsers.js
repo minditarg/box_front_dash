@@ -66,11 +66,7 @@ const ListUsers = ( props ) =>
 {
   const classes = useStyles();
 
-   React.useEffect(() => {
-
-    props.reloadUsers();
-
-  }, []);
+  
 return (
 
   <Card>
