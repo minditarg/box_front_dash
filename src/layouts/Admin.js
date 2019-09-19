@@ -155,7 +155,7 @@ export default function Admin({ ...rest }) {
           bgImage={image}
           handleFixedClick={handleFixedClick}
         fixedClasses={fixedClasses*/}
-        />
+        
       </div>
     </div>
   );
