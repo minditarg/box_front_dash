@@ -12,6 +12,7 @@ import ListUsers from "../../components/ListUsers/ListUsers";
 import NewUser from "../../components/NewUser/NewUser";
 
 
+//import MaterialTable from "material-table";
 
 const styles = {
   cardCategoryWhite: {
@@ -414,6 +415,7 @@ export default function Users(props) {
 
 
               />
+              
 
 
             } />
