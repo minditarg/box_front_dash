@@ -6,52 +6,52 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 
 
-const input = ( props ) => {
+const input = (props) => {
     let inputElement = null;
     let textValidation = null
     if (props.invalid && props.shouldValidate && props.touched) {
-      textValidation =  props.textValid
+        textValidation = props.textValid
 
 
 
     }
 
-    switch ( props.elementType ) {
-        case ( 'input' ):
-            inputElement = <TextField style={{ marginTop:'15px'}}
+    switch (props.elementType) {
+        case ('input'):
+            inputElement = <TextField style={{ marginTop: '15px' }}
                 {...props.elementConfig}
                 value={props.value}
                 onChange={props.changed} />;
             break;
-        case ( 'textarea' ):
+        case ('textarea'):
 
             inputElement =
-            <TextField style={{ marginTop:'20px'}}
-            {...props.elementConfig}
-            value={props.value}
-            onChange={props.changed}
-            multiline={true}
-            />;
+                <TextField style={{ marginTop: '20px' }}
+                    {...props.elementConfig}
+                    value={props.value}
+                    onChange={props.changed}
+                    multiline={true}
+                />;
 
             break;
-        case ( 'select' ):
+        case ('select'):
             inputElement = (
-          <FormControl style={{ minWidth:'180px',marginTop:'15px'}}>
-        <InputLabel >{ props.elementConfig.label}</InputLabel>
-        <Select
-        {...props.elementConfig}
-          value={props.value}
-          onChange={props.changed}
+                <FormControl style={{ minWidth: '180px', marginTop: '15px' }}>
+                    <InputLabel >{props.elementConfig.label}</InputLabel>
+                    <Select
+                        {...props.elementConfig}
+                        value={props.value}
+                        onChange={props.changed}
 
-        >
-         {props.elementConfig.options.map(option => (
-              <MenuItem key={option.value} value={option.value}>{option.displayValue}</MenuItem>
+                    >
+                        {props.elementConfig.options.map(option => (
+                            <MenuItem key={option.value} value={option.value}>{option.displayValue}</MenuItem>
 
-                    ))}
+                        ))}
 
 
-        </Select>
-      </FormControl>
+                    </Select>
+                </FormControl>
             );
             break;
         default:
@@ -66,7 +66,7 @@ const input = ( props ) => {
         <div>
             <label>{props.label}</label>
             {inputElement}
-            <br /><span style={{ fontSize:'80%',color:'red' }}>{textValidation}</span>
+            <br /><span style={{ fontSize: '80%', color: 'red' }}>{textValidation}</span>
         </div>
     );
 
