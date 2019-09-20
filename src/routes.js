@@ -34,7 +34,8 @@ import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 import Users from "views/Users/Users.js";
-import Materiales from "views/Materiales/Materiales";
+import Insumos from "views/Insumos/Insumos";
+import NewInsumos from "views/Insumos/NewInsumo";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 
@@ -120,11 +121,19 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/materiales",
-    name: "Materiales",
+    path: "/insumos",
+    name: "Insumos",
     rtlName: "التطور للاحترافية",
     icon: Person,
-    component: Materiales,
+    component: Insumos,
+    layout: "/admin"
+  },
+  {
+    path: "/nuevoinsumo",
+    name: "Nuevo Insumo",
+    rtlName: "NI",
+    icon: Person,
+    component: NewInsumos,
     layout: "/admin"
   }
 ];
