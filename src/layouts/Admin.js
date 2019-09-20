@@ -25,7 +25,7 @@ let ps;
 const switchRoutes = (
   <Switch>
     {routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
+      if (prop.layout === "/admin" && !prop.groupComponent) {
         return (
           <Route
             path={prop.layout + prop.path}
@@ -33,6 +33,17 @@ const switchRoutes = (
             key={key}
           />
         );
+      } else if(prop.groupComponent) {
+        return prop.dependences.map((prop,key) => {
+          return(
+            <Route
+              path={prop.layout + prop.path}
+              component={prop.component}
+              key={key}
+            />
+          )
+        })
+
       }
       return null;
     })}
@@ -95,7 +106,7 @@ export default function Admin({ ...rest }) {
       window.removeEventListener("resize", resizeFunction);
     };
   }, [mainPanel]);
-
+  console.log(switchRoutes)
 
   React.useEffect(() => {
 /*
@@ -155,7 +166,7 @@ export default function Admin({ ...rest }) {
           bgImage={image}
           handleFixedClick={handleFixedClick}
         fixedClasses={fixedClasses*/}
-        
+
       </div>
     </div>
   );

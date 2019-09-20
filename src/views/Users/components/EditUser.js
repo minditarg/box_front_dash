@@ -60,7 +60,8 @@ const EditUser = ( props ) =>
   React.useEffect(() => {
           props.getUserEdit(props.match.params.iduser);
           return () => {
-            props.resetEditForm();
+            props.resetEditForm(true);
+            props.reloadUsers();
           }
   }, []);
 

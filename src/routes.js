@@ -120,13 +120,21 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/materiales",
-    name: "Materiales",
-    rtlName: "التطور للاحترافية",
-    icon: Person,
-    component: Materiales,
-    layout: "/admin"
+    groupComponent:true,
+    name:'Insumos',
+    open:'open1',
+    dependences: [  {
+        path: "/materiales",
+        name: "Nuevo Insumo",
+        rtlName: "التطور للاحترافية",
+        icon: Person,
+        component: Materiales,
+        layout: "/admin"
+      }
+
+    ]
   }
+
 ];
 
 
@@ -140,6 +148,11 @@ export const breadcrumRoutes = [
       path:"/nuevousuario",
       name:"Nuevo",
       to:"/admin/usuarios/nuevousuario"
+    },
+    {
+      path:"/editarusuario",
+      name:"Editar",
+      to:"/admin/usuarios/editarusuario"
     }
   ]
 }

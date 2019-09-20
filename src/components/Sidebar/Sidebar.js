@@ -11,6 +11,11 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Icon from "@material-ui/core/Icon";
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import Collapse from '@material-ui/core/Collapse';
 // core components
 import AdminNavbarLinks from "components/Navbars/AdminNavbarLinks.js";
 import RTLNavbarLinks from "components/Navbars/RTLNavbarLinks.js";
@@ -21,6 +26,23 @@ const useStyles = makeStyles(styles);
 
 export default function Sidebar(props) {
   const classes = useStyles();
+
+  const [openVar, setOpenVar] = React.useState({
+    open1:false,
+    open2:false,
+    open3:false,
+    open4:false,
+    open5:false
+  });
+
+  function handleClick(value) {
+    var openVarCopy = {...openVar};
+    openVarCopy[value]=!openVarCopy[value];
+
+    setOpenVar(
+      openVarCopy
+    );
+  }
   // verifies if routeName is the one active (in browser input)
   function activeRoute(routeName) {
     return window.location.href.indexOf(routeName) > -1 ? true : false;
@@ -29,6 +51,79 @@ export default function Sidebar(props) {
   var links = (
     <List className={classes.list}>
       {routes.map((prop, key) => {
+        if(prop.groupComponent) {
+
+      return(
+        <div>
+        <div
+
+          className={ classes.item}
+
+          key={key}
+        >
+        <ListItem button className={classes.itemLink } onClick={()=>handleClick(prop.open)}>
+
+         <InboxIcon className={classes.itemIcon} />
+
+       <ListItemText
+       className={classes.itemText}
+       disableTypography={true}
+       primary={prop.name} />
+         {openVar[prop.open] ? <ExpandLess className={classes.itemIcon2} /> : <ExpandMore className={classes.itemIcon2}/>}
+     </ListItem>
+     </div>
+      <Collapse in={openVar[prop.open]} timeout="auto" unmountOnExit>
+            <List className={classes.list,classes.nested}>
+          {prop.dependences.map((prop, key) => {
+            var listItemClasses;
+
+              listItemClasses = classNames({
+                [" " + classes[color]]: activeRoute(prop.layout + prop.path)
+              });
+
+            const whiteFontClasses = classNames({
+              [" " + classes.whiteFont]: activeRoute(prop.layout + prop.path)
+            });
+          return   <NavLink
+              to={prop.layout + prop.path}
+              className={classes.item}
+              activeClassName="active"
+              key={key}
+            >
+              <ListItem button className={classes.itemLink + listItemClasses}>
+                {typeof prop.icon === "string" ? (
+                  <Icon
+                  className={classNames(classes.itemIcon, whiteFontClasses, {
+                    [classes.itemIconRTL]: props.rtlActive
+                  })}
+                  >
+                    {prop.icon}
+                  </Icon>
+                ) : (
+                  <prop.icon
+                  className={classNames(classes.itemIcon, whiteFontClasses, {
+                    [classes.itemIconRTL]: props.rtlActive
+                  })}
+                  />
+                )}
+                <ListItemText
+                  primary={props.rtlActive ? prop.rtlName : prop.name}
+                  className={classNames(classes.itemText, whiteFontClasses, {
+                    [classes.itemTextRTL]: props.rtlActive
+                  })}
+                  disableTypography={true}
+                />
+              </ListItem>
+            </NavLink>
+
+
+        })}
+        </List>
+        </Collapse>
+      </div>
+   )
+
+        } else {
         var activePro = " ";
         var listItemClasses;
         if (prop.path === "/upgrade-to-pro") {
@@ -77,7 +172,10 @@ export default function Sidebar(props) {
             </ListItem>
           </NavLink>
         );
-      })}
+      }
+      })
+
+    }
     </List>
   );
   var brand = (

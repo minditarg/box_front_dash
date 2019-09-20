@@ -16,6 +16,7 @@ import {
 } from "assets/jss/material-dashboard-react.js";
 
 const sidebarStyle = theme => ({
+
   drawerPaper: {
     border: "none",
     position: "fixed",
@@ -137,6 +138,15 @@ const sidebarStyle = theme => ({
     listStyle: "none",
     position: "unset"
   },
+  list2: {
+    marginTop: "0",
+    paddingLeft: "0",
+    paddingTop: "0",
+    paddingBottom: "0",
+    marginBottom: "0",
+    listStyle: "none",
+    position: "unset"
+  },
   item: {
     position: "relative",
     display: "block",
@@ -167,6 +177,17 @@ const sidebarStyle = theme => ({
     verticalAlign: "middle",
     color: "rgba(" + hexToRgb(whiteColor) + ", 0.8)"
   },
+  itemIcon2: {
+    width: "24px",
+    height: "30px",
+    fontSize: "24px",
+    lineHeight: "30px",
+    float: "right",
+    marginRight: "15px",
+    textAlign: "center",
+    verticalAlign: "middle",
+    color: "rgba(" + hexToRgb(whiteColor) + ", 0.8)"
+  },
   itemIconRTL: {
     marginRight: "3px",
     marginLeft: "15px",
@@ -174,6 +195,7 @@ const sidebarStyle = theme => ({
   },
   itemText: {
     ...defaultFont,
+    display:"inline",
     margin: "0",
     lineHeight: "30px",
     fontSize: "14px",
@@ -288,6 +310,9 @@ const sidebarStyle = theme => ({
     width: "260px",
     zIndex: "4",
     overflowScrolling: "touch"
+  },
+  nested:{
+    paddingLeft: '1.5em'
   },
   activePro: {
     [theme.breakpoints.up("md")]: {

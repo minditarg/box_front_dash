@@ -59,6 +59,9 @@ const NewUser = ( props ) =>
 
         React.useEffect(() => {
                 props.resetNewForm(true);
+            return () => {
+              props.reloadUsers();
+            }
         }, []);
 
 
