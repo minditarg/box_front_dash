@@ -14,32 +14,32 @@ const columns = [{ title: "id", field: "id" },
 { title: "Activo", field: "activo" }
 ];
 
-class Materiales extends Component {
+class Insumos extends Component {
     state = {
-         materiales: [],
+         insumos: [],
          actions: []
     };
 
 
     deleteMaterial = (id) => {
         alert("You want to delete " + id);
-        axios.post('/delete-materiales', {           
+        axios.post('/delete-insumos', {           
                 id:id        
         })
           .then(res => {
             if (res.data.success == 1) {
-             this.getMateriales();
+             this.getInsumos();
             }
           })
     }
 
-    getMateriales = () => {
-        axios.get('/list-materiales')
+    getInsumos = () => {
+        axios.get('/list-insumos')
           .then(res => {
             if (res.data.success == 1) {
               let resultado = [...res.data.result];
               this.setState({
-                materiales: resultado
+                insumos: resultado
               })
             }
           })
@@ -53,7 +53,7 @@ class Materiales extends Component {
                 this.props.history.replace('/');
               else 
               {
-                  // TODO: REVISAR SI ESTO ESTA BIEN O COMO ES ASINCRONICO PUEDE NO CARGAR EL ACTIONS ANTES DE QUE MUESTRE LA TABLA CON EL getMateriales y al tocar el icono pinche
+                  // TODO: REVISAR SI ESTO ESTA BIEN O COMO ES ASINCRONICO PUEDE NO CARGAR EL ACTIONS ANTES DE QUE MUESTRE LA TABLA CON EL getInsumos y al tocar el icono pinche
                 this.state.actions=[
                     {
                       icon: 'edit',
@@ -66,7 +66,7 @@ class Materiales extends Component {
                       onClick: (event, rowData) => this.deleteMaterial(rowData.id)
                     }
                   ];
-                this.getMateriales();
+                this.getInsumos();
               }
             })
          
@@ -78,8 +78,8 @@ class Materiales extends Component {
             <div style={{ maxWidth: "100%" }}>
                 <MaterialTable
                     columns={columns}
-                    data={this.state.materiales}
-                    title="Materiales"
+                    data={this.state.insumos}
+                    title="Insumos"
                     actions={this.state.actions}
                 />
             </div>
@@ -88,4 +88,4 @@ class Materiales extends Component {
 }
 
 
-export default Materiales;
+export default Insumos;
