@@ -13,21 +13,19 @@ import Card from "components/Card/Card.js";
 import Button from "components/CustomButtons/Button.js";
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
-
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 
 
-class NewInsumo extends Component {
+class NewPedido extends Component {
   state = {
-    insumos: [],
+    pedidos: [],
     actions: [],
     orderForm: {
       codigo: {
         elementType: 'input',
         elementConfig: {
           type: 'text',
-          label: 'Codigo Interno',
+          label: 'Identificador',
           fullWidth: true
         },
         value: '',
@@ -41,7 +39,7 @@ class NewInsumo extends Component {
         elementType: 'input',
         elementConfig: {
           type: 'text',
-          label: 'Descripcion',
+          label: 'Proveedor',
           fullWidth: true
         },
         value: '',
@@ -52,7 +50,8 @@ class NewInsumo extends Component {
         touched: false
       }
     },
-    formIsValid: false
+    formIsValid: false,
+    pedidoInsertado: false
   }
 
   checkValidity = (value, rules) => {
@@ -107,27 +106,22 @@ class NewInsumo extends Component {
   }
 
 
-  handleSubmitNewInsumo = (event) => {
-    event.preventDefault();
-    axios.post('/insert-insumos', {
+  handleSubmitNewPedido = (event) => {
+
+    axios.post('/insert-pedidos', {
       codigo: event.target[0].value,
       descripcion: event.target[1].value
     })
       .then(res => {
         if (res.data.success == 1) {
-          toast.success("Nuevo insumo creado");
-          //alert("Nuevo insumo creado");
+         // this.setState({pedidoInsertado: true});
+          alert("Nuevo pedido creado");
         }
         else {
-          toast.error("Error");
+          alert("error");
         }
       })
   }
-
-  // componentDidUpdate(){
-  //   //console.log("AA");
-  //   this.setState({insumoInsertado: false});
-  // }
 
   render() {
     const formElementsArray = [];
@@ -139,18 +133,28 @@ class NewInsumo extends Component {
     }
     return (
       <form onSubmit={(event) => {
-        this.handleSubmitNewInsumo(event)
+        this.handleSubmitNewPedido(event)
 
       }}>
 
         <Card>
           <CardHeader color="primary">
-            <h4 >Nuevo Insumo</h4>
+            <h4 >Nuevo Pedido</h4>
             <p >
-              Formulario alta de Insumo
+              Formulario alta de Pedido
           </p>
           </CardHeader>
           <CardBody>
+{/*             
+             { this.state.pedidoInsertado == true ?   
+              
+              <SnackbarContent
+              message={'El pedido se ha guardado con éxito'}
+              close
+              color="success"
+              />
+              : null
+            } */}
             
             
             {formElementsArray.map(formElement => (
@@ -166,9 +170,11 @@ class NewInsumo extends Component {
                 changed={(event) => this.inputChangedHandler(event, formElement.id)}
               />
             ))}
-    
+
+
+            
             <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
-            <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={2000}/>
+
           </CardBody>
         </Card>
       </ form>
@@ -177,4 +183,4 @@ class NewInsumo extends Component {
 }
 
 
-export default NewInsumo;
+export default NewPedido;

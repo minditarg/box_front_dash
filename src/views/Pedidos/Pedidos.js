@@ -4,45 +4,46 @@ import axios from "axios";
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
 import MaterialTable from "material-table";
-import SnackbarContent from "components/Snackbar/SnackbarContent.js";
-import { CardActions } from "@material-ui/core";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { CardActions } from "@material-ui/core";
+
 
 
 const columns = [{ title: "id", field: "id" },
-{ title: "Codigo", field: "codigo" },
-{ title: "Descripcion", field: "descripcion" },
-{ title: "Activo", field: "activo" }
+{ title: "Usuario", field: "username" },
+{ title: "Identificador", field: "identificador" },
+{ title: "Proveedor", field: "proveedor" },
+{ title: "Fecha", field: "fecha" }
 ];
 
-class Insumos extends Component {
+class Pedidos extends Component {
     state = {
-         insumos: [],
+         pedidos: [],
          actions: []
     };
 
 
     deleteMaterial = (id) => {
-        
-        axios.post('/delete-insumos', {           
+        alert("You want to delete " + id);
+        axios.post('/delete-pedidos', {           
                 id:id        
         })
           .then(res => {
             if (res.data.success == 1) {
-             this.getInsumos();
-             toast.info("Insumo eliminado");
+             this.getPedidos();
+             toast.info("Pedido eliminado");
             }
           })
     }
 
-    getInsumos = () => {
-        axios.get('/list-insumos')
+    getPedidos = () => {
+        axios.get('/list-pedidos')
           .then(res => {
             if (res.data.success == 1) {
               let resultado = [...res.data.result];
               this.setState({
-                insumos: resultado
+                pedidos: resultado
               })
             }
           })
@@ -56,7 +57,7 @@ class Insumos extends Component {
                 this.props.history.replace('/');
               else 
               {
-                  // TODO: REVISAR SI ESTO ESTA BIEN O COMO ES ASINCRONICO PUEDE NO CARGAR EL ACTIONS ANTES DE QUE MUESTRE LA TABLA CON EL getInsumos y al tocar el icono pinche
+                  // TODO: REVISAR SI ESTO ESTA BIEN O COMO ES ASINCRONICO PUEDE NO CARGAR EL ACTIONS ANTES DE QUE MUESTRE LA TABLA CON EL getPedidos y al tocar el icono pinche
                 this.state.actions=[
                     {
                       icon: 'edit',
@@ -69,7 +70,7 @@ class Insumos extends Component {
                       onClick: (event, rowData) => this.deleteMaterial(rowData.id)
                     }
                   ];
-                this.getInsumos();
+                this.getPedidos();
               }
             })
          
@@ -81,8 +82,8 @@ class Insumos extends Component {
             <div style={{ maxWidth: "100%" }}>
                 <MaterialTable
                     columns={columns}
-                    data={this.state.insumos}
-                    title="Insumos"
+                    data={this.state.pedidos}
+                    title="Pedidos"
                     actions={this.state.actions}
                 />
                  <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={2000}/>
@@ -92,4 +93,4 @@ class Insumos extends Component {
 }
 
 
-export default Insumos;
+export default Pedidos;

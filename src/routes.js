@@ -35,7 +35,9 @@ import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 import Users from "views/Users/Users.js";
 import Insumos from "views/Insumos/Insumos";
-import NewInsumos from "views/Insumos/NewInsumo";
+import NewInsumo from "views/Insumos/NewInsumo";
+import Pedidos from "views/Pedidos/Pedidos";
+import NewPedido from "views/Pedidos/NewPedido";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 
@@ -138,7 +140,33 @@ const dashboardRoutes = [
       name: "Nuevo",
       rtlName: "NI",
       icon: Person,
-      component: NewInsumos,
+      component: NewInsumo,
+      layout: "/admin"
+
+    }
+
+    ]
+
+  },
+  {
+    groupComponent:true,
+    name:'Pedidos',
+    open:'openPedidos',
+    dependences: [
+      {
+      path: "/pedidos",
+      name: "Listado",
+      rtlName: "NP",
+      icon: Person,
+      component: Pedidos,
+      layout: "/admin"
+    },
+    {
+      path: "/nuevopedido",
+      name: "Nuevo",
+      rtlName: "NI",
+      icon: Person,
+      component: NewPedido,
       layout: "/admin"
 
     }
