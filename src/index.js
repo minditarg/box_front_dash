@@ -19,6 +19,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { Provider } from 'react-redux';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
+
+import counterReducer from './store/reducers/counter';
+import resultReducer from './store/reducers/result';
 
 // core components
 import Admin from "layouts/Admin.js";
@@ -29,12 +35,34 @@ import "assets/css/material-dashboard-react.css?v=1.8.0";
 
 const hist = createBrowserHistory();
 
+const rootReducer = combineReducers({
+    ctr: counterReducer,
+    res: resultReducer
+});
+
+const logger = store => {
+    return next => {
+        return action => {
+          //  console.log('[Middleware] Dispatching', action);
+            const result = next(action);
+          //  console.log('[Middleware] next state', store.getState());
+            return result;
+        }
+    }
+};
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(logger, thunk)));
+
 ReactDOM.render(
+  <Provider store={store}>
   <Router history={hist}>
     <Switch>
       <Route path="/admin" component={Admin} />
       <Route from="/" component={Root}  />
     </Switch>
-  </Router>,
+  </Router>
+  </Provider>,
   document.getElementById("root")
 );
