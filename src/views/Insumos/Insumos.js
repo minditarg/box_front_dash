@@ -24,9 +24,9 @@ class Insumos extends Component {
 
 
     deleteMaterial = (id) => {
-        
-        axios.post('/delete-insumos', {           
-                id:id        
+
+        axios.post('/delete-insumos', {
+                id:id
         })
           .then(res => {
             if (res.data.success == 1) {
@@ -47,14 +47,14 @@ class Insumos extends Component {
             }
           })
       }
-    
+
       componentDidMount() {
 
           axios.get('/me')
             .then(res => {
-              if (res.data.success != 1) 
+              if (res.data.success != 1)
                 this.props.history.replace('/');
-              else 
+              else
               {
                   // TODO: REVISAR SI ESTO ESTA BIEN O COMO ES ASINCRONICO PUEDE NO CARGAR EL ACTIONS ANTES DE QUE MUESTRE LA TABLA CON EL getInsumos y al tocar el icono pinche
                 this.state.actions=[
@@ -72,7 +72,7 @@ class Insumos extends Component {
                 this.getInsumos();
               }
             })
-         
+
       }
 
 
