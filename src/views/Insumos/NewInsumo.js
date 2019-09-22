@@ -17,43 +17,11 @@ import Save from '@material-ui/icons/Save';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { StateNewInsumo } from "./VariablesState";
+
 
 class NewInsumo extends Component {
-  state = {
-    insumos: [],
-    actions: [],
-    orderForm: {
-      codigo: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'text',
-          label: 'Codigo Interno',
-          fullWidth: true
-        },
-        value: '',
-        validation: {
-          required: true
-        },
-        valid: false,
-        touched: false
-      },
-      descripcion: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'text',
-          label: 'Descripcion',
-          fullWidth: true
-        },
-        value: '',
-        validation: {
-          required: true
-        },
-        valid: false,
-        touched: false
-      }
-    },
-    formIsValid: false
-  }
+  state = {...StateNewInsumo}
 
   checkValidity = (value, rules) => {
     let isValid = true;
@@ -81,7 +49,7 @@ class NewInsumo extends Component {
     //alert("modificado");
     let checkValid;
     const updatedOrderForm = {
-      ...this.state.orderForm
+      ...this.state.newInsumoForm
     };
     const updatedFormElement = {
       ...updatedOrderForm[inputIdentifier]
@@ -99,7 +67,7 @@ class NewInsumo extends Component {
     }
 
     this.setState({
-      orderForm: updatedOrderForm,
+      newInsumoForm: updatedOrderForm,
       formIsValid: formIsValidAlt
 
     })
@@ -116,7 +84,7 @@ class NewInsumo extends Component {
       .then(res => {
         if (res.data.success == 1) {
           toast.success("Nuevo insumo creado");
-          //alert("Nuevo insumo creado");
+          this.resetForm();
         }
         else {
           toast.error("Error");
@@ -124,17 +92,23 @@ class NewInsumo extends Component {
       })
   }
 
-  // componentDidUpdate(){
-  //   //console.log("AA");
-  //   this.setState({insumoInsertado: false});
-  // }
+resetForm = () => {
+  let newInsumoForm = { ...this.state.newInsumoForm };
+  for(let key in newInsumoForm) {
+    newInsumoForm[key].value = ''
+  }
+  this.setState({
+    newInsumoForm:newInsumoForm
+  })
+
+}
 
   render() {
     const formElementsArray = [];
-    for (let key in this.state.orderForm) {
+    for (let key in this.state.newInsumoForm) {
       formElementsArray.push({
         id: key,
-        config: this.state.orderForm[key]
+        config: this.state.newInsumoForm[key]
       });
     }
     return (
@@ -151,8 +125,8 @@ class NewInsumo extends Component {
           </p>
           </CardHeader>
           <CardBody>
-            
-            
+
+
             {formElementsArray.map(formElement => (
               <Input
                 key={formElement.id}
@@ -166,7 +140,7 @@ class NewInsumo extends Component {
                 changed={(event) => this.inputChangedHandler(event, formElement.id)}
               />
             ))}
-    
+
             <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
             <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={2000}/>
           </CardBody>
