@@ -76,9 +76,9 @@ return (
 
   <Card>
     <CardHeader color="primary">
-      <h4 className={classes.cardTitleWhite}>Nuevo Usuario</h4>
+      <h4 className={classes.cardTitleWhite}>Insumo</h4>
       <p className={classes.cardCategoryWhite}>
-        Formulario de un usuario nuevo
+        Detalles del Insumo
       </p>
     </CardHeader>
     <CardBody>

@@ -25,14 +25,14 @@ class Pedidos extends Component {
 
 
     deleteMaterial = (id) => {
-        alert("You want to delete " + id);
+        //alert("You want to delete " + id);
         axios.post('/delete-pedidos', {           
                 id:id        
         })
           .then(res => {
             if (res.data.success == 1) {
              this.getPedidos();
-             toast.info("Pedido eliminado");
+             toast.info("Ingreso eliminado");
             }
           })
     }
@@ -61,12 +61,12 @@ class Pedidos extends Component {
                 this.state.actions=[
                     {
                       icon: 'edit',
-                      tooltip: 'Edit User',
+                      tooltip: 'Editar Ingreso',
                       onClick: (event, rowData) => alert("Editing " + rowData.descripcion)
                     },
                     {
                       icon: 'delete',
-                      tooltip: 'Delete User',
+                      tooltip: 'Eliminar Ingreso',
                       onClick: (event, rowData) => this.deleteMaterial(rowData.id)
                     }
                   ];
@@ -83,7 +83,7 @@ class Pedidos extends Component {
                 <MaterialTable
                     columns={columns}
                     data={this.state.pedidos}
-                    title="Pedidos"
+                    title="Ingresos"
                     actions={this.state.actions}
                 />
                  <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={2000}/>

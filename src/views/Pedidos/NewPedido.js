@@ -156,7 +156,7 @@ class NewPedido extends Component {
             .then(res => {
                 if (res.data.success == 1) {
                     // this.setState({pedidoInsertado: true});
-                    toast.success("Nuevo pedido creado");
+                    toast.success("Nuevo ingreso creado");
                 }
                 else {
                     toast.error("Error");
@@ -216,7 +216,7 @@ class NewPedido extends Component {
         this.state.actions=[
             {
               icon: 'delete',
-              tooltip: 'Delete User',
+              tooltip: 'Eliminar Insumo',
               onClick: (event, rowData) => this.deleteInsumo(rowData)
             }
           ];
@@ -246,9 +246,9 @@ class NewPedido extends Component {
 
                 <Card>
                     <CardHeader color="primary">
-                        <h4 >Nuevo Pedido</h4>
+                        <h4 >Nuevo Ingreso</h4>
                         <p >
-                            Formulario alta de Pedido
+                            Detalles del Ingreso
           </p>
                     </CardHeader>
                     <CardBody>
@@ -277,7 +277,7 @@ class NewPedido extends Component {
                                 <MaterialTable
                                     columns={columnsInsumos}
                                     data={this.state.insumos}
-                                    title="Insumos"
+                                    title="Ingreso"
                                     actions={this.state.actionsInsumos}
                                 />
                                 <Button onClick={this.closeDialog.bind(this)} >Cerrar</Button>
@@ -287,7 +287,7 @@ class NewPedido extends Component {
                         <MaterialTable
                             columns={columnsInsumos}
                             data={this.state.detallepedidos}
-                            title="Detalle Pedido"
+                            title="Detalle Ingreso"
                             actions={this.state.actions}
                         />
 

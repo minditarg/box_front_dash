@@ -99,6 +99,8 @@ class Insumos extends Component {
                         let editInsumoFormAlt = {...this.state.editInsumoForm};
                           editInsumoFormAlt.codigo.value = resultado.data.result[0].codigo;
                           editInsumoFormAlt.descripcion.value = resultado.data.result[0].descripcion;
+                          editInsumoFormAlt.unidad.value = resultado.data.result[0].unidad;
+                          editInsumoFormAlt.minimo.value = resultado.data.result[0].minimo;
 
                           for(let key in editInsumoFormAlt){
                             editInsumoFormAlt[key].touched = true;
@@ -121,7 +123,7 @@ class Insumos extends Component {
       handleSubmitEditInsumo = (event) => {
 
           event.preventDefault();
-          axios.post(`/update-insumos`, { id:this.state.insumoEdit.id,codigo: this.state.editInsumoForm.codigo.value, descripcion: this.state.editInsumoForm.descripcion.value})
+          axios.post(`/update-insumos`, { id:this.state.insumoEdit.id,codigo: this.state.editInsumoForm.codigo.value, descripcion: this.state.editInsumoForm.descripcion.value, unidad: this.state.editInsumoForm.unidad.value, minimo: this.state.editInsumoForm.minimo.value})
               .then(res => {
                   let estadoAlt = null
                   if (res.data.success == 0) {

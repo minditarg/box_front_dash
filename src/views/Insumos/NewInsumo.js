@@ -79,7 +79,9 @@ class NewInsumo extends Component {
     event.preventDefault();
     axios.post('/insert-insumos', {
       codigo: event.target[0].value,
-      descripcion: event.target[1].value
+      descripcion: event.target[1].value,
+      unidad: event.target[2].value,
+      minimo: event.target[3].value
     })
       .then(res => {
         if (res.data.success == 1) {

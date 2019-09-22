@@ -30,6 +30,34 @@ export const StateListado = {
       },
       valid: false,
       touched: false
+    },
+    unidad: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Unidad',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    minimo: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Stock Minimo',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
     }
   },
 
@@ -42,7 +70,8 @@ export const StateListado = {
 export const ColumnsListado = [{ title: "id", field: "id" },
 { title: "Codigo", field: "codigo" },
 { title: "Descripcion", field: "descripcion" },
-{ title: "Activo", field: "activo" }
+{ title: "Unidad", field: "unidad" },
+{ title: "Stock Minimo", field: "minimo" }
 ];
 
 export const StateNewInsumo =
@@ -68,6 +97,34 @@ export const StateNewInsumo =
       elementConfig: {
         type: 'text',
         label: 'Descripcion',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    unidad: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Unidad',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    minimo: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Stock Minimo',
         fullWidth: true
       },
       value: '',
