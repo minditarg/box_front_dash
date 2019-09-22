@@ -19,12 +19,22 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const columns = [{ title: "id", field: "id" },
-{ title: "Usuario", field: "username" },
-{ title: "Identificador", field: "identificador" },
-{ title: "Proveedor", field: "proveedor" },
-{ title: "Fecha", field: "fecha" }
+
+// const columns = [{ title: "id", field: "id" },
+// { title: "Usuario", field: "username" },
+// { title: "Identificador", field: "identificador" },
+// { title: "Proveedor", field: "proveedor" },
+// { title: "Fecha", field: "fecha" }
+// ];
+
+const columnsInsumos = [{ title: "id", field: "id" },
+{ title: "Codigo", field: "codigo" },
+{ title: "Descripcion", field: "descripcion" },
+{ title: "Activo", field: "activo" }
+//{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
 ];
 
 class NewPedido extends Component {
@@ -33,6 +43,9 @@ class NewPedido extends Component {
         open: false,
         detallepedidos: [],
         actions: [],
+        actionsInsumos: [],
+        insumos: [],
+        insumoSeleccionado: 0,
         orderForm: {
             codigo: {
                 elementType: 'input',
@@ -66,6 +79,18 @@ class NewPedido extends Component {
         formIsValid: false,
         pedidoInsertado: false
     }
+
+    getInsumos = () => {
+        axios.get('/list-insumos')
+          .then(res => {
+            if (res.data.success == 1) {
+              let resultado = [...res.data.result];
+              this.setState({
+                insumos: resultado
+              })
+            }
+          })
+      }
 
     checkValidity = (value, rules) => {
         let isValid = true;
@@ -120,18 +145,21 @@ class NewPedido extends Component {
 
 
     handleSubmitNewPedido = (event) => {
-
+        event.preventDefault();
+       // alert("cod: " + event.target[0].value + " desc: " + event.target[1].value);
+        console.log(this.state.detallepedidos);
         axios.post('/insert-pedidos', {
             codigo: event.target[0].value,
-            descripcion: event.target[1].value
+            descripcion: event.target[1].value,
+            detalle: this.state.detallepedidos
         })
             .then(res => {
                 if (res.data.success == 1) {
                     // this.setState({pedidoInsertado: true});
-                    alert("Nuevo pedido creado");
+                    toast.success("Nuevo pedido creado");
                 }
                 else {
-                    alert("error");
+                    toast.error("Error");
                 }
             })
     }
@@ -142,6 +170,64 @@ class NewPedido extends Component {
 
     closeDialog() {
         this.setState({ open: false });
+    }
+
+    insumoSelectHandler = (id) => {
+        //alert("seleccionandoooo " + id);
+        this.closeDialog();
+
+        axios.get('/select-insumos/'+id)
+          .then(res => {
+            if (res.data.success == 1) {
+              let resultado = [...res.data.result];
+            // alert('HOLA ' + id);
+             let detallepedidoant = [...this.state.detallepedidos];
+             console.log(resultado);
+            // alert(detallepedidoant.length);
+             detallepedidoant = detallepedidoant.concat(resultado);
+            // alert(detallepedidoant.length);
+              this.setState({
+                detallepedidos: [...detallepedidoant]
+              })
+            }
+            else
+            {
+                alert("error");
+            }
+          })
+        
+    }
+
+
+    deleteInsumo = (rowData) => {
+        
+        //alert("eliminando: " + this.state.detallepedidos.indexOf(rowData));
+        //data.splice(data.indexOf(oldData), 1);
+        let detallepedidosant = [...this.state.detallepedidos];
+        detallepedidosant.splice(detallepedidosant.indexOf(rowData), 1);
+        this.setState({
+            detallepedidos : detallepedidosant
+        });
+        //this.state.detallepedidos.splice(this.state.detallepedidos.indexOf(rowData), 1);
+    }
+    
+
+    componentDidMount() {
+        this.state.actions=[
+            {
+              icon: 'delete',
+              tooltip: 'Delete User',
+              onClick: (event, rowData) => this.deleteInsumo(rowData)
+            }
+          ];
+        this.state.actionsInsumos=[
+            {
+              icon: 'save',
+              tooltip: 'Seleccionar Insumo',
+              onClick: (event, rowData) => this.insumoSelectHandler(rowData.id)
+              
+            }];
+        this.getInsumos();
     }
 
     render() {
@@ -188,19 +274,25 @@ class NewPedido extends Component {
                         <Dialog open={this.state.open} onEnter={console.log('Dialogo')}>
                             <DialogTitle>Seleccionar Insumo</DialogTitle>
                             <DialogContent>
-                                
+                                <MaterialTable
+                                    columns={columnsInsumos}
+                                    data={this.state.insumos}
+                                    title="Insumos"
+                                    actions={this.state.actionsInsumos}
+                                />
                                 <Button onClick={this.closeDialog.bind(this)} >Cerrar</Button>
                             </DialogContent>
                         </Dialog>
 
                         <MaterialTable
-                            columns={columns}
+                            columns={columnsInsumos}
                             data={this.state.detallepedidos}
-                            title="Detalle Pedidos"
+                            title="Detalle Pedido"
                             actions={this.state.actions}
                         />
 
                         <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
+                        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={2000}/>
 
                     </CardBody>
                 </Card>
