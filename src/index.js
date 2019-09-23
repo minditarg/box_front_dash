@@ -23,6 +23,13 @@ import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 
+import { ThemeProvider } from '@material-ui/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
+
+import indigo from '@material-ui/core/colors/indigo';
+import lightGreen from '@material-ui/core/colors/lightGreen';
+
+
 import counterReducer from './store/reducers/counter';
 import resultReducer from './store/reducers/result';
 
@@ -38,6 +45,14 @@ const hist = createBrowserHistory();
 const rootReducer = combineReducers({
     ctr: counterReducer,
     res: resultReducer
+});
+
+
+const theme = createMuiTheme({
+  palette: {
+    primary: { main: indigo[700] }, // Purple and green play nicely together.
+    secondary: { main: lightGreen[500] }, // This is just green.A700 as hex.
+  },
 });
 
 const logger = store => {
@@ -58,10 +73,12 @@ const store = createStore(rootReducer, composeEnhancers(applyMiddleware(logger, 
 ReactDOM.render(
   <Provider store={store}>
   <Router history={hist}>
+   <ThemeProvider theme={theme}>
     <Switch>
       <Route path="/admin" component={Admin} />
       <Route from="/" component={Root}  />
     </Switch>
+    </ThemeProvider>
   </Router>
   </Provider>,
   document.getElementById("root")

@@ -21,8 +21,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="http://www.boxrental.com.ar/">
+        Box Rental
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -30,12 +30,14 @@ function Copyright() {
   );
 }
 
+let num = Math.floor((Math.random() * (4-1))+1);
+
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100vh',
   },
   image: {
-    backgroundImage: 'url(https://source.unsplash.com/random)',
+    backgroundImage: 'url(/assets/imagenes/boxlogin-' + num + '.jpg)',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
@@ -58,6 +60,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
+
 
 const estadoVar = {
 
@@ -222,7 +225,6 @@ export default function SignInSide(props) {
       )
 
   }
-  console.log(estado);
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -233,7 +235,7 @@ export default function SignInSide(props) {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+           Inicio de Sesión
           </Typography>
           <form className={classes.form} onSubmit={handleSubmit}>
           {alerta}
@@ -249,10 +251,10 @@ export default function SignInSide(props) {
           touched={formElement.config.touched}
           changed={(event) => inputChangedHandler(event, formElement.id)} />
   ))}
-            <FormControlLabel
+           {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+           /> */}
             <Button
               type="submit"
               fullWidth
@@ -261,9 +263,10 @@ export default function SignInSide(props) {
               disabled={!estado.formIsValid}
               className={classes.submit}
             >
-              Sign In
+             Ingresar
             </Button>
             <Grid container>
+            {/*
               <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
@@ -274,7 +277,9 @@ export default function SignInSide(props) {
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
+              */}
             </Grid>
+            
             <Box mt={5}>
               <Copyright />
             </Box>

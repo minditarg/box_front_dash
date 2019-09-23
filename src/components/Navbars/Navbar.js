@@ -13,9 +13,11 @@ import Menu from "@material-ui/icons/Menu";
 import AdminNavbarLinks from "./AdminNavbarLinks.js";
 import RTLNavbarLinks from "./RTLNavbarLinks.js";
 import Button from "components/CustomButtons/Button.js";
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import { Route, Switch ,Link} from 'react-router-dom';
+
+import { Route, Switch} from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
+
+import logoBox from 'assets/img/logobox.png';
 
 import styles from "assets/jss/material-dashboard-react/components/headerStyle.js";
 
@@ -32,22 +34,6 @@ export default function Header(props) {
     })
   }
 
-  let arrayBread = [ ]
-  let arrayCopia = [ ...props.breadcrumRoutes ]
- 
-  function makeBrand(array) {
-    let objArrayBread = mapBreadscrumRoutes(array);
-    if(objArrayBread) {
-      arrayBread.push({...objArrayBread});
-      
-    let lengtharray = arrayBread.length;
-
-    if(lengtharray > 0 && arrayBread[lengtharray-1].children)
-      makeBrand(arrayBread[lengtharray-1].children);
-      }
- 
-}
-makeBrand(arrayCopia);
   
 
   const { color } = props;
@@ -58,19 +44,8 @@ makeBrand(arrayCopia);
     <AppBar className={classes.appBar + appBarClasses}>
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
-         <Breadcrumbs aria-label="breadcrumb">
-          {/* Here we create navbar brand, based on route name */}
-           {arrayBread.map((elem,index) =>{
-              return (
-                 <Link key={"bread-" + index} color="inherit" to={ elem.to} >
-                  {elem.name}
-                  </Link>
-              )
-
-            })}
-
-       </Breadcrumbs>
-     
+        
+        <img style={{ marginLeft:'1em'}} src={logoBox} /> 
         </div>
         <Hidden smDown implementation="css">
           {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks />}

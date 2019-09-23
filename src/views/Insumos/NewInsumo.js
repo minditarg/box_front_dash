@@ -6,6 +6,7 @@ import Input from "components/Input/Input";
 // import ReactDOM from "react-dom";
 import MaterialTable from "material-table";
 import { CardActions } from "@material-ui/core";
+import { withStyles } from '@material-ui/styles';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -19,6 +20,36 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { StateNewInsumo } from "./VariablesState";
 
+
+const styles = {
+  cardCategoryWhite: {
+    "&,& a,& a:hover,& a:focus": {
+      color: "rgba(255,255,255,.62)",
+      margin: "0",
+      fontSize: "14px",
+      marginTop: "0",
+      marginBottom: "0"
+    },
+    "& a,& a:hover,& a:focus": {
+      color: "#FFFFFF"
+    }
+  },
+  cardTitleWhite: {
+    color: "#FFFFFF",
+    marginTop: "0px",
+    minHeight: "auto",
+    fontWeight: "300",
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    marginBottom: "3px",
+    textDecoration: "none",
+    "& small": {
+      color: "#777",
+      fontSize: "65%",
+      fontWeight: "400",
+      lineHeight: "1"
+    }
+  }
+};
 
 class NewInsumo extends Component {
   state = {...StateNewInsumo}
@@ -121,8 +152,8 @@ resetForm = () => {
 
         <Card>
           <CardHeader color="primary">
-            <h4 >Nuevo Insumo</h4>
-            <p >
+            <h4 className={this.props.classes.cardTitleWhite} >Nuevo Insumo</h4>
+            <p className={this.props.classes.cardCategoryWhite} >
               Formulario alta de Insumo
           </p>
           </CardHeader>
@@ -153,4 +184,4 @@ resetForm = () => {
 }
 
 
-export default NewInsumo;
+export default withStyles(styles)(NewInsumo);

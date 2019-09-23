@@ -6,6 +6,7 @@ import Input from "components/Input/Input";
 // import ReactDOM from "react-dom";
 import MaterialTable from "material-table";
 import { CardActions } from "@material-ui/core";
+import { withStyles } from '@material-ui/styles';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -36,6 +37,36 @@ const columnsInsumos = [{ title: "id", field: "id" },
 { title: "Activo", field: "activo" }
 //{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
 ];
+
+const styles = {
+  cardCategoryWhite: {
+    "&,& a,& a:hover,& a:focus": {
+      color: "rgba(255,255,255,.62)",
+      margin: "0",
+      fontSize: "14px",
+      marginTop: "0",
+      marginBottom: "0"
+    },
+    "& a,& a:hover,& a:focus": {
+      color: "#FFFFFF"
+    }
+  },
+  cardTitleWhite: {
+    color: "#FFFFFF",
+    marginTop: "0px",
+    minHeight: "auto",
+    fontWeight: "300",
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    marginBottom: "3px",
+    textDecoration: "none",
+    "& small": {
+      color: "#777",
+      fontSize: "65%",
+      fontWeight: "400",
+      lineHeight: "1"
+    }
+  }
+};
 
 class NewPedido extends Component {
     state = {
@@ -246,8 +277,8 @@ class NewPedido extends Component {
 
                 <Card>
                     <CardHeader color="primary">
-                        <h4 >Nuevo Ingreso</h4>
-                        <p >
+                        <h4 className={this.props.classes.cardTitleWhite} >Nuevo Ingreso</h4>
+                        <p className={this.props.classes.cardCategoryWhite} >
                             Detalles del Ingreso
           </p>
                     </CardHeader>
@@ -302,4 +333,4 @@ class NewPedido extends Component {
 }
 
 
-export default NewPedido;
+export default withStyles(styles)(NewPedido);

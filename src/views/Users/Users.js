@@ -248,6 +248,9 @@ class Users extends Component {
         }
 
         if(value == 'editar' && this.state.checked.length == 1) {
+           this.setState({
+              menuContext:menuContext
+            })
           let idUser = this.state.checked[0].id;
           this.props.history.push(this.props.match.url + '/editarusuario/' + idUser);
         }

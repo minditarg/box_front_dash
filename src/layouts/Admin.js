@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, Link } from "react-router-dom";
 import axios from 'axios';
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
@@ -12,13 +12,17 @@ import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
+import GridItem from "components/Grid/GridItem.js";
+import GridContainer from "components/Grid/GridContainer.js";
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+
 import routes from "routes.js";
 import { breadcrumRoutes } from "routes.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
-import bgImage from "assets/img/sidebar-2.jpg";
-import logo from "assets/img/reactlogo.png";
+import bgImage from "assets/img/boxside.jpg";
+import boxlogoside from "assets/img/boxlogoside.png";
 
 let ps;
 
@@ -31,16 +35,16 @@ const switchRoutes = (
             path={prop.layout + prop.path}
             component={prop.component}
             key={key}
-          />
+            />
         );
-      } else if(prop.groupComponent) {
-        return prop.dependences.map((prop,key) => {
-          return(
+      } else if (prop.groupComponent) {
+        return prop.dependences.map((prop, key) => {
+          return (
             <Route
               path={prop.layout + prop.path}
               component={prop.component}
               key={key}
-            />
+              />
           )
         })
 
@@ -53,17 +57,50 @@ const switchRoutes = (
 
 const useStyles = makeStyles(styles);
 
+
+
+
+
+
 export default function Admin({ ...rest }) {
   // styles
-  console.log(rest)
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
   // states and functions
   const [image, setImage] = React.useState(bgImage);
-  const [color, setColor] = React.useState("blue");
+  const [color, setColor] = React.useState("green");
   const [fixedClasses, setFixedClasses] = React.useState("dropdown show");
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  function mapBreadscrumRoutes(array) {
+    return array.find(elem => {
+
+      if (rest.location.pathname.indexOf(elem.path) > -1)
+        return true;
+      return false;
+    })
+  }
+
+  let arrayBread = []
+  let arrayCopia = [...breadcrumRoutes]
+
+  function makeBrand(array) {
+    let objArrayBread = mapBreadscrumRoutes(array);
+    if (objArrayBread) {
+      arrayBread.push({ ...objArrayBread });
+
+      let lengtharray = arrayBread.length;
+
+      if (lengtharray > 0 && arrayBread[lengtharray - 1].children)
+        makeBrand(arrayBread[lengtharray - 1].children);
+    }
+
+  }
+  makeBrand(arrayCopia);
+
+
+
   const handleImageClick = image => {
     setImage(image);
   };
@@ -106,20 +143,19 @@ export default function Admin({ ...rest }) {
       window.removeEventListener("resize", resizeFunction);
     };
   }, [mainPanel]);
-  console.log(switchRoutes)
 
   React.useEffect(() => {
-/*
-     axios.get('/me')
-        .then(res => {
-          if (res.data.success == 1) {
-
-          } else if (res.data.success == 3) {
-            rest.history.replace('/');
-          }
-
-        })
-*/
+    /*
+         axios.get('/me')
+            .then(res => {
+              if (res.data.success == 1) {
+    
+              } else if (res.data.success == 3) {
+                rest.history.replace('/');
+              }
+    
+            })
+    */
 
   }, []);
 
@@ -135,29 +171,44 @@ export default function Admin({ ...rest }) {
       <Sidebar
 
         routes={routes}
-        logoText={"Creative Tim"}
-        logo={logo}
+        logoText={"box app"}
+        logo={boxlogoside}
         image={image}
         handleDrawerToggle={handleDrawerToggle}
         open={mobileOpen}
         color={color}
         {...rest}
-      />
+        />
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
-          breadcrumRoutes={breadcrumRoutes}
+
           routes={routes}
           handleDrawerToggle={handleDrawerToggle}
           {...rest}
-        />
+          />
         {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
         {getRoute() ? (
           <div className={classes.content}>
+            
+                <Breadcrumbs style={{ marginLeft:'1.5em',marginBottom:'1.5em'}} aria-label="breadcrumb">
+
+                  {arrayBread.map((elem, index) => {
+                   
+                    return (
+                      <Link key={"bread-" + index} color="primary" to={elem.to} >
+                        {elem.name}
+                      </Link>
+                    )
+
+                  })}
+
+                </Breadcrumbs>
+             
             <div className={classes.container}>{switchRoutes}</div>
           </div>
         ) : (
-          <div className={classes.map}>{switchRoutes}</div>
-        )}
+            <div className={classes.map}>{switchRoutes}</div>
+          )}
         {/*getRoute() ? <Footer /> : null}
         <FixedPlugin
           handleImageClick={handleImageClick}
