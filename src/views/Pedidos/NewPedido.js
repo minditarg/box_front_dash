@@ -31,10 +31,11 @@ import 'react-toastify/dist/ReactToastify.css';
 // { title: "Fecha", field: "fecha" }
 // ];
 
-const columnsInsumos = [{ title: "id", field: "id" },
-{ title: "Codigo", field: "codigo" },
-{ title: "Descripcion", field: "descripcion" },
-{ title: "Activo", field: "activo" }
+const columnsInsumos = [{ title: "id", field: "id", editable: 'never' },
+{ title: "Codigo", field: "codigo", editable: 'never' },
+{ title: "Descripcion", field: "descripcion", editable: 'never' },
+{ title: "Activo", field: "activo", editable: 'never' },
+{ title: "Cantidad", field: "cantidad", type: 'numeric' }
 //{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
 ];
 
@@ -320,6 +321,43 @@ class NewPedido extends Component {
                             data={this.state.detallepedidos}
                             title="Detalle Ingreso"
                             actions={this.state.actions}
+                            editable={{
+                                onRowAdd: newData =>
+                                  new Promise((resolve, reject) => {
+                                    setTimeout(() => {
+                                      {
+                                        const data = this.state.detallepedidos;
+                                        data.push(newData);
+                                        this.setState({ data }, () => resolve());
+                                      }
+                                      resolve()
+                                    }, 1000)
+                                  }),
+                                onRowUpdate: (newData, oldData) =>
+                                  new Promise((resolve, reject) => {
+                                    setTimeout(() => {
+                                      {
+                                        const data = this.state.detallepedidos;
+                                        const index = data.indexOf(oldData);
+                                        data[index] = newData;
+                                        this.setState({ data }, () => resolve());
+                                      }
+                                      resolve()
+                                    }, 1000)
+                                  }),
+                                onRowDelete: oldData =>
+                                  new Promise((resolve, reject) => {
+                                    setTimeout(() => {
+                                      {
+                                        let data = this.state.detallepedidos;
+                                        const index = data.indexOf(oldData);
+                                        data.splice(index, 1);
+                                        this.setState({ data }, () => resolve());
+                                      }
+                                      resolve()
+                                    }, 1000)
+                                  }),
+                              }}
                         />
 
                         <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>

@@ -38,6 +38,7 @@ import Insumos from "views/Insumos/Insumos";
 import NewInsumo from "views/Insumos/NewInsumo";
 import Pedidos from "views/Pedidos/Pedidos";
 import NewPedido from "views/Pedidos/NewPedido";
+import Stock from "views/Stock/Stock";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 
@@ -45,76 +46,83 @@ const dashboardRoutes = [
   {
     path: "/dashboard",
     name: "Dashboard",
-    rtlName: "لوحة القيادة",
+    rtlName: "DS",
     icon: Dashboard,
     component: DashboardPage,
     layout: "/admin"
   },
-  {
-    path: "/user",
-    name: "User Profile",
-    rtlName: "ملف تعريفي للمستخدم",
-    icon: Person,
-    component: UserProfile,
-    layout: "/admin"
-  },
-  {
-    path: "/table",
-    name: "Table List",
-    rtlName: "قائمة الجدول",
-    icon: "content_paste",
-    component: TableList,
-    layout: "/admin"
-  },
-  {
-    path: "/typography",
-    name: "Typography",
-    rtlName: "طباعة",
-    icon: LibraryBooks,
-    component: Typography,
-    layout: "/admin"
-  },
-  {
-    path: "/icons",
-    name: "Icons",
-    rtlName: "الرموز",
-    icon: BubbleChart,
-    component: Icons,
-    layout: "/admin"
-  },
-  {
-    path: "/maps",
-    name: "Maps",
-    rtlName: "خرائط",
-    icon: LocationOn,
-    component: Maps,
-    layout: "/admin"
-  },
-  {
-    path: "/notifications",
-    name: "Notifications",
-    rtlName: "إخطارات",
-    icon: Notifications,
-    component: NotificationsPage,
-    layout: "/admin"
-  },
-  {
-    path: "/rtl-page",
-    name: "RTL Support",
-    rtlName: "پشتیبانی از راست به چپ",
-    icon: Language,
-    component: RTLPage,
-    layout: "/rtl"
-  },
+  // {
+  //   path: "/user",
+  //   name: "User Profile",
+  //   rtlName: "UP",
+  //   icon: Person,
+  //   component: UserProfile,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/table",
+  //   name: "Table List",
+  //   rtlName: "TL",
+  //   icon: "content_paste",
+  //   component: TableList,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/typography",
+  //   name: "Typography",
+  //   rtlName: "TI",
+  //   icon: LibraryBooks,
+  //   component: Typography,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/icons",
+  //   name: "Icons",
+  //   rtlName: "IC",
+  //   icon: BubbleChart,
+  //   component: Icons,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/maps",
+  //   name: "Maps",
+  //   rtlName: "MP",
+  //   icon: LocationOn,
+  //   component: Maps,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/notifications",
+  //   name: "Notifications",
+  //   rtlName: "NO",
+  //   icon: Notifications,
+  //   component: NotificationsPage,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/rtl-page",
+  //   name: "RTL Support",
+  //   rtlName: "RTL",
+  //   icon: Language,
+  //   component: RTLPage,
+  //   layout: "/rtl"
+  // },
   {
     path: "/usuarios",
     name: "Usuarios",
-    rtlName: "التطور للاحترافية",
+    rtlName: "Us",
     icon: Person,
     component: Users,
     layout: "/admin"
   },
-  
+  {
+    path: "/stock",
+    name: "Stock",
+    rtlName: "ST",
+    icon: Person,
+    component: Stock,
+    layout: "/admin"
+  },
   {
     groupComponent:true,
     name:'Insumos',
@@ -123,7 +131,7 @@ const dashboardRoutes = [
       {
       path: "/insumos",
       name: "Listado",
-      rtlName: "التطور للاحترافية",
+      rtlName: "LI",
       icon: Person,
       component: Insumos,
       layout: "/admin"
@@ -143,7 +151,7 @@ const dashboardRoutes = [
   },
   {
     groupComponent:true,
-    name:'Pedidos',
+    name:'Ingresos',
     open:'openPedidos',
     dependences: [
       {
