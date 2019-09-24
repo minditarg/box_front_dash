@@ -39,6 +39,7 @@ import NewInsumo from "views/Insumos/NewInsumo";
 import Pedidos from "views/Pedidos/Pedidos";
 import NewPedido from "views/Pedidos/NewPedido";
 import Stock from "views/Stock/Stock";
+import AjusteStock from "views/Stock/AjusteStock";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 
@@ -116,12 +117,27 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/stock",
-    name: "Stock",
-    rtlName: "ST",
-    icon: Person,
-    component: Stock,
-    layout: "/admin"
+    groupComponent:true,
+    name:'Stock',
+    open:'open1',
+    dependences: [
+      {
+      path: "/stock",
+      name: "Listado",
+      rtlName: "LI",
+      icon: Person,
+      component: Stock,
+      layout: "/admin"
+    },
+    {
+      path: "/AjusteStock",
+      name: "Ajuste",
+      rtlName: "NI",
+      icon: Person,
+      component: AjusteStock,
+      layout: "/admin"
+
+    }]
   },
   {
     groupComponent:true,
@@ -144,10 +160,7 @@ const dashboardRoutes = [
       component: NewInsumo,
       layout: "/admin"
 
-    }
-
-    ]
-
+    }]
   },
   {
     groupComponent:true,

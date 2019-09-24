@@ -75,7 +75,7 @@ export const StateListado = {
   { title: "Descripcion", field: "descripcion" },
   { title: "Unidad", field: "unidad" },
   { title: "Stock Minimo", field: "minimo" },
-  { title: "Stock Actual", field: "stock", cellStyle: {
+  { title: "Stock Actual", field: "cantidad", cellStyle: {
     backgroundColor: '#039be5',
     color: '#FFF'
   },}
