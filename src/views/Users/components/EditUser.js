@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Input from 'components/Input/Input';
-import { Route, Switch ,Link, withRouter} from 'react-router-dom';
+import { Route, Switch, Link, withRouter } from 'react-router-dom';
 
-import { makeStyles } from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/styles';
+
+import axios from "axios";
+import { toast } from 'react-toastify';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -10,7 +13,8 @@ import Card from "components/Card/Card.js";
 import Button from "components/CustomButtons/Button.js";
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
-import SnackbarContent from "components/Snackbar/SnackbarContent.js";
+
+import { StateEditUser } from "../VariablesState";
 
 
 
@@ -44,86 +48,228 @@ const styles = {
   }
 };
 
-const useStyles = makeStyles(styles);
 
-const EditUser = ( props ) =>
-{
-  const classes = useStyles();
-    const formElementsArray = [];
-        for (let key in props.orderForm) {
-            formElementsArray.push({
-                id: key,
-                config: props.orderForm[key]
+class EditUser extends Component {
+  state = { ...StateEditUser };
+
+
+  getUsersType = () => {
+    axios.get('/list-users_type')
+      .then(res => {
+        if (res.data.success == 1) {
+          let resultadoUserType = [...res.data.result];
+          let a = [];
+          resultadoUserType.forEach(function (entry) {
+            a.push({
+              value: entry.id,
+              displayValue: entry.desc
             });
+          })
+
+
+          let formulario = { ...this.state.editUserForm }
+          formulario.tipoUser.elementConfig.options = [...a];
+          this.setState({
+            editUserForm: formulario
+          })
+
+
+        }
+      })
+  }
+
+
+
+  checkValidity = (value, rules) => {
+    let isValid = true;
+    let textValid = null;
+
+    if (rules.required && isValid) {
+      isValid = value.toString().trim() !== '';
+      textValid = 'El campo es requerido'
+    }
+
+    if (rules.minLength && isValid) {
+      isValid = value.length >= rules.minLength;
+      textValid = 'La cantidad de caracteres minimos es ' + rules.minLength
+    }
+
+    if (rules.maxLength && isValid) {
+      isValid = value.length <= rules.maxLength;
+      textValid = 'Supera el maximo de caracteres';
+    }
+
+    return { isValid: isValid, textValid: textValid };
+  }
+
+
+  getUserEdit = (id) => {
+    axios.get('/list-users/' + id)
+      .then(resultado => {
+        if (resultado.data.success == 1) {
+          if (resultado.data.result.length > 0) {
+            this.setState({
+              userEdit: resultado.data.result[0]
+            })
+
+            let editUserFormAlt = { ...this.state.editUserForm };
+            editUserFormAlt.username.value = resultado.data.result[0].username;
+            editUserFormAlt.nombre.value = resultado.data.result[0].nombre;
+            editUserFormAlt.tipoUser.value = resultado.data.result[0].id_users_type.toString();
+            for (let key in editUserFormAlt) {
+              editUserFormAlt[key].touched = true;
+              editUserFormAlt[key].valid = true;
+            }
+            this.getUsersType("edit", editUserFormAlt);
+          }
+          else {
+            this.setState({
+              userEdit: null
+            })
+          }
+        }
+      })
+  }
+
+  handleSubmitEditUser = (event) => {
+
+    event.preventDefault();
+    axios.post(`/update-user`, { id: this.state.userEdit.id, nombre: this.state.editUserForm.nombre.value, id_users_type: this.state.editUserForm.tipoUser.value })
+      .then(res => {
+
+        let estadoAlt = null
+        if (res.data.success == 0) {
+          estadoAlt = false
+        }
+        if (res.data.success == 1) {
+          estadoAlt = true
         }
 
-  React.useEffect(() => {
-          props.getUserEdit(props.match.params.iduser);
-          return () => {
-            props.resetEditForm(true);
-            props.reloadUsers();
-          }
-  }, []);
+        if (estadoAlt) {
+          toast.success("El Usuario se ha modificado con exito!");
+          this.setState({
+            successSubmitEdit: true,
+            editFormIsValid: false
+          })
+        }
+      })
 
-return (
-
-  <form onSubmit={(event) => {
-    props.handleSubmitEditUser(event)
-
- }}>
+  }
 
 
+  inputEditChangedHandler = (event, inputIdentifier) => {
+    let checkValid;
+    const updatedOrderForm = {
+      ...this.state.editUserForm
+    };
+    const updatedFormElement = {
+      ...updatedOrderForm[inputIdentifier]
+    };
+    updatedFormElement.value = event.target.value;
+    checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+    updatedFormElement.valid = checkValid.isValid;
+    updatedFormElement.textValid = checkValid.textValid;
+    updatedFormElement.touched = true;
+    updatedOrderForm[inputIdentifier] = updatedFormElement;
+
+    let formIsValidAlt = true;
+    for (let inputIdentifier in updatedOrderForm) {
+      formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
+    }
+    this.setState({
+      editUserForm: updatedOrderForm,
+      editFormIsValid: formIsValidAlt
+    })
+
+  }
+
+
+  editSingleUser = value => {
+    this.props.history.push(this.props.match.url + '/editarusuario/' + value);
+  }
+
+
+  resetEditForm = () => {
+    let editUserFormAlt = { ...this.state.editUserForm };
+    let successSubmitEdit = this.state.successSubmitEdit;
+    for (let key in editUserFormAlt) {
+      editUserFormAlt[key].value = ''
+    }
+
+    this.setState({
+      editFormIsValid: false,
+      successSubmitEdit: successSubmitEdit
+    })
+
+
+  }
+
+  componentDidMount() {
+
+    this.getUsersType();
+    this.getUserEdit(this.props.match.params.iduser);
+  }
+
+  render() {
+
+    const formElementsArray = [];
+    for (let key in this.state.editUserForm) {
+      formElementsArray.push({
+        id: key,
+        config: this.state.editUserForm[key]
+      });
+    }
+
+    return (
+
+      <form onSubmit={(event) => {
+        this.handleSubmitEditUser(event)
+
+      } }>
 
 
 
-  <Card>
-    <CardHeader color="primary">
-      <h4 className={classes.cardTitleWhite}>Nuevo Usuario</h4>
-      <p className={classes.cardCategoryWhite}>
-        Formulario de un usuario nuevo
+
+
+        <Card>
+          <CardHeader color="primary">
+            <h4 className={this.props.classes.cardTitleWhite}>Nuevo Usuario</h4>
+            <p className={this.props.classes.cardCategoryWhite}>
+              Formulario de un usuario nuevo
       </p>
-    </CardHeader>
-    <CardBody>
-      { props.successSubmitEdit &&
-            <SnackbarContent
-                message={
-                'El usuario se ha modificado con éxito'
-                }
-                close
-                color="success"
-                />
-      }
-                      <div className="mt-3 mb-3">
-                      {formElementsArray.map(formElement => (
-                  <Input
-                      key={formElement.id}
-                      elementType={formElement.config.elementType}
-                      elementConfig={formElement.config.elementConfig}
-                      value={formElement.config.value}
-                      textValid={formElement.config.textValid}
-                      invalid={!formElement.config.valid}
-                      shouldValidate={formElement.config.validation}
-                      touched={formElement.config.touched}
-                      changed={(event) => props.inputEditChangedHandler(event, formElement.id)}
-                       />
+          </CardHeader>
+          <CardBody>
+
+            <div className="mt-3 mb-3">
+              {formElementsArray.map(formElement => (
+                <Input
+                  key={formElement.id}
+                  elementType={formElement.config.elementType}
+                  elementConfig={formElement.config.elementConfig}
+                  value={formElement.config.value}
+                  textValid={formElement.config.textValid}
+                  invalid={!formElement.config.valid}
+                  shouldValidate={formElement.config.validation}
+                  touched={formElement.config.touched}
+                  changed={(event) => this.inputEditChangedHandler(event, formElement.id)}
+                  />
               ))}
-              </div>
+            </div>
 
-                      <Button style={{ marginTop:'25px'}} color="info" onClick={()=> props.history.push('/admin/usuarios')} ><ArrowBack />Volver</Button><Button style={{ marginTop:'25px'}} color="primary"  disabled={!props.editFormIsValid} type="submit" ><Save /> Guardar</Button>
+            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/usuarios')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.editFormIsValid} type="submit" ><Save /> Guardar</Button>
 
 
-        </CardBody>
+          </CardBody>
         </Card>
 
 
 
+      </ form>
 
 
+    )
+  }
 
+};
 
-  </ form>
-
-
-)};
-
-export default withRouter(EditUser);
+export default withRouter(withStyles(styles)(EditUser));
