@@ -24,19 +24,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-// const columns = [{ title: "id", field: "id" },
-// { title: "Usuario", field: "username" },
-// { title: "Identificador", field: "identificador" },
-// { title: "Proveedor", field: "proveedor" },
-// { title: "Fecha", field: "fecha" }
-// ];
 
 const columnsInsumos = [{ title: "id", field: "id", editable: 'never' },
 { title: "Codigo", field: "codigo", editable: 'never' },
 { title: "Descripcion", field: "descripcion", editable: 'never' },
 { title: "Activo", field: "activo", editable: 'never' },
 { title: "Cantidad", field: "cantidad", type: 'numeric' }
-//{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
 ];
 
 const styles = {
@@ -76,7 +69,6 @@ class AjusteStock extends Component {
         codigo: null,
         descripcion: "",
         stock: null,
-        detallepedidos: [],
         actions: [],
         actionsInsumos: [],
         insumos: [],
@@ -86,28 +78,44 @@ class AjusteStock extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
+                    disabled: true,
                     label: 'Codigo Interno',
                     fullWidth: true
                 },
                 value: '',
                 validation: {
-                    required: true
+                    required: false
                 },
-                valid: false,
+                valid: true,
                 touched: false
             },
             descripcion: {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
+                    disabled: true,
                     label: 'Descripcion',
                     fullWidth: true
                 },
                 value: '',
                 validation: {
-                    required: true
+                    required: false
                 },
-                valid: false,
+                valid: true,
+                touched: false
+            },
+            cantidad: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    label: 'Cantidad',
+                    fullWidth: true
+                },
+                value: '',
+                validation: {
+                    required: false
+                },
+                valid: true,
                 touched: false
             }
         },
@@ -181,17 +189,18 @@ class AjusteStock extends Component {
 
     handleSubmitNewPedido = (event) => {
         event.preventDefault();
-       // alert("cod: " + event.target[0].value + " desc: " + event.target[1].value);
-        console.log(this.state.detallepedidos);
-        axios.post('/insert-pedidos', {
+       //alert("cod: " + event.target[0].value + " desc: " + event.target[1].value + " canti: " + event.target[2].value);
+        //console.log(this.state.detallepedidos);
+        axios.post('/ajuste-stock', {
             codigo: event.target[0].value,
             descripcion: event.target[1].value,
-            detalle: this.state.detallepedidos
+            cantidad: event.target[2].value//,
+            //detalle: this.state.detallepedidos
         })
             .then(res => {
                 if (res.data.success == 1) {
                     // this.setState({pedidoInsertado: true});
-                    toast.success("Nuevo ingreso creado");
+                    toast.success("Insumo Ajustado");
                 }
                 else {
                     toast.error("Error");
@@ -220,11 +229,17 @@ class AjusteStock extends Component {
                 let resultado = [...res.data.result];
                 
                 console.log(resultado);
-                alert(resultado[0].id);
+             //   alert(resultado[0].id);
+               
+
+
+               // this.state.orderForm.codigo.value = resultado[0].id;
+            let ordenformNuevo = {...this.state.orderForm};
+                ordenformNuevo.codigo.value = resultado[0].id;
+                ordenformNuevo.descripcion.value = resultado[0].descripcion;
+                ordenformNuevo.cantidad.value = resultado[0].cantidad;
                 this.setState({
-                    codigo: resultado[0].id,
-                    descripcion: resultado[0].descripcion,
-                    stock: resultado[0].stock
+                    orderForm: ordenformNuevo
                 })
             }
             else
@@ -233,19 +248,6 @@ class AjusteStock extends Component {
             }
           })
         
-    }
-
-
-    deleteInsumo = (rowData) => {
-        
-        //alert("eliminando: " + this.state.detallepedidos.indexOf(rowData));
-        //data.splice(data.indexOf(oldData), 1);
-        let detallepedidosant = [...this.state.detallepedidos];
-        detallepedidosant.splice(detallepedidosant.indexOf(rowData), 1);
-        this.setState({
-            detallepedidos : detallepedidosant
-        });
-        //this.state.detallepedidos.splice(this.state.detallepedidos.indexOf(rowData), 1);
     }
     
 
@@ -289,9 +291,6 @@ class AjusteStock extends Component {
           </p>
                     </CardHeader>
                     <CardBody>
-
-
-
                         {formElementsArray.map(formElement => (
                             <Input
                                 key={formElement.id}
@@ -323,7 +322,7 @@ class AjusteStock extends Component {
 
                         
 
-                        <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
+                        <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Ajustar </Button>
                         <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={2000}/>
 
                     </CardBody>
