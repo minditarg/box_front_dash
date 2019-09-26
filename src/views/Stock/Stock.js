@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Route, Switch ,Link} from 'react-router-dom';
+import { Route, Switch, Link } from 'react-router-dom';
+import { withStyles } from '@material-ui/styles';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
-import MaterialTable from "material-table";
+import MaterialTable, { MTableCell } from "material-table";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import { CardActions } from "@material-ui/core";
 import { ToastContainer, toast } from 'react-toastify';
@@ -16,252 +17,277 @@ import { ColumnsListado, StateListado } from "./VariablesState";
 
 import indigo from '@material-ui/core/colors/indigo';
 import lightGreen from '@material-ui/core/colors/lightGreen';
+import red from '@material-ui/core/colors/red';
 
+const styles = {
+  rowTable: {
+    ":hover": {
+     backgroundColor:"green"
+    }
+  }
+  
+};
 
 
 class Stock extends Component {
-    state = { ... StateListado};
+  state = { ...StateListado };
 
 
   deleteMaterial = (rowData) => {
-        this.handleClickOpen(rowData);
+    this.handleClickOpen(rowData);
 
-    }
+  }
 
   getInsumos = () => {
-        axios.get('/list-insumos')
-          .then(res => {
-            if (res.data.success == 1) {
-              let resultado = [...res.data.result];
-              this.setState({
-                insumos: resultado
-              })
-            } else if(res.data.success == 3 || res.data.success == 4){
-              toast.error(res.data.error_msj);
-              setTimeout(()=>{
-                this.props.history.replace('/');
-              },3500)
-            }
-
-          },err =>{
-            toast.error(err.message);
+    axios.get('/list-insumos')
+      .then(res => {
+        if (res.data.success == 1) {
+          let resultado = [...res.data.result];
+          this.setState({
+            insumos: resultado
           })
-      }
+        } else if (res.data.success == 3 || res.data.success == 4) {
+          toast.error(res.data.error_msj);
+          setTimeout(() => {
+            this.props.history.replace('/');
+          }, 3500)
+        }
+
+      }, err => {
+        toast.error(err.message);
+      })
+  }
 
   handleClickOpen(rowData) {
     this.setState({
-      openDeleteDialog:true,
-      deleteRowData:rowData
+      openDeleteDialog: true,
+      deleteRowData: rowData
     })
   }
 
   handleClose() {
     this.setState({
-      openDeleteDialog:false,
-      deleteRowData:null
+      openDeleteDialog: false,
+      deleteRowData: null
     })
   }
 
-//   handleDelete(rowData) {
-//     if(rowData.id) {
-//     axios.post('/delete-insumos', {
-//             id:rowData.id
-//     })
-//       .then(res => {
-//         if (res.data.success == 1) {
-//           this.handleClose();
-//          this.getInsumos();
-//          toast.success("Insumo eliminado");
-//         }
-//       },err =>{
-//         toast.error(err.message);
-//       })
-//     }
+  //   handleDelete(rowData) {
+  //     if(rowData.id) {
+  //     axios.post('/delete-insumos', {
+  //             id:rowData.id
+  //     })
+  //       .then(res => {
+  //         if (res.data.success == 1) {
+  //           this.handleClose();
+  //          this.getInsumos();
+  //          toast.success("Insumo eliminado");
+  //         }
+  //       },err =>{
+  //         toast.error(err.message);
+  //       })
+  //     }
 
-//   }
+  //   }
 
-      componentDidMount() {
+  componentDidMount() {
 
-        this.getInsumos();
+    this.getInsumos();
 
-      }
-
-
+  }
 
 
 
-      getInsumoEdit = (id) => {
-        axios.get('/list-insumos/' + id)
-              .then(resultado => {
-                  if(resultado.data.success == 1) {
-                      if(resultado.data.result.length > 0) {
-                        this.setState({
-                          insumoEdit:resultado.data.result[0]
-                        })
 
-                        let editInsumoFormAlt = {...this.state.editInsumoForm};
-                          editInsumoFormAlt.codigo.value = resultado.data.result[0].codigo;
-                          editInsumoFormAlt.descripcion.value = resultado.data.result[0].descripcion;
-                          editInsumoFormAlt.unidad.value = resultado.data.result[0].unidad;
-                          editInsumoFormAlt.minimo.value = resultado.data.result[0].minimo;
-                          editInsumoFormAlt.stock.value = resultado.data.result[0].stock;
 
-                          for(let key in editInsumoFormAlt){
-                            editInsumoFormAlt[key].touched = true;
-                            editInsumoFormAlt[key].valid = true;
-                          }
-                          this.setState({
-                            editInsumoForm:editInsumoFormAlt
-                          })
-                      }
-                        else
-                    {
-                      this.setState({
-                        insumoEdit:null
-                      })
-                    }
-                  }
-              })
-      }
+  getInsumoEdit = (id) => {
+    axios.get('/list-insumos/' + id)
+      .then(resultado => {
+        if (resultado.data.success == 1) {
+          if (resultado.data.result.length > 0) {
+            this.setState({
+              insumoEdit: resultado.data.result[0]
+            })
 
-      handleSubmitEditInsumo = (event) => {
+            let editInsumoFormAlt = { ...this.state.editInsumoForm };
+            editInsumoFormAlt.codigo.value = resultado.data.result[0].codigo;
+            editInsumoFormAlt.descripcion.value = resultado.data.result[0].descripcion;
+            editInsumoFormAlt.unidad.value = resultado.data.result[0].unidad;
+            editInsumoFormAlt.minimo.value = resultado.data.result[0].minimo;
+            editInsumoFormAlt.stock.value = resultado.data.result[0].stock;
 
-          event.preventDefault();
-          axios.post(`/update-insumos`, { id:this.state.insumoEdit.id,codigo: this.state.editInsumoForm.codigo.value, descripcion: this.state.editInsumoForm.descripcion.value, unidad: this.state.editInsumoForm.unidad.value, minimo: this.state.editInsumoForm.minimo.value})
-              .then(res => {
-                  let estadoAlt = null
-                  if (res.data.success == 0) {
-                      estadoAlt = false
-                  }
-                  if (res.data.success == 1) {
-                      estadoAlt = true
-                  }
-
-                  if(estadoAlt){
-
-                    this.setState({
-                      editFormIsValid:false
-                    })
-                    toast.success("Los cambios se realizaron correctamente");
-                    }
-              })
-
-      }
-
-      checkValidity = (value, rules) => {
-          let isValid = true;
-          let textValid = null;
-
-          if (rules.required && isValid) {
-              isValid = value.toString().trim() !== '';
-              textValid = 'El campo es requerido'
+            for (let key in editInsumoFormAlt) {
+              editInsumoFormAlt[key].touched = true;
+              editInsumoFormAlt[key].valid = true;
+            }
+            this.setState({
+              editInsumoForm: editInsumoFormAlt
+            })
           }
-
-          if (rules.minLength && isValid) {
-              isValid = value.length >= rules.minLength;
-              textValid = 'La cantidad de caracteres minimos es ' + rules.minLength
+          else {
+            this.setState({
+              insumoEdit: null
+            })
           }
+        }
+      })
+  }
 
-          if (rules.maxLength && isValid) {
-              isValid = value.length <= rules.maxLength ;
-              textValid = 'Supera el maximo de caracteres';
-          }
+  handleSubmitEditInsumo = (event) => {
 
-          return {isValid:isValid,textValid:textValid};
-      }
-
-
-
-
-      inputEditChangedHandler = (event, inputIdentifier) => {
-          let checkValid;
-          const updatedOrderForm = {
-              ...this.state.editInsumoForm
-          };
-          const updatedFormElement = {
-              ...updatedOrderForm[inputIdentifier]
-          };
-          updatedFormElement.value = event.target.value;
-          checkValid =  this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
-          updatedFormElement.valid = checkValid.isValid;
-          updatedFormElement.textValid = checkValid.textValid;
-          updatedFormElement.touched = true;
-          updatedOrderForm[inputIdentifier] = updatedFormElement;
-
-          let formIsValidAlt = true;
-          for (let inputIdentifier in updatedOrderForm) {
-              formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
-          }
-          this.setState({
-            editInsumoForm:updatedOrderForm,
-            editFormIsValid:formIsValidAlt
-          })
-
-      }
-
-
-      editSingleInsumo = value => {
-      this.props.history.push(this.props.match.url + '/editarinsumo/' + value);
-      }
-
-
-      resetEditForm = ()=> {
-      let editInsumoFormAlt = {...this.state.editInsumoForm};
-        for(let key in editInsumoFormAlt){
-          editInsumoFormAlt[key].value = ''
+    event.preventDefault();
+    axios.post(`/update-insumos`, { id: this.state.insumoEdit.id, codigo: this.state.editInsumoForm.codigo.value, descripcion: this.state.editInsumoForm.descripcion.value, unidad: this.state.editInsumoForm.unidad.value, minimo: this.state.editInsumoForm.minimo.value })
+      .then(res => {
+        let estadoAlt = null
+        if (res.data.success == 0) {
+          estadoAlt = false
+        }
+        if (res.data.success == 1) {
+          estadoAlt = true
         }
 
-        this.setState({
-          editInsumoForm:editInsumoFormAlt,
-          editFormIsValid:false
-        })
+        if (estadoAlt) {
 
+          this.setState({
+            editFormIsValid: false
+          })
+          toast.success("Los cambios se realizaron correctamente");
+        }
+      })
 
-      }
+  }
 
-      reloadInsumos = () => {
-        this.getInsumos();
-      }
+  checkValidity = (value, rules) => {
+    let isValid = true;
+    let textValid = null;
 
-
-    render() {
-
-        return ([
-          <Switch>
-                <Route path={ this.props.match.url } exact  render={() =>
-            <div style={{ maxWidth: "100%" }}>
-                <MaterialTable
-                    columns={ColumnsListado}
-                    data={this.state.insumos}
-                    title="STOCK"
-                    options={{
-                        exportButton: true,
-                        headerStyle: {
-                            backgroundColor: indigo[700],
-                            color: '#FFF'
-                          }
-                      }}
-                    // actions={[ {
-                    //     icon: 'edit',
-                    //     tooltip: 'Edit User',
-                    //     onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarinsumo/' + rowData.id)
-                    //   },
-                    //   {
-                    //     icon: 'delete',
-                    //     tooltip: 'Delete User',
-                    //     onClick: (event, rowData) => this.deleteMaterial(rowData)
-                    //   }]}
-                />
-
-            </div> } />
-
-            </Switch>,
-          
-           <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={3000}/>
-
-   ]);
+    if (rules.required && isValid) {
+      isValid = value.toString().trim() !== '';
+      textValid = 'El campo es requerido'
     }
+
+    if (rules.minLength && isValid) {
+      isValid = value.length >= rules.minLength;
+      textValid = 'La cantidad de caracteres minimos es ' + rules.minLength
+    }
+
+    if (rules.maxLength && isValid) {
+      isValid = value.length <= rules.maxLength;
+      textValid = 'Supera el maximo de caracteres';
+    }
+
+    return { isValid: isValid, textValid: textValid };
+  }
+
+
+
+
+  inputEditChangedHandler = (event, inputIdentifier) => {
+    let checkValid;
+    const updatedOrderForm = {
+      ...this.state.editInsumoForm
+    };
+    const updatedFormElement = {
+      ...updatedOrderForm[inputIdentifier]
+    };
+    updatedFormElement.value = event.target.value;
+    checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+    updatedFormElement.valid = checkValid.isValid;
+    updatedFormElement.textValid = checkValid.textValid;
+    updatedFormElement.touched = true;
+    updatedOrderForm[inputIdentifier] = updatedFormElement;
+
+    let formIsValidAlt = true;
+    for (let inputIdentifier in updatedOrderForm) {
+      formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
+    }
+    this.setState({
+      editInsumoForm: updatedOrderForm,
+      editFormIsValid: formIsValidAlt
+    })
+
+  }
+
+
+  editSingleInsumo = value => {
+    this.props.history.push(this.props.match.url + '/editarinsumo/' + value);
+  }
+
+
+  resetEditForm = () => {
+    let editInsumoFormAlt = { ...this.state.editInsumoForm };
+    for (let key in editInsumoFormAlt) {
+      editInsumoFormAlt[key].value = ''
+    }
+
+    this.setState({
+      editInsumoForm: editInsumoFormAlt,
+      editFormIsValid: false
+    })
+
+
+  }
+
+  reloadInsumos = () => {
+    this.getInsumos();
+  }
+
+
+  render() {
+
+    return ([
+      <Switch>
+        <Route path={this.props.match.url} exact render={() =>
+          <div style={{ maxWidth: "100%" }}>
+            <MaterialTable
+              columns={ColumnsListado}
+              data={this.state.insumos}
+              title="STOCK"
+              components={{
+                Cell: props => {
+                  let styles = null
+                  if (props.columnDef.field == 'cantidad') {
+                    if (props.rowData.cantidad - props.rowData.minimo < 0) {
+                      styles = { backgroundColor: red[700], color: 'white' }
+                    } else {
+                       styles = { backgroundColor: lightGreen[700], color: 'white' }
+                    }
+                  }
+                  return (
+
+                    <MTableCell style={styles} {...props} />
+
+                  )
+                }
+              }}
+              options={{
+                exportButton: true,
+                headerStyle: {
+                  backgroundColor: indigo[700],
+                  color: '#FFF'
+                },
+              }}
+              // actions={[ {
+              //     icon: 'edit',
+              //     tooltip: 'Edit User',
+              //     onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarinsumo/' + rowData.id)
+              //   },
+              //   {
+              //     icon: 'delete',
+              //     tooltip: 'Delete User',
+              //     onClick: (event, rowData) => this.deleteMaterial(rowData)
+              //   }]}
+              />
+
+          </div>} />
+
+      </Switch>,
+
+      <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={3000} />
+
+    ]);
+  }
 }
 
 
-export default Stock;
+export default withStyles(styles)(Stock);

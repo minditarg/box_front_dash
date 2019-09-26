@@ -15,6 +15,8 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import Pagination from "material-ui-flat-pagination";
+
 
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -168,6 +170,12 @@ return (
             })}
           </List>
         </CardBody>
+         <Pagination
+          limit={props.limit}
+          offset={props.offset}
+          total={props.totalUsers}
+          onClick={(e, offset) => props.handlePagination(offset)}
+        />
       </Card>
 
 

@@ -184,9 +184,7 @@ class EditUser extends Component {
   }
 
 
-  editSingleUser = value => {
-    this.props.history.push(this.props.match.url + '/editarusuario/' + value);
-  }
+ 
 
 
   resetEditForm = () => {

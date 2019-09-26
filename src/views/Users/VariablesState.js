@@ -1,6 +1,6 @@
 export const StateListUsers = {
     users: [],
-
+    offset:0,
     checked: [],
     menuContext: null,
     botonesAcciones: {

@@ -17,7 +17,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { StateListUsers } from "./VariablesState";
 
-
+const limit = 10;
 
 
 class Users extends Component {
@@ -134,11 +134,19 @@ class Users extends Component {
     this.props.history.push(this.props.match.url + '/editarusuario/' + value);
   }
      
+    handlePagination = offset => {
+      this.setState({
+        offset:offset
+      })
 
+    }
 
 
 
     render() {
+      let totalUsers = this.state.users.length;
+      let users = this.state.users.slice(this.state.offset ,this.state.offset + limit);
+
         return (
           <GridContainer>
             <GridItem xs={12} sm={12} md={12}>
@@ -147,10 +155,12 @@ class Users extends Component {
                   <Route path={ this.props.match.url } exact  render={() =>
 
                     <ListUsers
-
+                        offset = {this.state.offset}
+                        limit={limit}
+                        totalUsers = {totalUsers}
                         menuContext={this.state.menuContext}
                         botonesAcciones={this.state.botonesAcciones}
-                        users={this.state.users}
+                        users={users}
                         checked={this.state.checked}
 
                         menuHandleOpen={(event) => this.menuHandleOpen(event)}
@@ -158,6 +168,7 @@ class Users extends Component {
                         menuHandleItemClick={(keyName) => this.menuHandleItemClick(keyName)}
                         handleToggle={(value) => this.handleToggle(value)}
                         editSingleUser={(value) => this.editSingleUser(value)}
+                        handlePagination={(offset) => { this.handlePagination(offset)}}
                        reloadUsers={this.reloadUsers}
 
 
