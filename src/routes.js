@@ -40,6 +40,7 @@ import Pedidos from "views/Pedidos/Pedidos";
 import NewPedido from "views/Pedidos/NewPedido";
 import Stock from "views/Stock/Stock";
 import AjusteStock from "views/Stock/AjusteStock";
+import Egresos from "views/Egresos/NewEgreso";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 
@@ -114,6 +115,14 @@ const dashboardRoutes = [
     rtlName: "Us",
     icon: Person,
     component: Users,
+    layout: "/admin"
+  },
+  {
+    path: "/egresos",
+    name: "Pañol",
+    rtlName: "Pa",
+    icon: Person,
+    component: Egresos,
     layout: "/admin"
   },
   {
