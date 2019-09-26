@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/styles';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
-import MaterialTable, { MTableCell } from "material-table";
+import MaterialTable, { MTableCell, MTableBodyRow} from "material-table";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import { CardActions } from "@material-ui/core";
 import { ToastContainer, toast } from 'react-toastify';
@@ -21,11 +21,11 @@ import red from '@material-ui/core/colors/red';
 
 const styles = {
   rowTable: {
-    ":hover": {
-     backgroundColor:"green"
-    }
+    "&:hover":{
+     backgroundColor:"lightgray"
+   }
   }
-  
+
 };
 
 
@@ -255,9 +255,16 @@ class Stock extends Component {
                   }
                   return (
 
-                    <MTableCell style={styles} {...props} />
+                    <MTableCell  style={styles} {...props}  />
 
                   )
+                },
+                Row: props => {
+                  return(
+                    <MTableBodyRow className={this.props.classes.rowTable} {...props}   />
+
+                  )
+
                 }
               }}
               options={{

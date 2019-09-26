@@ -37,6 +37,8 @@ import resultReducer from './store/reducers/result';
 import Admin from "layouts/Admin.js";
 import Root from "layouts/Root.js";
 
+import registerServiceWorker from './registerServiceWorker';
+
 
 import "assets/css/material-dashboard-react.css?v=1.8.0";
 
@@ -83,3 +85,4 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root")
 );
+registerServiceWorker();
