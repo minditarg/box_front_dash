@@ -50,7 +50,7 @@ const styles = {
 
 
 class EditUser extends Component {
-  state = { ...StateEditUser };
+  state = JSON.parse(JSON.stringify(StateEditUser));
 
 
   getUsersType = () => {

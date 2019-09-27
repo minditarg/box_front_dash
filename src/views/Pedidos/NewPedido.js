@@ -15,10 +15,14 @@ import Button from "components/CustomButtons/Button.js";
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
+
+import StepAgregarInsumo from './components/StepAgregarInsumo';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -66,6 +70,12 @@ const styles = {
       fontWeight: "400",
       lineHeight: "1"
     }
+  },
+  closeButton: {
+    position: 'absolute',
+    right: '0.5em',
+    top: '0.5em',
+    color: 'grey',
   }
 };
 
@@ -204,20 +214,17 @@ class NewPedido extends Component {
         this.setState({ open: false });
     }
 
-    insumoSelectHandler = (id) => {
-        //alert("seleccionandoooo " + id);
+    onClickInsumo = (id,cantidad) => {
         this.closeDialog();
 
         axios.get('/select-insumos/'+id)
           .then(res => {
             if (res.data.success == 1) {
               let resultado = [...res.data.result];
-            // alert('HOLA ' + id);
+              resultado[0].cantidad = cantidad;
              let detallepedidoant = [...this.state.detallepedidos];
-             console.log(resultado);
-            // alert(detallepedidoant.length);
+
              detallepedidoant = detallepedidoant.concat(resultado);
-            // alert(detallepedidoant.length);
               this.setState({
                 detallepedidos: [...detallepedidoant]
               })
@@ -227,12 +234,12 @@ class NewPedido extends Component {
                 alert("error");
             }
           })
-        
+
     }
 
 
     deleteInsumo = (rowData) => {
-        
+
         //alert("eliminando: " + this.state.detallepedidos.indexOf(rowData));
         //data.splice(data.indexOf(oldData), 1);
         let detallepedidosant = [...this.state.detallepedidos];
@@ -242,7 +249,7 @@ class NewPedido extends Component {
         });
         //this.state.detallepedidos.splice(this.state.detallepedidos.indexOf(rowData), 1);
     }
-    
+
 
     componentDidMount() {
         this.state.actions=[
@@ -257,7 +264,7 @@ class NewPedido extends Component {
               icon: 'save',
               tooltip: 'Seleccionar Insumo',
               onClick: (event, rowData) => this.insumoSelectHandler(rowData.id)
-              
+
             }];
         this.getInsumos();
     }
@@ -303,16 +310,23 @@ class NewPedido extends Component {
 
                         <Button style={{ marginTop: '25px' }} color="primary" onClick={this.openDialog.bind(this)} > Agregar Insumo</Button>
 
-                        <Dialog open={this.state.open} onEnter={console.log('Dialogo')}>
-                            <DialogTitle>Seleccionar Insumo</DialogTitle>
+                        <Dialog open={this.state.open} onClose={this.closeDialog.bind(this)}>
+                            <DialogTitle>Seleccionar Insumo
+                            <IconButton aria-label="close" className={this.props.classes.closeButton}  onClick={this.closeDialog.bind(this)}>
+                                <CloseIcon />
+                              </IconButton>
+                            </DialogTitle>
+
+
                             <DialogContent>
-                                <MaterialTable
-                                    columns={columnsInsumos}
-                                    data={this.state.insumos}
-                                    title="Ingreso"
-                                    actions={this.state.actionsInsumos}
-                                />
-                                <Button onClick={this.closeDialog.bind(this)} >Cerrar</Button>
+                            { this.state.open &&
+                            <StepAgregarInsumo
+                            columnsInsumos = {columnsInsumos}
+                            insumos={this.state.insumos}
+                            orderForm={this.state.orderForm}
+                            onClickInsumo = {(id,cantidad) => this.onClickInsumo(id,cantidad)}
+                            />
+                          }
                             </DialogContent>
                         </Dialog>
 

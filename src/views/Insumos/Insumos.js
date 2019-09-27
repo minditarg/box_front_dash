@@ -17,7 +17,7 @@ import { ColumnsListado, StateListado } from "./VariablesState";
 
 
 class Insumos extends Component {
-    state = { ... StateListado};
+    state = JSON.parse(JSON.stringify(StateListado));
 
 
   deleteMaterial = (rowData) => {

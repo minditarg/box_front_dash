@@ -49,7 +49,7 @@ const styles = {
 
 
 class NewUser extends Component {
-  state = { ...StateNewUser };
+  state =JSON.parse(JSON.stringify(StateNewUser));
 
 
   handleSubmitNewUser = (event) => {

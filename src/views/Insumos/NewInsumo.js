@@ -52,7 +52,7 @@ const styles = {
 };
 
 class NewInsumo extends Component {
-  state = {...StateNewInsumo}
+  state = JSON.parse(JSON.stringify(StateNewInsumo))
 
   checkValidity = (value, rules) => {
     let isValid = true;
