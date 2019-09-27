@@ -128,7 +128,7 @@ const dashboardRoutes = [
   {
     groupComponent:true,
     name:'Stock',
-    open:'open1',
+    open:'openStock',
     dependences: [
       {
       path: "/stock",
@@ -151,7 +151,7 @@ const dashboardRoutes = [
   {
     groupComponent:true,
     name:'Insumos',
-    open:'open1',
+    open:'openInsumos',
     dependences: [
       {
       path: "/insumos",
