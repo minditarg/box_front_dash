@@ -41,6 +41,8 @@ import NewPedido from "views/Pedidos/NewPedido";
 import Stock from "views/Stock/Stock";
 import AjusteStock from "views/Stock/AjusteStock";
 import Egresos from "views/Egresos/NewEgreso";
+import Modulos from "views/Modulos/Modulos";
+import NewModulo from "views/Modulos/NewModulo";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 
@@ -192,10 +194,30 @@ const dashboardRoutes = [
       component: NewPedido,
       layout: "/admin"
 
-    }
+    }]
+  },
+  {
+    groupComponent:true,
+    name:'Modulos',
+    open:'open4',
+    dependences: [
+      {
+      path: "/modulos",
+      name: "Listado",
+      rtlName: "LM",
+      icon: Person,
+      component: Modulos,
+      layout: "/admin"
+    },
+    {
+      path: "/nuevomodulo",
+      name: "Nuevo",
+      rtlName: "NM",
+      icon: Person,
+      component: NewModulo,
+      layout: "/admin"
 
-    ]
-
+    }]
   }
 
 
