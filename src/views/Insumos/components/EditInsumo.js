@@ -48,7 +48,7 @@ const styles = {
 
 
 class EditInsumo extends Component {
-state= {... StateEditInsumo};
+state= JSON.parse(JSON.stringify(StateEditInsumo));
 
     getInsumoEdit = (id) => {
         axios.get('/list-insumos/' + id)
