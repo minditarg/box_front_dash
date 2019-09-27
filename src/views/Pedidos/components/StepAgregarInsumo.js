@@ -8,6 +8,10 @@ import Typography from '@material-ui/core/Typography';
 import MaterialTable,{MTableBodyRow } from "material-table";
 import Input from "components/Input/Input";
 
+var idInsumo = null;
+
+
+
 const useStyles = makeStyles(theme => ({
     root: {
         width: '90%',
@@ -25,16 +29,16 @@ function getSteps() {
     return ['Seleccione un Insumo', 'Modificar cantidad'];
 }
 
-function getStepContent(stepIndex, props, formElementsArray,handleNext) {
+function getStepContent(stepIndex, props, formElementsArray,handleNext,inputChangedHandler) {
     switch (stepIndex) {
         case 0:
             return <MaterialTable
                 columns={props.columnsInsumos}
                 data={props.insumos}
                 title="Insumo"
-                actions={props.actionsInsumos}
                 onRowClick={(event, rowData) => {
-                   props.onClickInsumo(rowData);
+
+                   idInsumo = rowData.id;
                    handleNext();
                 } }
 
@@ -42,6 +46,7 @@ function getStepContent(stepIndex, props, formElementsArray,handleNext) {
                 />;
 
         case 1:
+
             return (<div>{
                 formElementsArray.map(formElement => (
                     <Input
@@ -53,7 +58,7 @@ function getStepContent(stepIndex, props, formElementsArray,handleNext) {
                         invalid={!formElement.config.valid}
                         shouldValidate={formElement.config.validation}
                         touched={formElement.config.touched}
-                        changed={(event) => this.inputChangedHandler(event, formElement.id)}
+                        changed={(event) => inputChangedHandler(event, formElement.id)}
                         />
                 ))
             }</div>);
@@ -63,11 +68,28 @@ function getStepContent(stepIndex, props, formElementsArray,handleNext) {
 }
 
 export default function HorizontalLabelPositionBelowStepper(props) {
+  const [orderForm, setOrderForm] = React.useState({
+      cantidad: {
+          elementType: 'input',
+          elementConfig: {
+              type: 'number',
+              label: 'Cantidad',
+              fullWidth: true
+          },
+          value: '',
+          validation: {
+              required: true
+          },
+          valid: false,
+          touched: false
+      }
+  });
+  const [formIsValid, setFormIsValid] = React.useState(false);
     const formElementsArray = [];
-    for (let key in props.orderForm) {
+    for (let key in orderForm) {
         formElementsArray.push({
             id: key,
-            config: props.orderForm[key]
+            config: orderForm[key]
         });
     }
     const classes = useStyles();
@@ -75,8 +97,15 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const steps = getSteps();
 
     const handleNext = () => {
+      let orderFormAlt = {...orderForm};
+      orderFormAlt.cantidad.value = '';
+      setOrderForm(orderFormAlt);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
     };
+
+    const handleFinish = () => {
+      props.onClickInsumo(idInsumo,orderForm.cantidad.value);
+    }
 
     const handleBack = () => {
         setActiveStep(prevActiveStep => prevActiveStep - 1);
@@ -85,6 +114,51 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const handleReset = () => {
         setActiveStep(0);
     };
+
+    const checkValidity = (value, rules) => {
+        let isValid = true;
+        let textValid = null;
+
+        if (rules.required && isValid) {
+            isValid = value.toString().trim() !== '';
+            textValid = 'El campo es requerido'
+        }
+
+        if (rules.minLength && isValid) {
+            isValid = value.length >= rules.minLength;
+            textValid = 'La cantidad de caracteres minimos es ' + rules.minLength
+        }
+
+        if (rules.maxLength && isValid) {
+            isValid = value.length <= rules.maxLength ;
+            textValid = 'Supera el maximo de caracteres';
+        }
+
+        return {isValid:isValid,textValid:textValid};
+    }
+
+    const inputChangedHandler = (event, inputIdentifier) => {
+        let checkValid;
+        const updatedOrderForm = {
+            ...orderForm
+        };
+        const updatedFormElement = {
+            ...updatedOrderForm[inputIdentifier]
+        };
+        updatedFormElement.value = event.target.value;
+        checkValid =  checkValidity(updatedFormElement.value, updatedFormElement.validation);
+        updatedFormElement.valid = checkValid.isValid;
+        updatedFormElement.textValid = checkValid.textValid;
+        updatedFormElement.touched = true;
+        updatedOrderForm[inputIdentifier] = updatedFormElement;
+
+        let formIsValidAlt = true;
+        for (let inputIdentifier in updatedOrderForm) {
+            formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
+        }
+        setOrderForm(updatedOrderForm);
+        setFormIsValid(formIsValidAlt);
+    }
 
     return (
         <div className={classes.root}>
@@ -96,28 +170,25 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                 ))}
             </Stepper>
             <div>
-                {activeStep === steps.length ? (
-                    <div>
-                        <Typography className={classes.instructions}>All steps completed</Typography>
-                        <Button onClick={handleReset}>Reset</Button>
-                    </div>
-                ) : (
                         <div>
-                            <Typography className={classes.instructions}>{getStepContent(activeStep, props, formElementsArray,handleNext)}</Typography>
+                            <Typography className={classes.instructions}>{getStepContent(activeStep, props, formElementsArray,handleNext,inputChangedHandler)}</Typography>
                             <div>
                                 <Button
                                     disabled={activeStep === 0}
                                     onClick={handleBack}
                                     className={classes.backButton}
                                     >
-                                    Back
+                                    Atras
               </Button>
-                                <Button variant="contained" color="primary" onClick={handleNext}>
-                                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                </Button>
+                            {activeStep === steps.length - 1 ? (
+                              <Button variant="contained" color="primary" onClick={handleFinish}>
+                                  Agregar
+                              </Button>
+                            ) : null}
+
                             </div>
                         </div>
-                    )}
+
             </div>
         </div>
     );
