@@ -7,16 +7,22 @@ import MaterialTable from "material-table";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CardActions } from "@material-ui/core";
-
+import Moment from 'react-moment';
 
 
 const columns = [{ title: "id", field: "id" },
 { title: "Usuario", field: "username" },
 { title: "Identificador", field: "identificador" },
 { title: "Proveedor", field: "proveedor" },
-{ title: "Fecha", field: "fecha" }
+{ title: "Fecha", field: "fecha", render: rowData => <Moment format="DD/MM/YYYY - HH:mm">{rowData.fecha}</Moment> }
 ];
 
+/*
+render: rowData => <img src={rowData.url} style={{width: 50, borderRadius: '50%'}}
+ <Moment format="YYYY/MM/DD">
+                1976-04-19T12:59-0500
+            </Moment>
+ */
 class Pedidos extends Component {
     state = {
          pedidos: [],
