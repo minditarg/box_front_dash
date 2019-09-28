@@ -18,6 +18,10 @@
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import ListIcon from '@material-ui/icons/List';
+import AdjustIcon from '@material-ui/icons/Adjust';
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
 import BubbleChart from "@material-ui/icons/BubbleChart";
 import LocationOn from "@material-ui/icons/LocationOn";
@@ -136,7 +140,7 @@ const dashboardRoutes = [
       path: "/stock",
       name: "Listado",
       rtlName: "LI",
-      icon: Person,
+      icon: ListIcon,
       component: Stock,
       layout: "/admin"
     },
@@ -144,7 +148,7 @@ const dashboardRoutes = [
       path: "/AjusteStock",
       name: "Ajuste",
       rtlName: "NI",
-      icon: Person,
+      icon: AdjustIcon,
       component: AjusteStock,
       layout: "/admin"
 
@@ -159,7 +163,7 @@ const dashboardRoutes = [
       path: "/insumos",
       name: "Listado",
       rtlName: "LI",
-      icon: Person,
+      icon: ListIcon,
       component: Insumos,
       layout: "/admin"
     },
@@ -167,7 +171,7 @@ const dashboardRoutes = [
       path: "/nuevoinsumo",
       name: "Nuevo",
       rtlName: "NI",
-      icon: Person,
+      icon: AddBoxIcon,
       component: NewInsumo,
       layout: "/admin"
 
@@ -176,13 +180,14 @@ const dashboardRoutes = [
   {
     groupComponent:true,
     name:'Ingresos',
+    icon: LocalShippingIcon,
     open:'open3',
     dependences: [
       {
       path: "/ingresos",
       name: "Listado",
       rtlName: "NP",
-      icon: Person,
+      icon: ListIcon,
       component: Ingresos,
       layout: "/admin"
     },
@@ -190,7 +195,7 @@ const dashboardRoutes = [
       path: "/nuevoingreso",
       name: "Nuevo",
       rtlName: "NI",
-      icon: Person,
+      icon: AddBoxIcon,
       component: NewIngreso,
       layout: "/admin"
 
@@ -205,7 +210,7 @@ const dashboardRoutes = [
       path: "/modulos",
       name: "Listado",
       rtlName: "LM",
-      icon: Person,
+      icon: ListIcon,
       component: Modulos,
       layout: "/admin"
     },
@@ -213,7 +218,7 @@ const dashboardRoutes = [
       path: "/nuevomodulo",
       name: "Nuevo",
       rtlName: "NM",
-      icon: Person,
+      icon: AddBoxIcon,
       component: NewModulo,
       layout: "/admin"
 
