@@ -27,14 +27,14 @@ export default function Header(props) {
   const classes = useStyles();
   function mapBreadscrumRoutes(array) {
     return   array.find(elem =>{
-         
+
             if(props.location.pathname.indexOf(elem.path) > -1)
               return true;
-       return false;       
+       return false;
     })
   }
 
-  
+
 
   const { color } = props;
   const appBarClasses = classNames({
@@ -44,11 +44,11 @@ export default function Header(props) {
     <AppBar className={classes.appBar + appBarClasses}>
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
-        
-        <img style={{ marginLeft:'1em'}} src={logoBox} /> 
+
+        <img style={{ marginLeft:'1em'}} src={logoBox} />
         </div>
         <Hidden smDown implementation="css">
-          {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks />}
+          {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks user={props.user} />}
         </Hidden>
         <Hidden mdUp implementation="css">
           <IconButton

@@ -69,6 +69,7 @@ export default function Admin({ ...rest }) {
   const mainPanel = React.createRef();
   // states and functions
   const [image, setImage] = React.useState(bgImage);
+  const [user, setUser] = React.useState(null);
   const [color, setColor] = React.useState("green");
   const [fixedClasses, setFixedClasses] = React.useState("dropdown show");
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -145,17 +146,18 @@ export default function Admin({ ...rest }) {
   }, [mainPanel]);
 
   React.useEffect(() => {
-    /*
+
          axios.get('/me')
             .then(res => {
               if (res.data.success == 1) {
-    
+                  setUser(res.data.user);
+                  console.log(res.data.user);
               } else if (res.data.success == 3) {
-                rest.history.replace('/');
+                //rest.history.replace('/');
               }
-    
+
             })
-    */
+
 
   }, []);
 
@@ -181,7 +183,7 @@ export default function Admin({ ...rest }) {
         />
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
-
+          user={user}
           routes={routes}
           handleDrawerToggle={handleDrawerToggle}
           {...rest}
@@ -189,11 +191,11 @@ export default function Admin({ ...rest }) {
         {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
         {getRoute() ? (
           <div className={classes.content}>
-            
+
                 <Breadcrumbs style={{ marginLeft:'1.5em',marginBottom:'1.5em'}} aria-label="breadcrumb">
 
                   {arrayBread.map((elem, index) => {
-                   
+
                     return (
                       <Link key={"bread-" + index} color="primary" to={elem.to} >
                         {elem.name}
@@ -203,7 +205,7 @@ export default function Admin({ ...rest }) {
                   })}
 
                 </Breadcrumbs>
-             
+
             <div className={classes.container}>{switchRoutes}</div>
           </div>
         ) : (
