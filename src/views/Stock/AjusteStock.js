@@ -158,7 +158,6 @@ class AjusteStock extends Component {
     }
 
     inputChangedHandler = (event, inputIdentifier) => {
-        //alert("modificado");
         let checkValid;
         const updatedOrderForm = {
             ...this.state.orderForm
@@ -189,17 +188,15 @@ class AjusteStock extends Component {
 
     handleSubmitNewPedido = (event) => {
         event.preventDefault();
-        //alert("cod: " + event.target[0].value + " desc: " + event.target[1].value + " canti: " + event.target[2].value);
-        //console.log(this.state.detallepedidos);
         axios.post('/ajuste-stock', {
             codigo: event.target[0].value,
             descripcion: event.target[1].value,
-            cantidad: event.target[2].value//,
-            //detalle: this.state.detallepedidos
+            cantidad: event.target[2].value
+
         })
             .then(res => {
                 if (res.data.success == 1) {
-                    // this.setState({pedidoInsertado: true});
+
                     toast.success("Insumo Ajustado");
                 }
                 else {
@@ -217,8 +214,6 @@ class AjusteStock extends Component {
     }
 
     insumoSelectHandler = (id) => {
-        //alert("seleccionandoooo " + id);
-        
         this.closeDialog();
 
         //{"success":1,
@@ -226,27 +221,25 @@ class AjusteStock extends Component {
         axios.get('/select-insumos/' + id)
             .then(res => {
                 if (res.data.success == 1) {
-                    // alert(res.data.result.value);
+
                     let resultado = [...res.data.result];
-
-                    console.log(resultado);
-                    //   alert(resultado[0].id);
-
-
-
-                    // this.state.orderForm.codigo.value = resultado[0].id;
                     let ordenformNuevo = { ...this.state.orderForm };
                     ordenformNuevo.codigo.value = resultado[0].id;
+                     ordenformNuevo.codigo.elementConfig.disabled = false;
+                     ordenformNuevo.codigo.elementConfig.InputProps = { readOnly: true};
                     ordenformNuevo.codigo.touched = true;
                     ordenformNuevo.codigo.valid = true;
                     ordenformNuevo.descripcion.value = resultado[0].descripcion;
+                     ordenformNuevo.descripcion.elementConfig.disabled = false;
+                     ordenformNuevo.descripcion.elementConfig.InputProps = { readOnly: true};
+
                     ordenformNuevo.descripcion.touched = true;
                     ordenformNuevo.descripcion.valid = true;
                     ordenformNuevo.cantidad.value = resultado[0].cantidad;
                     ordenformNuevo.cantidad.touched = false;
                     this.setState({
                         orderForm: ordenformNuevo,
-                        formIsValid:false
+                        formIsValid: false
                     })
                 }
                 else {
@@ -256,11 +249,8 @@ class AjusteStock extends Component {
 
     }
 
-    
-
 
     componentDidMount() {
-
         this.getInsumos();
     }
 

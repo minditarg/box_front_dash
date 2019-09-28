@@ -5,10 +5,11 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import MaterialTable,{MTableBodyRow } from "material-table";
+import MaterialTable, { MTableBodyRow } from "material-table";
 import Input from "components/Input/Input";
+import axios from "axios";
+import Paper from '@material-ui/core/Paper';
 
-var idInsumo = null;
 
 
 
@@ -29,62 +30,29 @@ function getSteps() {
     return ['Seleccione un Insumo', 'Modificar cantidad'];
 }
 
-function getStepContent(stepIndex, props, formElementsArray,handleNext,inputChangedHandler) {
-    switch (stepIndex) {
-        case 0:
-            return <MaterialTable
-                columns={props.columnsInsumos}
-                data={props.insumos}
-                title="Insumo"
-                onRowClick={(event, rowData) => {
 
-                   idInsumo = rowData.id;
-                   handleNext();
-                } }
-
-
-                />;
-
-        case 1:
-
-            return (<div>{
-                formElementsArray.map(formElement => (
-                    <Input
-                        key={formElement.id}
-                        elementType={formElement.config.elementType}
-                        elementConfig={formElement.config.elementConfig}
-                        value={formElement.config.value}
-                        textValid={formElement.config.textValid}
-                        invalid={!formElement.config.valid}
-                        shouldValidate={formElement.config.validation}
-                        touched={formElement.config.touched}
-                        changed={(event) => inputChangedHandler(event, formElement.id)}
-                        />
-                ))
-            }</div>);
-        default:
-            return 'Paso no seleccionado';
-    }
-}
 
 export default function HorizontalLabelPositionBelowStepper(props) {
-  const [orderForm, setOrderForm] = React.useState({
-      cantidad: {
-          elementType: 'input',
-          elementConfig: {
-              type: 'number',
-              label: 'Cantidad',
-              fullWidth: true
-          },
-          value: '',
-          validation: {
-              required: true
-          },
-          valid: false,
-          touched: false
-      }
-  });
-  const [formIsValid, setFormIsValid] = React.useState(false);
+    const [orderForm, setOrderForm] = React.useState({
+        cantidad: {
+            elementType: 'input',
+            elementConfig: {
+                type: 'number',
+                label: 'Cantidad',
+                fullWidth: true
+            },
+            value: '',
+            validation: {
+                required: true,
+                mayor0: true
+            },
+            valid: false,
+            touched: false
+        }
+    });
+    const [formIsValid, setFormIsValid] = React.useState(false);
+    const [insumos, setInsumos] = React.useState([]);
+    const [rowInsumo, setRowInsumo] = React.useState(null);
     const formElementsArray = [];
     for (let key in orderForm) {
         formElementsArray.push({
@@ -96,15 +64,17 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
 
+
+
     const handleNext = () => {
-      let orderFormAlt = {...orderForm};
-      orderFormAlt.cantidad.value = '';
-      setOrderForm(orderFormAlt);
+        let orderFormAlt = { ...orderForm };
+        orderFormAlt.cantidad.value = '';
+        setOrderForm(orderFormAlt);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
     };
 
     const handleFinish = () => {
-      props.onClickInsumo(idInsumo,orderForm.cantidad.value);
+        props.onClickInsumo(rowInsumo.id, orderForm.cantidad.value);
     }
 
     const handleBack = () => {
@@ -124,17 +94,22 @@ export default function HorizontalLabelPositionBelowStepper(props) {
             textValid = 'El campo es requerido'
         }
 
+        if (rules.mayor0 && isValid) {
+            isValid = value >= 0;
+            textValid = 'La cantidad debe ser mayor a 0'
+        }
+
         if (rules.minLength && isValid) {
             isValid = value.length >= rules.minLength;
             textValid = 'La cantidad de caracteres minimos es ' + rules.minLength
         }
 
         if (rules.maxLength && isValid) {
-            isValid = value.length <= rules.maxLength ;
+            isValid = value.length <= rules.maxLength;
             textValid = 'Supera el maximo de caracteres';
         }
 
-        return {isValid:isValid,textValid:textValid};
+        return { isValid: isValid, textValid: textValid };
     }
 
     const inputChangedHandler = (event, inputIdentifier) => {
@@ -146,7 +121,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
             ...updatedOrderForm[inputIdentifier]
         };
         updatedFormElement.value = event.target.value;
-        checkValid =  checkValidity(updatedFormElement.value, updatedFormElement.validation);
+        checkValid = checkValidity(updatedFormElement.value, updatedFormElement.validation);
         updatedFormElement.valid = checkValid.isValid;
         updatedFormElement.textValid = checkValid.textValid;
         updatedFormElement.touched = true;
@@ -160,6 +135,72 @@ export default function HorizontalLabelPositionBelowStepper(props) {
         setFormIsValid(formIsValidAlt);
     }
 
+    const getStepContent = (stepIndex) => {
+        switch (stepIndex) {
+            case 0:
+                return <MaterialTable
+                    columns={props.columnsInsumos}
+                    data={insumos}
+                    title="Insumo"
+                    onRowClick={(event, rowData) => {
+
+                        setRowInsumo(rowData);
+                        handleNext();
+                    } }
+                    components={{
+                        Container: props => (
+                            <Paper elevation={0} {...props} />
+                        )
+                    }}
+
+
+                    />;
+
+            case 1:
+
+                return (<React.Fragment>
+                    <p><span style={{ fontWeight:'300'}}>Código: </span>
+                      {rowInsumo.codigo}</p>
+                     <p><span style={{ fontWeight:'300'}}>Descripción: </span>
+                      {rowInsumo.descripcion}</p>
+
+                    {
+                        formElementsArray.map(formElement => (
+                            <Input
+                                key={formElement.id}
+                                elementType={formElement.config.elementType}
+                                elementConfig={formElement.config.elementConfig}
+                                value={formElement.config.value}
+                                textValid={formElement.config.textValid}
+                                invalid={!formElement.config.valid}
+                                shouldValidate={formElement.config.validation}
+                                touched={formElement.config.touched}
+                                changed={(event) => inputChangedHandler(event, formElement.id)}
+                                />
+                        ))
+                    }</React.Fragment>);
+            default:
+                return 'Paso no seleccionado';
+        }
+    }
+
+    const getInsumos = () => {
+        axios.get('/list-insumos')
+            .then(res => {
+                if (res.data.success == 1) {
+                    let resultado = [...res.data.result];
+                    setInsumos(resultado);
+                }
+            })
+    }
+
+
+    React.useEffect(() => {
+
+        getInsumos();
+
+    }, []);
+
     return (
         <div className={classes.root}>
             <Stepper activeStep={activeStep} alternativeLabel>
@@ -170,24 +211,24 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                 ))}
             </Stepper>
             <div>
-                        <div>
-                            <Typography className={classes.instructions}>{getStepContent(activeStep, props, formElementsArray,handleNext,inputChangedHandler)}</Typography>
-                            <div>
-                                <Button
-                                    disabled={activeStep === 0}
-                                    onClick={handleBack}
-                                    className={classes.backButton}
-                                    >
-                                    Atras
+                <div >
+                    <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                    <div style={{ marginTop:'2em'}}>
+                        <Button
+                            disabled={activeStep === 0}
+                            onClick={handleBack}
+                            className={classes.backButton}
+                            >
+                            Atras
               </Button>
-                            {activeStep === steps.length - 1 ? (
-                              <Button variant="contained" color="primary" onClick={handleFinish}>
-                                  Agregar
+                        {activeStep === steps.length - 1 ? (
+                            <Button variant="contained" color="primary" disabled={!formIsValid} onClick={handleFinish}>
+                                Agregar
                               </Button>
-                            ) : null}
+                        ) : null}
 
-                            </div>
-                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>

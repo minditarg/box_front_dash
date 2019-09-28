@@ -17,12 +17,17 @@ import Save from '@material-ui/icons/Save';
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import AddIcon from '@material-ui/icons/Add';
+
+import GridItem from "components/Grid/GridItem.js";
+import GridContainer from "components/Grid/GridContainer.js";
 
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 
 import StepAgregarInsumo from './components/StepAgregarInsumo';
+import Paper from '@material-ui/core/Paper';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -38,45 +43,44 @@ import 'react-toastify/dist/ReactToastify.css';
 const columnsInsumos = [{ title: "id", field: "id", editable: 'never' },
 { title: "Codigo", field: "codigo", editable: 'never' },
 { title: "Descripcion", field: "descripcion", editable: 'never' },
-{ title: "Activo", field: "activo", editable: 'never' },
 { title: "Cantidad", field: "cantidad", type: 'numeric' }
-//{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
+    //{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
 ];
 
 const styles = {
-  cardCategoryWhite: {
-    "&,& a,& a:hover,& a:focus": {
-      color: "rgba(255,255,255,.62)",
-      margin: "0",
-      fontSize: "14px",
-      marginTop: "0",
-      marginBottom: "0"
+    cardCategoryWhite: {
+        "&,& a,& a:hover,& a:focus": {
+            color: "rgba(255,255,255,.62)",
+            margin: "0",
+            fontSize: "14px",
+            marginTop: "0",
+            marginBottom: "0"
+        },
+        "& a,& a:hover,& a:focus": {
+            color: "#FFFFFF"
+        }
     },
-    "& a,& a:hover,& a:focus": {
-      color: "#FFFFFF"
+    cardTitleWhite: {
+        color: "#FFFFFF",
+        marginTop: "0px",
+        minHeight: "auto",
+        fontWeight: "300",
+        fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+        marginBottom: "3px",
+        textDecoration: "none",
+        "& small": {
+            color: "#777",
+            fontSize: "65%",
+            fontWeight: "400",
+            lineHeight: "1"
+        }
+    },
+    closeButton: {
+        position: 'absolute',
+        right: '0.5em',
+        top: '0.5em',
+        color: 'grey',
     }
-  },
-  cardTitleWhite: {
-    color: "#FFFFFF",
-    marginTop: "0px",
-    minHeight: "auto",
-    fontWeight: "300",
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: "3px",
-    textDecoration: "none",
-    "& small": {
-      color: "#777",
-      fontSize: "65%",
-      fontWeight: "400",
-      lineHeight: "1"
-    }
-  },
-  closeButton: {
-    position: 'absolute',
-    right: '0.5em',
-    top: '0.5em',
-    color: 'grey',
-  }
 };
 
 class NewPedido extends Component {
@@ -86,7 +90,7 @@ class NewPedido extends Component {
         detallepedidos: [],
         actions: [],
         actionsInsumos: [],
-        insumos: [],
+
         insumoSeleccionado: 0,
         orderForm: {
             codigo: {
@@ -122,17 +126,7 @@ class NewPedido extends Component {
         pedidoInsertado: false
     }
 
-    getInsumos = () => {
-        axios.get('/list-insumos')
-          .then(res => {
-            if (res.data.success == 1) {
-              let resultado = [...res.data.result];
-              this.setState({
-                insumos: resultado
-              })
-            }
-          })
-      }
+
 
     checkValidity = (value, rules) => {
         let isValid = true;
@@ -188,22 +182,23 @@ class NewPedido extends Component {
 
     handleSubmitNewPedido = (event) => {
         event.preventDefault();
-       // alert("cod: " + event.target[0].value + " desc: " + event.target[1].value);
-        console.log(this.state.detallepedidos);
-        axios.post('/insert-pedidos', {
-            codigo: event.target[0].value,
-            descripcion: event.target[1].value,
-            detalle: this.state.detallepedidos
-        })
-            .then(res => {
-                if (res.data.success == 1) {
-                    // this.setState({pedidoInsertado: true});
-                    toast.success("Nuevo ingreso creado");
-                }
-                else {
-                    toast.error("Error");
-                }
+        // alert("cod: " + event.target[0].value + " desc: " + event.target[1].value);
+        if (this.state.formIsValid) {
+            axios.post('/insert-pedidos', {
+                codigo: event.target[0].value,
+                descripcion: event.target[1].value,
+                detalle: this.state.detallepedidos
             })
+                .then(res => {
+                    if (res.data.success == 1) {
+                        // this.setState({pedidoInsertado: true});
+                        toast.success("Nuevo ingreso creado");
+                    }
+                    else {
+                        toast.error("Error");
+                    }
+                })
+        }
     }
 
     openDialog() {
@@ -214,26 +209,25 @@ class NewPedido extends Component {
         this.setState({ open: false });
     }
 
-    onClickInsumo = (id,cantidad) => {
+    onClickInsumo = (id, cantidad) => {
         this.closeDialog();
 
-        axios.get('/select-insumos/'+id)
-          .then(res => {
-            if (res.data.success == 1) {
-              let resultado = [...res.data.result];
-              resultado[0].cantidad = cantidad;
-             let detallepedidoant = [...this.state.detallepedidos];
+        axios.get('/select-insumos/' + id)
+            .then(res => {
+                if (res.data.success == 1) {
+                    let resultado = [...res.data.result];
+                    resultado[0].cantidad = cantidad;
+                    let detallepedidoant = [...this.state.detallepedidos];
 
-             detallepedidoant = detallepedidoant.concat(resultado);
-              this.setState({
-                detallepedidos: [...detallepedidoant]
-              })
-            }
-            else
-            {
-                alert("error");
-            }
-          })
+                    detallepedidoant = detallepedidoant.concat(resultado);
+                    this.setState({
+                        detallepedidos: [...detallepedidoant]
+                    })
+                }
+                else {
+                    alert("error");
+                }
+            })
 
     }
 
@@ -245,28 +239,27 @@ class NewPedido extends Component {
         let detallepedidosant = [...this.state.detallepedidos];
         detallepedidosant.splice(detallepedidosant.indexOf(rowData), 1);
         this.setState({
-            detallepedidos : detallepedidosant
+            detallepedidos: detallepedidosant
         });
         //this.state.detallepedidos.splice(this.state.detallepedidos.indexOf(rowData), 1);
     }
 
 
     componentDidMount() {
-        this.state.actions=[
+        this.state.actions = [
             {
-              icon: 'delete',
-              tooltip: 'Eliminar Insumo',
-              onClick: (event, rowData) => this.deleteInsumo(rowData)
+                icon: 'delete',
+                tooltip: 'Eliminar Insumo',
+                onClick: (event, rowData) => this.deleteInsumo(rowData)
             }
-          ];
-        this.state.actionsInsumos=[
+        ];
+        this.state.actionsInsumos = [
             {
-              icon: 'save',
-              tooltip: 'Seleccionar Insumo',
-              onClick: (event, rowData) => this.insumoSelectHandler(rowData.id)
+                icon: 'save',
+                tooltip: 'Seleccionar Insumo',
+                onClick: (event, rowData) => this.insumoSelectHandler(rowData.id)
 
             }];
-        this.getInsumos();
     }
 
     render() {
@@ -279,106 +272,117 @@ class NewPedido extends Component {
         }
         return (
             <form onSubmit={(event) => {
-                this.handleSubmitNewPedido(event)
+                this.handleSubmitNewPedido(event);
 
-            }}>
-
-                <Card>
-                    <CardHeader color="primary">
-                        <h4 className={this.props.classes.cardTitleWhite} >Nuevo Ingreso</h4>
-                        <p className={this.props.classes.cardCategoryWhite} >
-                            Detalles del Ingreso
-          </p>
-                    </CardHeader>
-                    <CardBody>
+            } }>
+                <GridContainer>
 
 
-
-                        {formElementsArray.map(formElement => (
-                            <Input
-                                key={formElement.id}
-                                elementType={formElement.config.elementType}
-                                elementConfig={formElement.config.elementConfig}
-                                value={formElement.config.value}
-                                textValid={formElement.config.textValid}
-                                invalid={!formElement.config.valid}
-                                shouldValidate={formElement.config.validation}
-                                touched={formElement.config.touched}
-                                changed={(event) => this.inputChangedHandler(event, formElement.id)}
-                            />
-                        ))}
-
-                        <Button style={{ marginTop: '25px' }} color="primary" onClick={this.openDialog.bind(this)} > Agregar Insumo</Button>
-
-                        <Dialog open={this.state.open} onClose={this.closeDialog.bind(this)}>
-                            <DialogTitle>Seleccionar Insumo
-                            <IconButton aria-label="close" className={this.props.classes.closeButton}  onClick={this.closeDialog.bind(this)}>
-                                <CloseIcon />
-                              </IconButton>
-                            </DialogTitle>
+                    <GridItem xs={12} sm={10} md={10} >
+                        <Card>
+                            <CardHeader color="primary">
+                                <h4 className={this.props.classes.cardTitleWhite} >Nuevo Ingreso</h4>
+                                <p className={this.props.classes.cardCategoryWhite} >
+                                    Detalles del Ingreso
+                                  </p>
+                            </CardHeader>
+                            <CardBody>
 
 
-                            <DialogContent>
-                            { this.state.open &&
-                            <StepAgregarInsumo
-                            columnsInsumos = {columnsInsumos}
-                            insumos={this.state.insumos}
-                            orderForm={this.state.orderForm}
-                            onClickInsumo = {(id,cantidad) => this.onClickInsumo(id,cantidad)}
-                            />
-                          }
-                            </DialogContent>
-                        </Dialog>
 
-                        <MaterialTable
-                            columns={columnsInsumos}
-                            data={this.state.detallepedidos}
-                            title="Detalle Ingreso"
-                            actions={this.state.actions}
-                            editable={{
-                                onRowAdd: newData =>
-                                  new Promise((resolve, reject) => {
-                                    setTimeout(() => {
-                                      {
-                                        const data = this.state.detallepedidos;
-                                        data.push(newData);
-                                        this.setState({ data }, () => resolve());
-                                      }
-                                      resolve()
-                                    }, 1000)
-                                  }),
-                                onRowUpdate: (newData, oldData) =>
-                                  new Promise((resolve, reject) => {
-                                    setTimeout(() => {
-                                      {
-                                        const data = this.state.detallepedidos;
-                                        const index = data.indexOf(oldData);
-                                        data[index] = newData;
-                                        this.setState({ data }, () => resolve());
-                                      }
-                                      resolve()
-                                    }, 1000)
-                                  }),
-                                onRowDelete: oldData =>
-                                  new Promise((resolve, reject) => {
-                                    setTimeout(() => {
-                                      {
-                                        let data = this.state.detallepedidos;
-                                        const index = data.indexOf(oldData);
-                                        data.splice(index, 1);
-                                        this.setState({ data }, () => resolve());
-                                      }
-                                      resolve()
-                                    }, 1000)
-                                  }),
-                              }}
-                        />
+                                {formElementsArray.map(formElement => (
+                                    <Input
+                                        key={formElement.id}
+                                        elementType={formElement.config.elementType}
+                                        elementConfig={formElement.config.elementConfig}
+                                        value={formElement.config.value}
+                                        textValid={formElement.config.textValid}
+                                        invalid={!formElement.config.valid}
+                                        shouldValidate={formElement.config.validation}
+                                        touched={formElement.config.touched}
+                                        changed={(event) => this.inputChangedHandler(event, formElement.id)}
+                                        />
+                                ))}
 
-                        <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
-                        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={2000}/>
 
-                    </CardBody>
-                </Card>
+
+
+                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
+
+                             
+
+
+
+                                <MaterialTable
+                                    columns={columnsInsumos}
+                                    data={this.state.detallepedidos}
+                                    title="Listado de Insumos"
+                                    actions={this.state.actions}
+                                    editable={{
+
+                                        onRowUpdate: (newData, oldData) =>
+                                            new Promise((resolve, reject) => {
+                                                setTimeout(() => {
+                                                    {
+                                                        const data = this.state.detallepedidos;
+                                                        const index = data.indexOf(oldData);
+                                                        data[index] = newData;
+                                                        this.setState({ data }, () => resolve());
+                                                    }
+
+                                                }, 200)
+                                            }),
+                                        onRowDelete: oldData =>
+                                            new Promise((resolve, reject) => {
+                                                setTimeout(() => {
+                                                    {
+                                                        let data = this.state.detallepedidos;
+                                                        const index = data.indexOf(oldData);
+                                                        data.splice(index, 1);
+                                                        this.setState({ data }, () => resolve());
+                                                    }
+
+                                                }, 200)
+                                            }),
+                                    }}
+                                    components={{
+                                        Container: props => (
+                                            <Paper elevation={0} {...props} />
+                                        )
+                                    }}
+                                    />
+
+
+                                <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
+                                <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={2000} />
+
+                            </CardBody>
+                        </Card>
+                    </GridItem>
+
+                </GridContainer>
+                   <Dialog
+                                    open={this.state.open}
+                                    onClose={this.closeDialog.bind(this)}
+                                    fullWidth={true}
+                                    maxWidth={"sm"}
+                                    >
+                                    <DialogTitle>Seleccionar Insumo
+                            <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
+                                            <CloseIcon />
+                                        </IconButton>
+                                    </DialogTitle>
+
+
+                                    <DialogContent>
+                                        {this.state.open &&
+                                            <StepAgregarInsumo
+                                                columnsInsumos={columnsInsumos}
+                                                onClickInsumo={(id, cantidad) => this.onClickInsumo(id, cantidad)}
+                                                />
+                                        }
+                                    </DialogContent>
+                                </Dialog>
             </ form>
         );
     }
