@@ -83,11 +83,11 @@ const styles = {
     }
 };
 
-class NewPedido extends Component {
+class NewIngreso extends Component {
     state = {
-        pedidos: [],
+        ingresos: [],
         open: false,
-        detallepedidos: [],
+        detalleingresos: [],
         actions: [],
         actionsInsumos: [],
 
@@ -123,7 +123,7 @@ class NewPedido extends Component {
             }
         },
         formIsValid: false,
-        pedidoInsertado: false
+        ingresoInsertado: false
     }
 
 
@@ -184,10 +184,10 @@ class NewPedido extends Component {
         event.preventDefault();
         // alert("cod: " + event.target[0].value + " desc: " + event.target[1].value);
         if (this.state.formIsValid) {
-            axios.post('/insert-pedidos', {
+            axios.post('/insert-ingresos', {
                 codigo: event.target[0].value,
                 descripcion: event.target[1].value,
-                detalle: this.state.detallepedidos
+                detalle: this.state.detalleingresos
             })
                 .then(res => {
                     if (res.data.success == 1) {
@@ -217,11 +217,11 @@ class NewPedido extends Component {
                 if (res.data.success == 1) {
                     let resultado = [...res.data.result];
                     resultado[0].cantidad = cantidad;
-                    let detallepedidoant = [...this.state.detallepedidos];
+                    let detalleingresoant = [...this.state.detalleingresos];
 
-                    detallepedidoant = detallepedidoant.concat(resultado);
+                    detalleingresoant = detalleingresoant.concat(resultado);
                     this.setState({
-                        detallepedidos: [...detallepedidoant]
+                        detalleingresos: [...detalleingresoant]
                     })
                 }
                 else {
@@ -236,10 +236,10 @@ class NewPedido extends Component {
 
         //alert("eliminando: " + this.state.detallepedidos.indexOf(rowData));
         //data.splice(data.indexOf(oldData), 1);
-        let detallepedidosant = [...this.state.detallepedidos];
-        detallepedidosant.splice(detallepedidosant.indexOf(rowData), 1);
+        let detalleingresosant = [...this.state.detalleingresos];
+        detalleingresosant.splice(detalleingresosant.indexOf(rowData), 1);
         this.setState({
-            detallepedidos: detallepedidosant
+            detalleingresos: detalleingresosant
         });
         //this.state.detallepedidos.splice(this.state.detallepedidos.indexOf(rowData), 1);
     }
@@ -309,13 +309,13 @@ class NewPedido extends Component {
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
 
-                             
+
 
 
 
                                 <MaterialTable
                                     columns={columnsInsumos}
-                                    data={this.state.detallepedidos}
+                                    data={this.state.detalleingresos}
                                     title="Listado de Insumos"
                                     actions={this.state.actions}
                                     editable={{
@@ -324,7 +324,7 @@ class NewPedido extends Component {
                                             new Promise((resolve, reject) => {
                                                 setTimeout(() => {
                                                     {
-                                                        const data = this.state.detallepedidos;
+                                                        const data = this.state.detalleingresos;
                                                         const index = data.indexOf(oldData);
                                                         data[index] = newData;
                                                         this.setState({ data }, () => resolve());
@@ -336,7 +336,7 @@ class NewPedido extends Component {
                                             new Promise((resolve, reject) => {
                                                 setTimeout(() => {
                                                     {
-                                                        let data = this.state.detallepedidos;
+                                                        let data = this.state.detalleingresos;
                                                         const index = data.indexOf(oldData);
                                                         data.splice(index, 1);
                                                         this.setState({ data }, () => resolve());
@@ -389,4 +389,4 @@ class NewPedido extends Component {
 }
 
 
-export default withStyles(styles)(NewPedido);
+export default withStyles(styles)(NewIngreso);

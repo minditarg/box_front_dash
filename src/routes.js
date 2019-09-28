@@ -36,8 +36,8 @@ import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 import Users from "views/Users/Users.js";
 import Insumos from "views/Insumos/Insumos";
 import NewInsumo from "views/Insumos/NewInsumo";
-import Pedidos from "views/Pedidos/Pedidos";
-import NewPedido from "views/Pedidos/NewPedido";
+import Ingresos from "views/Ingresos/Ingresos";
+import NewIngreso from "views/Ingresos/NewIngreso";
 import Stock from "views/Stock/Stock";
 import AjusteStock from "views/Stock/AjusteStock";
 import Egresos from "views/Egresos/NewEgreso";
@@ -179,19 +179,19 @@ const dashboardRoutes = [
     open:'open3',
     dependences: [
       {
-      path: "/pedidos",
+      path: "/ingresos",
       name: "Listado",
       rtlName: "NP",
       icon: Person,
-      component: Pedidos,
+      component: Ingresos,
       layout: "/admin"
     },
     {
-      path: "/nuevopedido",
+      path: "/nuevoingreso",
       name: "Nuevo",
       rtlName: "NI",
       icon: Person,
-      component: NewPedido,
+      component: NewIngreso,
       layout: "/admin"
 
     }]

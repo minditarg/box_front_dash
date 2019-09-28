@@ -23,17 +23,17 @@ render: rowData => <img src={rowData.url} style={{width: 50, borderRadius: '50%'
                 1976-04-19T12:59-0500
             </Moment>
  */
-class Pedidos extends Component {
+class Ingresos extends Component {
     state = {
-         pedidos: [],
+         ingresos: [],
          actions: []
     };
 
 
     deleteMaterial = (id) => {
         //alert("You want to delete " + id);
-        axios.post('/delete-pedidos', {           
-                id:id        
+        axios.post('/delete-pedidos', {
+                id:id
         })
           .then(res => {
             if (res.data.success == 1) {
@@ -44,24 +44,24 @@ class Pedidos extends Component {
     }
 
     getPedidos = () => {
-        axios.get('/list-pedidos')
+        axios.get('/list-ingresos')
           .then(res => {
             if (res.data.success == 1) {
               let resultado = [...res.data.result];
               this.setState({
-                pedidos: resultado
+                ingresos: resultado
               })
             }
           })
       }
-    
+
       componentDidMount() {
 
           axios.get('/me')
             .then(res => {
-              if (res.data.success != 1) 
+              if (res.data.success != 1)
                 this.props.history.replace('/');
-              else 
+              else
               {
                   // TODO: REVISAR SI ESTO ESTA BIEN O COMO ES ASINCRONICO PUEDE NO CARGAR EL ACTIONS ANTES DE QUE MUESTRE LA TABLA CON EL getPedidos y al tocar el icono pinche
                 this.state.actions=[
@@ -79,7 +79,7 @@ class Pedidos extends Component {
                 this.getPedidos();
               }
             })
-         
+
       }
 
 
@@ -88,7 +88,7 @@ class Pedidos extends Component {
             <div style={{ maxWidth: "100%" }}>
                 <MaterialTable
                     columns={columns}
-                    data={this.state.pedidos}
+                    data={this.state.ingresos}
                     title="Ingresos"
                     actions={this.state.actions}
                 />
@@ -99,4 +99,4 @@ class Pedidos extends Component {
 }
 
 
-export default Pedidos;
+export default Ingresos;
