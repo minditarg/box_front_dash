@@ -62,8 +62,17 @@ export default function Sidebar(props) {
           key={key}
         >
         <ListItem button className={classes.itemLink } onClick={()=>handleClick(prop.open)}>
-
-         <InboxIcon className={classes.itemIcon} />
+        {typeof prop.icon === "string" ? (
+          <Icon
+          className={classes.itemIcon}
+          >
+            {prop.icon}
+          </Icon>
+        ) : (
+          <prop.icon
+          className={classes.itemIcon}
+          />
+        )}
 
        <ListItemText
        className={classes.itemText}

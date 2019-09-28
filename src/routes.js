@@ -24,6 +24,7 @@ import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 import Language from "@material-ui/icons/Language";
+import AllInbox from "@material-ui/icons/AllInbox";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
@@ -131,12 +132,13 @@ const dashboardRoutes = [
     groupComponent:true,
     name:'Stock',
     open:'openStock',
+    icon: Person,
     dependences: [
       {
       path: "/stock",
       name: "Listado",
       rtlName: "LI",
-      icon: Person,
+      icon: AllInbox,
       component: Stock,
       layout: "/admin"
     },
@@ -154,6 +156,7 @@ const dashboardRoutes = [
     groupComponent:true,
     name:'Insumos',
     open:'open2',
+    icon: Person,
     dependences: [
       {
       path: "/insumos",
@@ -177,6 +180,7 @@ const dashboardRoutes = [
     groupComponent:true,
     name:'Ingresos',
     open:'open3',
+    icon: Person,
     dependences: [
       {
       path: "/ingresos",
@@ -200,6 +204,7 @@ const dashboardRoutes = [
     groupComponent:true,
     name:'Modulos',
     open:'open4',
+    icon: Person,
     dependences: [
       {
       path: "/modulos",
