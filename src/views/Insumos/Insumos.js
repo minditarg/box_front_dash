@@ -13,6 +13,7 @@ import ModalDelete from "./ModalDelete";
 import EditInsumo from "./components/EditInsumo";
 
 import { ColumnsListado, StateListado } from "./VariablesState";
+import {localization} from "variables/general.js";
 
 
 
@@ -103,14 +104,15 @@ class Insumos extends Component {
                     columns={ColumnsListado}
                     data={this.state.insumos}
                     title="Insumos"
+                    localization={localization}
                     actions={[ {
                         icon: 'edit',
-                        tooltip: 'Edit User',
+                        tooltip: 'Editar Insumo',
                         onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarinsumo/' + rowData.id)
                       },
                       {
                         icon: 'delete',
-                        tooltip: 'Delete User',
+                        tooltip: 'Borrar Insumo',
                         onClick: (event, rowData) => this.deleteMaterial(rowData)
                       }]}
                 />

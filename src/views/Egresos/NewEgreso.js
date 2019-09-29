@@ -341,9 +341,9 @@ class NewEgreso extends Component {
 
                 <Card>
                     <CardHeader color="primary">
-                        <h4 className={this.props.classes.cardTitleWhite} >Nuevo Ingreso</h4>
+                        <h4 className={this.props.classes.cardTitleWhite} >Pañol</h4>
                         <p className={this.props.classes.cardCategoryWhite} >
-                            Detalles del Ingreso
+                            Asignación de insumos a Módulos
           </p>
                     </CardHeader>
                     <CardBody>

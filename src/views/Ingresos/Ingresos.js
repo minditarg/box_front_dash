@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CardActions } from "@material-ui/core";
 import Moment from 'react-moment';
+import {localization} from "variables/general.js";
 
 
 const columns = [{ title: "id", field: "id" },
@@ -64,18 +65,13 @@ class Ingresos extends Component {
               else
               {
                   // TODO: REVISAR SI ESTO ESTA BIEN O COMO ES ASINCRONICO PUEDE NO CARGAR EL ACTIONS ANTES DE QUE MUESTRE LA TABLA CON EL getPedidos y al tocar el icono pinche
-                this.state.actions=[
-                    {
-                      icon: 'edit',
-                      tooltip: 'Editar Ingreso',
-                      onClick: (event, rowData) => alert("Editing " + rowData.descripcion)
-                    },
-                    {
-                      icon: 'delete',
-                      tooltip: 'Eliminar Ingreso',
-                      onClick: (event, rowData) => this.deleteMaterial(rowData.id)
-                    }
-                  ];
+                // this.state.actions=[
+                //     {
+                //       icon: 'delete',
+                //       tooltip: 'Eliminar Ingreso',
+                //       onClick: (event, rowData) => this.deleteMaterial(rowData.id)
+                //     }
+                //   ];
                 this.getPedidos();
               }
             })
@@ -91,6 +87,8 @@ class Ingresos extends Component {
                     data={this.state.ingresos}
                     title="Ingresos"
                     actions={this.state.actions}
+
+                    localization={localization}
                 />
                  <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={2000}/>
             </div>

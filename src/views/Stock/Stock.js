@@ -18,6 +18,7 @@ import { ColumnsListado, StateListado } from "./VariablesState";
 import indigo from '@material-ui/core/colors/indigo';
 import lightGreen from '@material-ui/core/colors/lightGreen';
 import red from '@material-ui/core/colors/red';
+import {localization} from "variables/general.js";
 
 const styles = {
   rowTable: {
@@ -243,6 +244,7 @@ class Stock extends Component {
               columns={ColumnsListado}
               data={this.state.insumos}
               title="STOCK"
+              localization={localization}
               components={{
                 Cell: props => {
                   let styles = null
