@@ -18,9 +18,27 @@ var server = [
   'Sign contract for "What are conference organizers afraid of?"'
 ];
 
+var localization={
+  body: {
+    emptyDataSourceMessage: 'No se registran datos cargados'
+  },
+  toolbar: {
+    searchTooltip: 'Buscar'
+  },
+  pagination: {
+    labelRowsSelect: 'Filas',
+    labelDisplayedRows: ' {from}-{to} de {count}',
+    firstTooltip: 'Primer página',
+    previousTooltip: 'Página anterior',
+    nextTooltip: 'Página siguiente',
+    lastTooltip: 'Última página'
+  }
+}
+
 module.exports = {
   // these 3 are used to create the tasks lists in TasksCard - Dashboard view
   bugs,
   website,
-  server
+  server,
+  localization
 };

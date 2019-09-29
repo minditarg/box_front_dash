@@ -22,6 +22,11 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import ListIcon from '@material-ui/icons/List';
 import AdjustIcon from '@material-ui/icons/Adjust';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
+import PictureInPictureIcon from '@material-ui/icons/PictureInPicture';
+import ViewComfyIcon from '@material-ui/icons/ViewComfy';
+import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
+//import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
 import BubbleChart from "@material-ui/icons/BubbleChart";
 import LocationOn from "@material-ui/icons/LocationOn";
@@ -125,10 +130,10 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/egresos",
+    path: "/panol",
     name: "Pañol",
     rtlName: "Pa",
-    icon: Person,
+    icon: ArrowForwardIosIcon,
     component: Egresos,
     layout: "/admin"
   },
@@ -136,7 +141,7 @@ const dashboardRoutes = [
     groupComponent:true,
     name:'Stock',
     open:'openStock',
-    icon: Person,
+    icon: FormatAlignJustifyIcon,
     dependences: [
       {
       path: "/stock",
@@ -160,7 +165,7 @@ const dashboardRoutes = [
     groupComponent:true,
     name:'Insumos',
     open:'open2',
-    icon: Person,
+    icon: ViewComfyIcon,
     dependences: [
       {
       path: "/insumos",
@@ -185,7 +190,6 @@ const dashboardRoutes = [
     name:'Ingresos',
     icon: LocalShippingIcon,
     open:'open3',
-    icon: Person,
     dependences: [
       {
       path: "/ingresos",
@@ -209,7 +213,7 @@ const dashboardRoutes = [
     groupComponent:true,
     name:'Modulos',
     open:'open4',
-    icon: Person,
+    icon: PictureInPictureIcon,
     dependences: [
       {
       path: "/modulos",

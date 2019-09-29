@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CardActions } from "@material-ui/core";
 import Moment from 'react-moment';
+import {localization} from "variables/general.js";
 
 
 const columns = [{ title: "id", field: "id" },
@@ -92,6 +93,7 @@ class Modulos extends Component {
                     data={this.state.modulos}
                     title="Modulos"
                     actions={this.state.actions}
+                    localization={localization}
                 />
                  <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={2000}/>
             </div>

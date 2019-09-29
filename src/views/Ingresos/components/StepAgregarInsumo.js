@@ -69,6 +69,8 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const handleNext = () => {
         let orderFormAlt = { ...orderForm };
         orderFormAlt.cantidad.value = '';
+        
+       // alert("handleNext");
         setOrderForm(orderFormAlt);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
     };
