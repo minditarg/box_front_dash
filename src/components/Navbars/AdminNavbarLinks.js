@@ -47,6 +47,11 @@ export default function AdminNavbarLinks(props) {
   const handleCloseProfile = () => {
     setOpenProfile(null);
   };
+
+  const handleCloseSession = () => {
+    setOpenProfile(null);
+    props.handleCloseSession();
+  };
   return (
     <div>
       <div className={classes.searchWrapper}>
@@ -218,7 +223,7 @@ export default function AdminNavbarLinks(props) {
                     <Divider light />
                   */}
                     <MenuItem
-                      onClick={handleCloseProfile}
+                      onClick={handleCloseSession}
                       className={classes.dropdownItem}
                     >
                       Cerrar Sesión

@@ -1,12 +1,14 @@
 import React from 'react';
 
 import { makeStyles } from "@material-ui/core/styles";
-
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import CommentIcon from '@material-ui/icons/Comment';
@@ -14,6 +16,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Search from '@material-ui/icons/Search';
 
 import Pagination from "material-ui-flat-pagination";
 
@@ -80,6 +83,9 @@ return (
     </CardHeader>
     <CardBody>
           <div style={{ position: 'relative', paddingBottom: '2em' }}>
+
+            <Grid container spacing={1} alignItems="flex-end">
+            <Grid item>
             <IconButton
               aria-label="more"
               aria-controls="long-menu"
@@ -89,6 +95,14 @@ return (
               >
               <MoreVertIcon />
             </IconButton>
+            </Grid>
+            <Grid item>
+              <Search />
+            </Grid>
+            <Grid item>
+              <TextField id="input-with-icon-grid" label="Buscar Usuario" />
+            </Grid>
+          </Grid>
           </div>
           <Menu
             id="simple-menu"
@@ -113,7 +127,6 @@ return (
           <List >
             {props.users.map((value, index) => {
               const labelId = `checkbox-list-label-${index}`;
-
               return ([
                 <ListItem key={index} role={undefined} dense button onClick={() => props.handleToggle(value)}>
                   <ListItemIcon>

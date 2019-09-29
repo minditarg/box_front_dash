@@ -39,7 +39,10 @@ export default function HorizontalLabelPositionBelowStepper(props) {
             elementConfig: {
                 type: 'number',
                 label: 'Cantidad',
-                fullWidth: true
+                fullWidth: true,
+                inputProps: {
+                  autoFocus:true
+                }
             },
             value: '',
             validation: {

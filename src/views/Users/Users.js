@@ -30,11 +30,6 @@ class Users extends Component {
       }
 
 
-////////////////////////
-////////////////////////
-//METODOS PARA MENU CONTEXTUAL
-////////////////////////
-////////////////////////
 
       handleToggle = value => {
         const currentIndex = this.state.checked.indexOf(value);
@@ -128,18 +123,20 @@ class Users extends Component {
             }
           })
         }
-      
+
 
      editSingleUser = value => {
     this.props.history.push(this.props.match.url + '/editarusuario/' + value);
   }
-     
+
     handlePagination = offset => {
       this.setState({
         offset:offset
       })
 
     }
+
+    
 
 
 
@@ -180,7 +177,7 @@ class Users extends Component {
                   <Route path={ this.props.match.url + "/nuevousuario"}  render={() =>
 
                    <NewUser
-                 
+
 
                  />}
                   />

@@ -100,7 +100,14 @@ export default function Admin({ ...rest }) {
   }
   makeBrand(arrayCopia);
 
-
+  const handleCloseSession = ()=> {
+    axios.get('/logout').then(res =>{
+          if(res.data.success==1){
+            setUser(null);
+            rest.history.replace('/');
+          }
+    })
+  }
 
   const handleImageClick = image => {
     setImage(image);
@@ -151,7 +158,6 @@ export default function Admin({ ...rest }) {
             .then(res => {
               if (res.data.success == 1) {
                   setUser(res.data.user);
-                  console.log(res.data.user);
               } else if (res.data.success == 3) {
                 //rest.history.replace('/');
               }
@@ -183,6 +189,7 @@ export default function Admin({ ...rest }) {
         />
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
+          handleCloseSession={()=>handleCloseSession()}
           user={user}
           routes={routes}
           handleDrawerToggle={handleDrawerToggle}
