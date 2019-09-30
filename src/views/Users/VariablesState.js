@@ -21,9 +21,9 @@ export const StateListUsers = {
         }
     },
     modalOpen: false,
+    openDeleteDialog:false,
+    deleteRowData:null
 
-
-    actionUpdateUsersConst: false
 
 
 }
@@ -95,8 +95,8 @@ export const StateEditUser = {
     },
     userEdit: null,
     editFormIsValid: false,
-
     successSubmitEdit: null,
+    disableAllButtons:false
 
 }
 
@@ -183,7 +183,8 @@ export const StateNewUser = {
     },
 
     formIsValid: false,
-    successSubmit: null
+    successSubmit: null,
+    disableAllButtons:false
 }
 
 

@@ -5,11 +5,17 @@ import { Route, Switch ,Link} from 'react-router-dom';
 // core components
 import MaterialTable, { MTableCell, MTableBodyRow} from "material-table";
 import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/styles';
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
+import CardHeader from "components/Card/CardHeader.js";
+import CardBody from "components/Card/CardBody.js";
+import Card from "components/Card/Card.js";
+import Paper from '@material-ui/core/Paper';
 
 import NewUser from "./components/NewUser";
 import EditUser from "./components/EditUser";
+import ModalDelete from "./components/ModalDelete"
 import {localization} from "variables/general.js";
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -17,7 +23,35 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { StateListUsers,ColumnsListado } from "./VariablesState";
 
-const limit = 10;
+const styles = {
+  cardCategoryWhite: {
+    "&,& a,& a:hover,& a:focus": {
+      color: "rgba(255,255,255,.62)",
+      margin: "0",
+      fontSize: "14px",
+      marginTop: "0",
+      marginBottom: "0"
+    },
+    "& a,& a:hover,& a:focus": {
+      color: "#FFFFFF"
+    }
+  },
+  cardTitleWhite: {
+    color: "#FFFFFF",
+    marginTop: "0px",
+    minHeight: "auto",
+    fontWeight: "300",
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    marginBottom: "3px",
+    textDecoration: "none",
+    "& small": {
+      color: "#777",
+      fontSize: "65%",
+      fontWeight: "400",
+      lineHeight: "1"
+    }
+  }
+};
 
 
 class Users extends Component {
@@ -26,7 +60,6 @@ class Users extends Component {
 
       componentDidMount() {
         this.getUsersAdmin();
-
       }
 
 
@@ -136,13 +169,46 @@ class Users extends Component {
 
     }
 
+    handleDeleteUser = rowData => {
+      this.setState({
+        openDeleteDialog:false
+      })
+        axios.post('/delete-user',{id:rowData.id}) .then(res => {
+              let users = [...this.state.users]
+              users = users.filter(elem =>{
+                if(elem.id == rowData.id)
+                  return false;
+
+                return true
+
+              })
+              this.setState({
+                users: users
+              })
+
+        })
+
+    }
+
+    handleDeleteButton = rowData => {
+      this.setState({
+        openDeleteDialog:true,
+        deleteRowData:rowData
+      })
+    }
+
+    handleModalClose() {
+      this.setState({
+        openDeleteDialog:false,
+        deleteRowData:null
+      })
+    }
+
 
 
 
 
     render() {
-      let totalUsers = this.state.users.length;
-      let users = this.state.users.slice(this.state.offset ,this.state.offset + limit);
 
         return (
           <GridContainer>
@@ -150,7 +216,14 @@ class Users extends Component {
 
             <Switch>
                   <Route path={ this.props.match.url } exact  render={() =>
-
+                    <Card>
+                      <CardHeader color="primary">
+                        <h4 className={this.props.classes.cardTitleWhite} >Usuarios</h4>
+                        <p className={this.props.classes.cardCategoryWhite} >
+                          Listado de Usuarios
+                      </p>
+                      </CardHeader>
+                      <CardBody>
                     <MaterialTable
                       columns={ColumnsListado}
                       data={this.state.users}
@@ -159,15 +232,23 @@ class Users extends Component {
 
                       actions={[ {
                           icon: 'edit',
-                          tooltip: 'Editar Insumo',
+                          tooltip: 'Editar Usuario',
                           onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarusuario/' + rowData.id)
                         },
                         {
                           icon: 'delete',
-                          tooltip: 'Borrar Insumo',
-                        
+                          tooltip: 'Borrar Ususario',
+                          onClick:(event, rowData) => this.handleDeleteButton(rowData)
+
                         }]}
+                        components={{
+                            Container: props => (
+                                <Paper elevation={0} {...props} />
+                            )
+                        }}
                       />
+                      </CardBody>
+                      </Card>
 
 
 
@@ -202,6 +283,13 @@ class Users extends Component {
 
 
             </GridItem>
+            <ModalDelete
+              openDeleteDialog={this.state.openDeleteDialog}
+              deleteRowData={this.state.deleteRowData}
+
+              handleClose={()=>this.handleModalClose()}
+              handleDelete={(rowData)=>this.handleDeleteUser(rowData)}
+             />
 
             <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={3000}/>
           </GridContainer>
@@ -211,4 +299,4 @@ class Users extends Component {
 }
 
 
-export default Users;
+export default withStyles(styles)(Users);

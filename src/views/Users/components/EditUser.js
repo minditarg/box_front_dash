@@ -134,23 +134,33 @@ class EditUser extends Component {
   handleSubmitEditUser = (event) => {
 
     event.preventDefault();
+    this.setState({
+     disableAllButtons:true
+    })
     axios.post(`/update-user`, { id: this.state.userEdit.id, nombre: this.state.editUserForm.nombre.value, id_users_type: this.state.editUserForm.tipoUser.value })
       .then(res => {
 
         let estadoAlt = null
-        if (res.data.success == 0) {
-          estadoAlt = false
-        }
+
         if (res.data.success == 1) {
           estadoAlt = true
+        } else {
+          estadoAlt = false
         }
 
         if (estadoAlt) {
           toast.success("El Usuario se ha modificado con exito!");
           this.setState({
             successSubmitEdit: true,
-            editFormIsValid: false
+            editFormIsValid: false,
+            disableAllButtons:false
           })
+        } else {
+
+            toast.error(res.data.error_msj);
+            this.setState({
+              disableAllButtons:false
+            })
         }
       })
 
@@ -184,7 +194,7 @@ class EditUser extends Component {
   }
 
 
- 
+
 
 
   resetEditForm = () => {
@@ -254,7 +264,7 @@ class EditUser extends Component {
               ))}
             </div>
 
-            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/usuarios')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.editFormIsValid} type="submit" ><Save /> Guardar</Button>
+            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/usuarios')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.editFormIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
 
           </CardBody>

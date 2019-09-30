@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Input from "components/Input/Input";
+import moment from "moment";
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -246,6 +247,7 @@ class NewIngreso extends Component {
 
 
     componentDidMount() {
+      console.log(moment("25/06/2019","DD/MM/YYYY").format('DD-MM-YYYY'));
         this.state.actions = [
             {
                 icon: 'delete',
