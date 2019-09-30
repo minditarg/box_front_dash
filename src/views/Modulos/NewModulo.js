@@ -25,7 +25,7 @@ import Dialog from '@material-ui/core/Dialog';
 import StepAgregarInsumo from './components/StepAgregarInsumo';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import {localization} from "variables/general.js";
 
 // const columns = [{ title: "id", field: "id" },
 // { title: "Usuario", field: "username" },
@@ -34,7 +34,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // { title: "Fecha", field: "fecha" }
 // ];
 
-const columnsInsumos = [{ title: "id", field: "id", editable: 'never' },
+const columnsInsumos = [
 { title: "Codigo", field: "codigo", editable: 'never' },
 { title: "Descripcion", field: "descripcion", editable: 'never' },
 { title: "Activo", field: "activo", editable: 'never' },
@@ -334,6 +334,7 @@ class NewModulo extends Component {
                             data={this.state.detallemodulos}
                             title="Detalle Modulo"
                             actions={this.state.actions}
+                            localization={localization}
                             editable={{
                                 onRowAdd: newData =>
                                   new Promise((resolve, reject) => {

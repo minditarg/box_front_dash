@@ -11,11 +11,11 @@ import Moment from 'react-moment';
 import {localization} from "variables/general.js";
 
 
-const columns = [{ title: "id", field: "id" },
-{ title: "Usuario", field: "username" },
+const columns = [
 { title: "Identificador", field: "identificador" },
+{ title: "Fecha Identificador", field: "fecha", render: rowData => <Moment format="DD/MM/YYYY">{rowData.fecha_identificador}</Moment> },
 { title: "Proveedor", field: "proveedor" },
-{ title: "Fecha", field: "fecha", render: rowData => <Moment format="DD/MM/YYYY - HH:mm">{rowData.fecha}</Moment> }
+{ title: "Usuario", field: "username" },
 ];
 
 /*

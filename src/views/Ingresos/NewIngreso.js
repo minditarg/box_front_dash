@@ -33,6 +33,17 @@ import Paper from '@material-ui/core/Paper';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+
+import moment from "moment";
+import {localization} from "variables/general";
+
+
 
 // const columns = [{ title: "id", field: "id" },
 // { title: "Usuario", field: "username" },
@@ -41,7 +52,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // { title: "Fecha", field: "fecha" }
 // ];
 
-const columnsInsumos = [{ title: "id", field: "id", editable: 'never' },
+const columnsInsumos = [
 { title: "Codigo", field: "codigo", editable: 'never' },
 { title: "Descripcion", field: "descripcion", editable: 'never' },
 { title: "Cantidad", field: "cantidad", type: 'numeric' }
@@ -92,6 +103,8 @@ class NewIngreso extends Component {
         actions: [],
         actionsInsumos: [],
 
+        selectedDate: new Date(), 
+
         insumoSeleccionado: 0,
         orderForm: {
             codigo: {
@@ -127,7 +140,12 @@ class NewIngreso extends Component {
         ingresoInsertado: false
     }
 
-
+    handleDateChange = (date) => {
+        this.setState({
+            selectedDate: date
+        }) 
+        
+    };
 
     checkValidity = (value, rules) => {
         let isValid = true;
@@ -183,17 +201,20 @@ class NewIngreso extends Component {
 
     handleSubmitNewPedido = (event) => {
         event.preventDefault();
-        // alert("cod: " + event.target[0].value + " desc: " + event.target[1].value);
+        console.log(event);
+       // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
             axios.post('/insert-ingresos', {
-                codigo: event.target[0].value,
-                descripcion: event.target[1].value,
+                fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
+                identificador: event.target[2].value,
+                proveedor: event.target[3].value,
                 detalle: this.state.detalleingresos
             })
                 .then(res => {
                     if (res.data.success == 1) {
                         // this.setState({pedidoInsertado: true});
                         toast.success("Nuevo ingreso creado");
+                        this.props.history.push("/admin/ingresos");
                     }
                     else {
                         toast.error("Error");
@@ -290,7 +311,19 @@ class NewIngreso extends Component {
                             </CardHeader>
                             <CardBody>
 
-
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDatePicker
+                                    margin="normal"
+                                    id="date-picker-dialog"
+                                    label="Fecha"
+                                    format="MM/dd/yyyy"
+                                    value={this.state.selectedDate}
+                                    onChange={this.handleDateChange}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                                </MuiPickersUtilsProvider>
 
                                 {formElementsArray.map(formElement => (
                                     <Input
@@ -306,20 +339,14 @@ class NewIngreso extends Component {
                                         />
                                 ))}
 
-
-
-
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
-
-
-
-
 
                                 <MaterialTable
                                     columns={columnsInsumos}
                                     data={this.state.detalleingresos}
                                     title="Listado de Insumos"
                                     actions={this.state.actions}
+                                    localization={localization}
                                     editable={{
 
                                         onRowUpdate: (newData, oldData) =>
