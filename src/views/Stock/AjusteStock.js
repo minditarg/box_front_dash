@@ -22,10 +22,10 @@ import Dialog from '@material-ui/core/Dialog';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {localization} from "variables/general.js";
 
 
-
-const columnsInsumos = [{ title: "id", field: "id", editable: 'never' },
+const columnsInsumos = [
 { title: "Codigo", field: "codigo", editable: 'never' },
 { title: "Descripcion", field: "descripcion", editable: 'never' },
 { title: "Activo", field: "activo", editable: 'never' },
@@ -299,6 +299,7 @@ class AjusteStock extends Component {
                                     columns={columnsInsumos}
                                     data={this.state.insumos}
                                     title="Insumo"
+                                    localization={localization}
                                     onRowClick={(event, rowData) => this.insumoSelectHandler(rowData.id)}
                                     />
                                 <Button onClick={this.closeDialog.bind(this)} >Cerrar</Button>

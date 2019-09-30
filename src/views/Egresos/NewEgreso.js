@@ -22,6 +22,7 @@ import Dialog from '@material-ui/core/Dialog';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {localization} from "variables/general.js";
 
 
 // const columns = [{ title: "id", field: "id" },
@@ -374,6 +375,7 @@ class NewEgreso extends Component {
                                     data={this.state.insumos}
                                     title="Ingreso"
                                     actions={this.state.actionsInsumos}
+                                    localization={localization}
                                 />
                                 <Button onClick={this.closeDialog.bind(this)} >Cerrar</Button>
                             </DialogContent>
@@ -384,6 +386,7 @@ class NewEgreso extends Component {
                             data={this.state.detalleegresos}
                             title="Detalle Ingreso"
                             actions={this.state.actions}
+                            localization={localization}
                             editable={{
                                 onRowAdd: newData =>
                                   new Promise((resolve, reject) => {

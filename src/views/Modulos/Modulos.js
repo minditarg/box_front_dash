@@ -11,7 +11,7 @@ import Moment from 'react-moment';
 import {localization} from "variables/general.js";
 
 
-const columns = [{ title: "id", field: "id" },
+const columns = [
 { title: "Descripcion", field: "descripcion" },
 { title: "Estado", field: "descripcion_estado" },
 { title: "Codigo", field: "codigo" },

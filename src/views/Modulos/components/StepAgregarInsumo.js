@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import MaterialTable,{MTableBodyRow } from "material-table";
 import Input from "components/Input/Input";
+import {localization} from "variables/general.js";
 
 var idInsumo = null;
 
@@ -36,6 +37,7 @@ function getStepContent(stepIndex, props, formElementsArray,handleNext,inputChan
                 columns={props.columnsInsumos}
                 data={props.insumos}
                 title="Insumo"
+                localization={localization}
                 onRowClick={(event, rowData) => {
 
                    idInsumo = rowData.id;

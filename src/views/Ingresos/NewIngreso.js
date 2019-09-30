@@ -39,7 +39,9 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-import moment from "moment"
+import moment from "moment";
+import {localization} from "variables/general";
+
 
 
 // const columns = [{ title: "id", field: "id" },
@@ -49,7 +51,7 @@ import moment from "moment"
 // { title: "Fecha", field: "fecha" }
 // ];
 
-const columnsInsumos = [{ title: "id", field: "id", editable: 'never' },
+const columnsInsumos = [
 { title: "Codigo", field: "codigo", editable: 'never' },
 { title: "Descripcion", field: "descripcion", editable: 'never' },
 { title: "Cantidad", field: "cantidad", type: 'numeric' }
@@ -342,6 +344,7 @@ class NewIngreso extends Component {
                                     data={this.state.detalleingresos}
                                     title="Listado de Insumos"
                                     actions={this.state.actions}
+                                    localization={localization}
                                     editable={{
 
                                         onRowUpdate: (newData, oldData) =>

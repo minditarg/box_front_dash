@@ -8,7 +8,7 @@ export const StateListado = {
 
 
 }
-export const ColumnsListado = [{ title: "id", field: "id" },
+export const ColumnsListado = [
 { title: "Codigo", field: "codigo" },
 { title: "Descripcion", field: "descripcion" },
 { title: "Unidad", field: "unidad" },

@@ -9,6 +9,7 @@ import MaterialTable, { MTableBodyRow } from "material-table";
 import Input from "components/Input/Input";
 import axios from "axios";
 import Paper from '@material-ui/core/Paper';
+import {localization} from "variables/general.js";
 
 
 
@@ -147,6 +148,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                     columns={props.columnsInsumos}
                     data={insumos}
                     title="Insumo"
+                    localization={localization}
                     onRowClick={(event, rowData) => {
 
                         setRowInsumo(rowData);
