@@ -54,25 +54,39 @@ class NewUser extends Component {
 
   handleSubmitNewUser = (event) => {
     event.preventDefault();
+    this.setState({
+      disableAllButtons:true
+    })
     axios.post(`/signup-json`, { username: this.state.newUserForm.username.value, password: this.state.newUserForm.password.value, nombre: this.state.newUserForm.nombre.value, id_users_type: this.state.newUserForm.tipoUser.value })
       .then(res => {
         let estadoAlt = null
-        if (res.data.success == 0) {
-          estadoAlt = false
-        }
+
         if (res.data.success == 1) {
           estadoAlt = true
+        } else {
+          estadoAlt = false
         }
         if (estadoAlt) {
-          debugger;
           toast.success("El usuario se ha creado con exito!");
           this.setState({
             successSubmit: true,
             formIsValid: false,
+            disableAllButtons:false
           })
           this.resetNewForm();
 
+        } else {
+          toast.error(res.data.error_msj);
+          this.setState({
+            disableAllButtons:false
+          })
         }
+      },err => {
+        toast.error(err.message);
+        this.setState({
+          disableAllButtons:false
+        })
+
       })
   }
 
