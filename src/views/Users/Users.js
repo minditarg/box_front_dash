@@ -176,6 +176,7 @@ class Users extends Component {
         openDeleteDialog:false
       })
         axios.post('/delete-user',{id:rowData.id}) .then(res => {
+          if(res.data.success ==1) {
               let users = [...this.state.users]
               users = users.filter(elem =>{
                 if(elem.id == rowData.id)
@@ -184,9 +185,14 @@ class Users extends Component {
                 return true
 
               })
+              toast.success("El usuario se ha eliminado con exito!");
               this.setState({
                 users: users
               })
+            } else {
+              toast.error(res.data.error_msj);
+
+            }
 
         })
 

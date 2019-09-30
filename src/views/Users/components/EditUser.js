@@ -162,6 +162,11 @@ class EditUser extends Component {
               disableAllButtons:false
             })
         }
+      },err =>{
+          toast.error(err.message);
+          this.setState({
+            disableAllButtons:false
+          })
       })
 
   }

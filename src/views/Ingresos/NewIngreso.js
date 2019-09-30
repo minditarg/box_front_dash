@@ -102,7 +102,7 @@ class NewIngreso extends Component {
         actions: [],
         actionsInsumos: [],
 
-        selectedDate: new Date(), 
+        selectedDate: new Date(),
 
         insumoSeleccionado: 0,
         orderForm: {
@@ -142,8 +142,8 @@ class NewIngreso extends Component {
     handleDateChange = (date) => {
         this.setState({
             selectedDate: date
-        }) 
-        
+        })
+
     };
 
     checkValidity = (value, rules) => {
