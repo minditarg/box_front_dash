@@ -23,7 +23,8 @@ var localization={
     emptyDataSourceMessage: 'No se registran datos cargados'
   },
   toolbar: {
-    searchTooltip: 'Buscar'
+    searchTooltip: 'Buscar',
+    searchPlaceholder: 'Buscar' 
   },
   pagination: {
     labelRowsSelect: 'Filas',

@@ -3,19 +3,19 @@ import axios from "axios";
 
 import { Route, Switch ,Link} from 'react-router-dom';
 // core components
-import MaterialTable, { MTableCell, MTableBodyRow} from "material-table";
+
 import Typography from '@material-ui/core/Typography';
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 
+import ListUsers from "./components/ListUsers";
 import NewUser from "./components/NewUser";
 import EditUser from "./components/EditUser";
-import {localization} from "variables/general.js";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { StateListUsers,ColumnsListado } from "./VariablesState";
+import { StateListUsers } from "./VariablesState";
 
 const limit = 10;
 
@@ -136,7 +136,7 @@ class Users extends Component {
 
     }
 
-
+    
 
 
 
@@ -151,24 +151,25 @@ class Users extends Component {
             <Switch>
                   <Route path={ this.props.match.url } exact  render={() =>
 
-                    <MaterialTable
-                      columns={ColumnsListado}
-                      data={this.state.users}
-                      title="Usuarios"
-                      localization={localization}
+                    <ListUsers
+                        offset = {this.state.offset}
+                        limit={limit}
+                        totalUsers = {totalUsers}
+                        menuContext={this.state.menuContext}
+                        botonesAcciones={this.state.botonesAcciones}
+                        users={users}
+                        checked={this.state.checked}
 
-                      actions={[ {
-                          icon: 'edit',
-                          tooltip: 'Editar Insumo',
-                          onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarusuario/' + rowData.id)
-                        },
-                        {
-                          icon: 'delete',
-                          tooltip: 'Borrar Insumo',
-                        
-                        }]}
-                      />
+                        menuHandleOpen={(event) => this.menuHandleOpen(event)}
+                        menuHandleClose={(event) => this.menuHandleClose(event)}
+                        menuHandleItemClick={(keyName) => this.menuHandleItemClick(keyName)}
+                        handleToggle={(value) => this.handleToggle(value)}
+                        editSingleUser={(value) => this.editSingleUser(value)}
+                        handlePagination={(offset) => { this.handlePagination(offset)}}
+                       reloadUsers={this.reloadUsers}
 
+
+                    />
 
 
 
