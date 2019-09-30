@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/styles';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
-import MaterialTable, { MTableCell, MTableBodyRow} from "material-table";
+import MaterialTable, { MTableCell, MTableBodyRow } from "material-table";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import { CardActions } from "@material-ui/core";
 import { ToastContainer, toast } from 'react-toastify';
@@ -18,13 +18,45 @@ import { ColumnsListado, StateListado } from "./VariablesState";
 import indigo from '@material-ui/core/colors/indigo';
 import lightGreen from '@material-ui/core/colors/lightGreen';
 import red from '@material-ui/core/colors/red';
-import {localization} from "variables/general.js";
+import { localization } from "variables/general.js";
+
+import CardHeader from "components/Card/CardHeader.js";
+import CardBody from "components/Card/CardBody.js";
+import Card from "components/Card/Card.js";
+import Paper from '@material-ui/core/Paper';
 
 const styles = {
   rowTable: {
-    "&:hover":{
-     backgroundColor:"lightgray"
-   }
+    "&:hover": {
+      backgroundColor: "lightgray"
+    }
+  },
+  cardCategoryWhite: {
+    "&,& a,& a:hover,& a:focus": {
+      color: "rgba(255,255,255,.62)",
+      margin: "0",
+      fontSize: "14px",
+      marginTop: "0",
+      marginBottom: "0"
+    },
+    "& a,& a:hover,& a:focus": {
+      color: "#FFFFFF"
+    }
+  },
+  cardTitleWhite: {
+    color: "#FFFFFF",
+    marginTop: "0px",
+    minHeight: "auto",
+    fontWeight: "300",
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    marginBottom: "3px",
+    textDecoration: "none",
+    "& small": {
+      color: "#777",
+      fontSize: "65%",
+      fontWeight: "400",
+      lineHeight: "1"
+    }
   }
 
 };
@@ -240,54 +272,67 @@ class Stock extends Component {
       <Switch>
         <Route path={this.props.match.url} exact render={() =>
           <div style={{ maxWidth: "100%" }}>
-            <MaterialTable
-              columns={ColumnsListado}
-              data={this.state.insumos}
-              title="STOCK"
-              localization={localization}
-              components={{
-                Cell: props => {
-                  let styles = null
-                  if (props.columnDef.field == 'cantidad') {
-                    if (props.rowData.cantidad - props.rowData.minimo < 0) {
-                      styles = { backgroundColor: red[700], color: 'white' }
-                    } else {
-                       styles = { backgroundColor: lightGreen[700], color: 'white' }
-                    }
-                  }
-                  return (
+            <Card>
+              <CardHeader color="primary">
+                <h4 className={this.props.classes.cardTitleWhite} >STOCK</h4>
+                <p className={this.props.classes.cardCategoryWhite} >
+                  Listado de Insumos
+                      </p>
+              </CardHeader>
+              <CardBody>
+                <MaterialTable
+                  columns={ColumnsListado}
+                  data={this.state.insumos}
+                  title=""
+                  localization={localization}
+                  components={{
+                    Cell: props => {
+                      let styles = null
+                      if (props.columnDef.field == 'cantidad') {
+                        if (props.rowData.cantidad - props.rowData.minimo < 0) {
+                          styles = { backgroundColor: red[700], color: 'white' }
+                        } else {
+                          styles = { backgroundColor: lightGreen[500], color: 'white' }
+                        }
+                      }
+                      return (
 
-                    <MTableCell  style={styles} {...props}  />
+                        <MTableCell style={styles} {...props} />
 
+                      )
+                    },
+                    Row: props => {
+                      return (
+                        <MTableBodyRow className={this.props.classes.rowTable} {...props} />
+
+                      )
+
+                    },
+                    Container: props => (
+                      <Paper elevation={0} {...props} />
                   )
-                },
-                Row: props => {
-                  return(
-                    <MTableBodyRow className={this.props.classes.rowTable} {...props}   />
+                  }}
 
-                  )
-
-                }
-              }}
-              options={{
-                exportButton: true,
-                headerStyle: {
-                  backgroundColor: indigo[700],
-                  color: '#FFF'
-                },
-              }}
-              // actions={[ {
-              //     icon: 'edit',
-              //     tooltip: 'Edit User',
-              //     onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarinsumo/' + rowData.id)
-              //   },
-              //   {
-              //     icon: 'delete',
-              //     tooltip: 'Delete User',
-              //     onClick: (event, rowData) => this.deleteMaterial(rowData)
-              //   }]}
-              />
-
+                  options={{
+                    exportButton: true,
+                    headerStyle: {
+                      backgroundColor: lightGreen[700],
+                      color: '#FFF'
+                    },
+                  }}
+                // actions={[ {
+                //     icon: 'edit',
+                //     tooltip: 'Edit User',
+                //     onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarinsumo/' + rowData.id)
+                //   },
+                //   {
+                //     icon: 'delete',
+                //     tooltip: 'Delete User',
+                //     onClick: (event, rowData) => this.deleteMaterial(rowData)
+                //   }]}
+                />
+              </CardBody>
+            </Card>
           </div>} />
 
       </Switch>,

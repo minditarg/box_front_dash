@@ -23,6 +23,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { StateListUsers,ColumnsListado } from "./VariablesState";
 
+import lightGreen from '@material-ui/core/colors/lightGreen';
+
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -227,7 +229,7 @@ class Users extends Component {
                     <MaterialTable
                       columns={ColumnsListado}
                       data={this.state.users}
-                      title="Usuarios"
+                      title=""
                       localization={localization}
 
                       actions={[ {
@@ -245,6 +247,14 @@ class Users extends Component {
                             Container: props => (
                                 <Paper elevation={0} {...props} />
                             )
+                        }}
+
+                        options={{
+                          exportButton: true,
+                          headerStyle: {
+                            backgroundColor: lightGreen[700],
+                            color: '#FFF'
+                          },
                         }}
                       />
                       </CardBody>

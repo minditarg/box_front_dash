@@ -40,7 +40,6 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-import moment from "moment";
 import {localization} from "variables/general";
 
 
