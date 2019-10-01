@@ -13,14 +13,15 @@ import yellow from '@material-ui/core/colors/yellow';
 import green from '@material-ui/core/colors/green';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 
+
 const styles = {}
 
-class DetalleStock extends Component {
+class DetalleIngresos extends Component {
     state = {
         detalle: []
     }
     componentDidMount() {
-        axios.get('/detalle-stock/' + this.props.idInsumo + '/' + this.props.cantidadRegistros).then(res => {
+        axios.get('/list-ingresos-detalles/' + this.props.idIngreso + '/' + this.props.cantidadRegistros).then(res => {
             console.log(res);
             //console.log(moment(res.data.result[0].fecha).format('DD/MM/YYYY'));
             this.setState({
@@ -36,35 +37,26 @@ class DetalleStock extends Component {
             <Table style={{ backgroundColor:blueGrey[50]}} size="small">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Movimiento</TableCell>
-                        <TableCell>Cantidad</TableCell>
-                        <TableCell align="right">Identificador</TableCell>
-                        <TableCell align="right">Usuario</TableCell>
-
-                        <TableCell align="right">Fecha</TableCell>
-
+                        <TableCell>Código</TableCell>
+                        <TableCell>Descripción</TableCell>
+                        <TableCell >Cantidad</TableCell>
+                    
                     </TableRow>
                 </TableHead>
                 <TableBody>
 
 
                     {this.state.detalle.map(elem => {
-                        let color=null;
-                        if(elem.id_movimiento == 1)
-                            color={ backgroundColor:green[100]};
-                        if(elem.id_movimiento == 3)
-                            color={ backgroundColor:yellow[100]};
-
-                           
+                      
+                            
                         return <TableRow key={elem.id}>
-                            <TableCell style={color} >
-                                {elem.descripcion}
+                            <TableCell >
+                                {elem.codigo}
                             </TableCell>
-                            <TableCell align="right">{elem.cantidad}</TableCell>
-                            <TableCell align="right">{elem.identificador}</TableCell>
-                            <TableCell align="right">{elem.username}</TableCell>
+                            <TableCell >{elem.descripcion}</TableCell>
+                            <TableCell >{elem.cantidad + ' ' + elem.unidad}</TableCell>
+                            
 
-                            <TableCell align="right">{moment(elem.fecha).format('DD/MM/YYYY')}</TableCell>
                         </TableRow>
 
                     })
@@ -78,7 +70,7 @@ class DetalleStock extends Component {
 
 }
 
-export default withStyles(styles)(DetalleStock);
+export default withStyles(styles)(DetalleIngresos);
 
 
 

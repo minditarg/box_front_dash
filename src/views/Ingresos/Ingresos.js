@@ -16,6 +16,8 @@ import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
 import Paper from '@material-ui/core/Paper';
 
+import DetalleIngresos from './components/DetalleIngresos'
+
 
 import { withStyles } from '@material-ui/styles';
 
@@ -147,6 +149,12 @@ class Ingresos extends Component {
                   color: '#FFF'
                 },
               }}
+                detailPanel={rowData => {
+                  console.log(rowData);
+                    return (
+                     <DetalleIngresos idIngreso={rowData.id} cantidadRegistros="7" />
+                    )
+                  } }
             />
           </CardBody>
         </Card>
