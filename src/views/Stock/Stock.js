@@ -3,6 +3,8 @@ import axios from "axios";
 import { Route, Switch, Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
 
+import DetalleStock from './components/DetalleStock';
+
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
 import MaterialTable, { MTableCell, MTableBodyRow } from "material-table";
@@ -310,7 +312,7 @@ class Stock extends Component {
                     },
                     Container: props => (
                       <Paper elevation={0} {...props} />
-                  )
+                    )
                   }}
 
                   options={{
@@ -320,17 +322,23 @@ class Stock extends Component {
                       color: '#FFF'
                     },
                   }}
-                // actions={[ {
-                //     icon: 'edit',
-                //     tooltip: 'Edit User',
-                //     onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarinsumo/' + rowData.id)
-                //   },
-                //   {
-                //     icon: 'delete',
-                //     tooltip: 'Delete User',
-                //     onClick: (event, rowData) => this.deleteMaterial(rowData)
-                //   }]}
-                />
+
+                  detailPanel={rowData => {
+                    return (
+                     <DetalleStock idInsumo={rowData.id} cantidadRegistros="7" />
+                    )
+                  } }
+                  // actions={[ {
+                  //     icon: 'edit',
+                  //     tooltip: 'Edit User',
+                  //     onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarinsumo/' + rowData.id)
+                  //   },
+                  //   {
+                  //     icon: 'delete',
+                  //     tooltip: 'Delete User',
+                  //     onClick: (event, rowData) => this.deleteMaterial(rowData)
+                  //   }]}
+                  />
               </CardBody>
             </Card>
           </div>} />
