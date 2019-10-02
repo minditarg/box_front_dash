@@ -72,6 +72,8 @@ class NewUser extends Component {
             successSubmit: true,
             formIsValid: false,
             disableAllButtons:false
+          },()=>{
+              this.props.getUsersAdmin();
           })
           this.resetNewForm();
 

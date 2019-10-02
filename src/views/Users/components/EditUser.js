@@ -137,7 +137,7 @@ class EditUser extends Component {
     this.setState({
      disableAllButtons:true
     })
-    axios.post(`/update-user`, { id: this.state.userEdit.id, nombre: this.state.editUserForm.nombre.value, id_users_type: this.state.editUserForm.tipoUser.value })
+    axios.post(`/update-user`, { id: this.props.match.params.iduser,username:this.state.editUserForm.username.value, nombre: this.state.editUserForm.nombre.value, id_users_type: this.state.editUserForm.tipoUser.value })
       .then(res => {
 
         let estadoAlt = null
@@ -149,11 +149,15 @@ class EditUser extends Component {
         }
 
         if (estadoAlt) {
-          toast.success("El Usuario se ha modificado con exito!");
+
+
           this.setState({
             successSubmitEdit: true,
             editFormIsValid: false,
             disableAllButtons:false
+          },()=>{
+              toast.success("El Usuario se ha modificado con exito!");
+              this.props.getUsersAdmin();
           })
         } else {
 
@@ -246,9 +250,9 @@ class EditUser extends Component {
 
         <Card>
           <CardHeader color="primary">
-            <h4 className={this.props.classes.cardTitleWhite}>Nuevo Usuario</h4>
+            <h4 className={this.props.classes.cardTitleWhite}>Editar Usuario</h4>
             <p className={this.props.classes.cardCategoryWhite}>
-              Formulario de un usuario nuevo
+              Formulario para modificar los datos del usuario
       </p>
           </CardHeader>
           <CardBody>

@@ -50,7 +50,8 @@ export const StateEditUser = {
             elementConfig: {
                 type: 'text',
                 label: 'usuario',
-                fullWidth: true
+                fullWidth: true,
+                disabled: true
             },
             value: '',
             validation: {
@@ -77,6 +78,7 @@ export const StateEditUser = {
             valid: false,
             touched: false
         },
+        /*
         descripcion: {
             elementType: 'textarea',
             elementConfig: {
@@ -90,7 +92,7 @@ export const StateEditUser = {
             },
             valid: false,
             touched: false
-        },
+        },*/
 
     },
     userEdit: null,
@@ -166,6 +168,7 @@ export const StateNewUser = {
             valid: false,
             touched: false
         },
+        /*
         descripcion: {
             elementType: 'textarea',
             elementConfig: {
@@ -179,7 +182,7 @@ export const StateNewUser = {
             },
             valid: false,
             touched: false
-        },
+        }, */
     },
 
     formIsValid: false,

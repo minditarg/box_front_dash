@@ -32,7 +32,8 @@ export default function Sidebar(props) {
     open2:false,
     open3:false,
     open4:false,
-    open5:false
+    open5:false,
+    openStock:true
   });
 
   function handleClick(value) {

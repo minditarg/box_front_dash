@@ -12,6 +12,8 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
 import Paper from '@material-ui/core/Paper';
+import Button from "components/CustomButtons/Button.js";
+import AddIcon from '@material-ui/icons/Add';
 
 import NewUser from "./components/NewUser";
 import EditUser from "./components/EditUser";
@@ -232,6 +234,8 @@ class Users extends Component {
                       </p>
                       </CardHeader>
                       <CardBody>
+                      <Button style={{ marginTop: '25px' }} onClick={()=>this.props.history.push(this.props.match.url + '/nuevousuario')} color="primary"><AddIcon/> Nuevo Usuario</Button>
+                      <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={2000} />
                     <MaterialTable
                       columns={ColumnsListado}
                       data={this.state.users}
@@ -274,6 +278,8 @@ class Users extends Component {
 
                    <NewUser
 
+                     getUsersAdmin={()=>this.getUsersAdmin()}
+
 
                  />}
                   />
@@ -291,6 +297,7 @@ class Users extends Component {
                    getUserEdit={(id) => { this.getUserEdit(id)}}
                    resetEditForm={this.resetEditForm}
                     reloadUsers={this.reloadUsers}
+                    getUsersAdmin={()=>this.getUsersAdmin()}
 
                  />}
                   />

@@ -57,14 +57,14 @@ import NewModulo from "views/Modulos/NewModulo";
 import RTLPage from "views/RTLPage/RTLPage.js";
 
 const dashboardRoutes = [
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    rtlName: "DS",
-    icon: Dashboard,
-    component: DashboardPage,
-    layout: "/admin"
-  },
+//  {
+//    path: "/dashboard",
+//    name: "Dashboard",
+//    rtlName: "DS",
+//    icon: Dashboard,
+//    component: DashboardPage,
+//    layout: "/admin"
+//  },
   // {
   //   path: "/user",
   //   name: "User Profile",
@@ -121,22 +121,9 @@ const dashboardRoutes = [
   //   component: RTLPage,
   //   layout: "/rtl"
   // },
-  {
-    path: "/usuarios",
-    name: "Usuarios",
-    rtlName: "Us",
-    icon: Person,
-    component: Users,
-    layout: "/admin"
-  },
-  {
-    path: "/panol",
-    name: "Pañol",
-    rtlName: "Pa",
-    icon: ArrowForwardIosIcon,
-    component: Egresos,
-    layout: "/admin"
-  },
+
+
+
   {
     groupComponent:true,
     name:'Stock',
@@ -210,6 +197,14 @@ const dashboardRoutes = [
     }]
   },
   {
+    path: "/usuarios",
+    name: "Usuarios",
+    rtlName: "Us",
+    icon: Person,
+    component: Users,
+    layout: "/admin"
+  },
+  {
     groupComponent:true,
     name:'Modulos',
     open:'open4',
@@ -232,7 +227,17 @@ const dashboardRoutes = [
       layout: "/admin"
 
     }]
-  }
+  },
+  {
+    path: "/panol",
+    name: "Pañol",
+    rtlName: "Pa",
+    icon: ArrowForwardIosIcon,
+    component: Egresos,
+    layout: "/admin"
+  },
+
+
 
 
 
