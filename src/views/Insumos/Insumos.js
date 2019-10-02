@@ -11,15 +11,18 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ModalDelete from "./ModalDelete";
 import EditInsumo from "./components/EditInsumo";
+import Button from "components/CustomButtons/Button.js";
 
 import { ColumnsListado, StateListado } from "./VariablesState";
 import { localization } from "variables/general.js";
 import lightGreen from '@material-ui/core/colors/lightGreen';
+import AddIcon from '@material-ui/icons/Add';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
 import Paper from '@material-ui/core/Paper';
+import NewInsumo from './NewInsumo';
 
 import { withStyles } from '@material-ui/styles';
 
@@ -151,6 +154,7 @@ class Insumos extends Component {
                       </p>
               </CardHeader>
               <CardBody>
+               <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/nuevoinsumo')} color="primary"><AddIcon /> Nuevo Insumo</Button>
                 <MaterialTable
                 isLoading={this.state.isLoading}
                   columns={ColumnsListado}
@@ -184,6 +188,13 @@ class Insumos extends Component {
         <Route path={this.props.match.url + "/editarinsumo/:idinsumo"} exact render={() =>
 
           <EditInsumo
+          getInsumos={()=>this.getInsumos()}
+          />
+        } />
+
+          <Route path={this.props.match.url + "/nuevoinsumo/"} exact render={() =>
+
+          <NewInsumo
           getInsumos={()=>this.getInsumos()}
           />
         } />

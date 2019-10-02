@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { Route, Switch, Link } from 'react-router-dom';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -10,13 +11,16 @@ import { CardActions } from "@material-ui/core";
 import Moment from 'react-moment';
 import { localization } from "variables/general.js";
 import lightGreen from '@material-ui/core/colors/lightGreen';
+import Button from "components/CustomButtons/Button.js";
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
 import Paper from '@material-ui/core/Paper';
+import AddIcon from '@material-ui/icons/Add';
 
 import DetalleIngresos from './components/DetalleIngresos'
+import NewIngreso from './NewIngreso'
 
 
 import { withStyles } from '@material-ui/styles';
@@ -106,33 +110,20 @@ class Ingresos extends Component {
   }
 
   componentDidMount() {
-
-    axios.get('/me')
-      .then(res => {
-        if (res.data.success != 1)
-          this.props.history.replace('/');
-        else {
-          // TODO: REVISAR SI ESTO ESTA BIEN O COMO ES ASINCRONICO PUEDE NO CARGAR EL ACTIONS ANTES DE QUE MUESTRE LA TABLA CON EL getPedidos y al tocar el icono pinche
-          // this.state.actions=[
-          //     {
-          //       icon: 'delete',
-          //       tooltip: 'Eliminar Ingreso',
-          //       onClick: (event, rowData) => this.deleteMaterial(rowData.id)
-          //     }
-          //   ];
-          this.getIngresos();
-        }
-      })
+    this.getIngresos();
 
   }
 
 
   render() {
+    let style = {}
+    if (this.props.match.url != this.props.location.pathname) {
+      style = { display: 'none' }
+    }
     return (
+      
       <div style={{ maxWidth: "100%" }}>
-
-
-        <Card>
+        <Card style={style}>
           <CardHeader color="primary">
             <h4 className={this.props.classes.cardTitleWhite} >INGRESOS</h4>
             <p className={this.props.classes.cardCategoryWhite} >
@@ -140,9 +131,10 @@ class Ingresos extends Component {
                       </p>
           </CardHeader>
           <CardBody>
+          <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/nuevoingreso')} color="primary"><AddIcon /> Nuevo Ingreso</Button>
 
             <MaterialTable
-            isLoading={this.state.isLoading}
+              isLoading={this.state.isLoading}
               columns={columns}
               data={this.state.ingresos}
               title=""
@@ -166,6 +158,20 @@ class Ingresos extends Component {
               />
           </CardBody>
         </Card>
+
+        <Switch>
+
+          <Route path={this.props.match.url + "/nuevoingreso"} exact render={() =>
+            <NewIngreso
+            getIngresos={()=>this.getIngresos()}
+             />
+          } />
+
+
+
+        </Switch>
+
+
         <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={2000} />
       </div>
     );

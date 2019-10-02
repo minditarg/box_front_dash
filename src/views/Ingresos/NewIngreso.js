@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import axios from "axios";
 import Input from "components/Input/Input";
 import moment from "moment";
+import { Route, Switch, Link, withRouter } from 'react-router-dom';
+
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -35,12 +37,12 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import DateFnsUtils from '@date-io/date-fns';
 import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
+    MuiPickersUtilsProvider,
+    KeyboardTimePicker,
+    KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-import {localization} from "variables/general";
+import { localization } from "variables/general";
 
 
 
@@ -52,9 +54,9 @@ import {localization} from "variables/general";
 // ];
 
 const columnsInsumos = [
-{ title: "Codigo", field: "codigo", editable: 'never' },
-{ title: "Descripcion", field: "descripcion", editable: 'never' },
-{ title: "Cantidad", field: "cantidad", type: 'numeric' }
+    { title: "Codigo", field: "codigo", editable: 'never' },
+    { title: "Descripcion", field: "descripcion", editable: 'never' },
+    { title: "Cantidad", field: "cantidad", type: 'numeric' }
     //{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
 ];
 
@@ -200,8 +202,8 @@ class NewIngreso extends Component {
 
     handleSubmitNewPedido = (event) => {
         event.preventDefault();
-        console.log(event);
-       // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
+      
+        // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
             axios.post('/insert-ingresos', {
                 fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
@@ -212,6 +214,7 @@ class NewIngreso extends Component {
                 .then(res => {
                     if (res.data.success == 1) {
                         // this.setState({pedidoInsertado: true});
+                        this.props.getIngresos();
                         toast.success("Nuevo ingreso creado");
                         this.props.history.push("/admin/ingresos");
                     }
@@ -267,7 +270,7 @@ class NewIngreso extends Component {
 
 
     componentDidMount() {
-      console.log(moment("25/06/2019","DD/MM/YYYY").format('DD-MM-YYYY'));
+       
         this.state.actions = [
             {
                 icon: 'delete',
@@ -311,17 +314,17 @@ class NewIngreso extends Component {
                             <CardBody>
 
                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <KeyboardDatePicker
-                                    margin="normal"
-                                    id="date-picker-dialog"
-                                    label="Fecha"
-                                    format="MM/dd/yyyy"
-                                    value={this.state.selectedDate}
-                                    onChange={this.handleDateChange}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
-                                />
+                                    <KeyboardDatePicker
+                                        margin="normal"
+                                        id="date-picker-dialog"
+                                        label="Fecha"
+                                        format="MM/dd/yyyy"
+                                        value={this.state.selectedDate}
+                                        onChange={this.handleDateChange}
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date',
+                                        }}
+                                        />
                                 </MuiPickersUtilsProvider>
 
                                 {formElementsArray.map(formElement => (
@@ -381,7 +384,7 @@ class NewIngreso extends Component {
                                     />
 
 
-                                <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
+                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/ingresos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
                                 <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={2000} />
 
                             </CardBody>
@@ -389,32 +392,32 @@ class NewIngreso extends Component {
                     </GridItem>
 
                 </GridContainer>
-                   <Dialog
-                                    open={this.state.open}
-                                    onClose={this.closeDialog.bind(this)}
-                                    fullWidth={true}
-                                    maxWidth={"sm"}
-                                    >
-                                    <DialogTitle>Seleccionar Insumo
+                <Dialog
+                    open={this.state.open}
+                    onClose={this.closeDialog.bind(this)}
+                    fullWidth={true}
+                    maxWidth={"sm"}
+                    >
+                    <DialogTitle>Seleccionar Insumo
                             <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
-                                            <CloseIcon />
-                                        </IconButton>
-                                    </DialogTitle>
+                            <CloseIcon />
+                        </IconButton>
+                    </DialogTitle>
 
 
-                                    <DialogContent>
-                                        {this.state.open &&
-                                            <StepAgregarInsumo
-                                                columnsInsumos={columnsInsumos}
-                                                onClickInsumo={(id, cantidad) => this.onClickInsumo(id, cantidad)}
-                                                />
-                                        }
-                                    </DialogContent>
-                                </Dialog>
+                    <DialogContent>
+                        {this.state.open &&
+                            <StepAgregarInsumo
+                                columnsInsumos={columnsInsumos}
+                                onClickInsumo={(id, cantidad) => this.onClickInsumo(id, cantidad)}
+                                />
+                        }
+                    </DialogContent>
+                </Dialog>
             </ form>
         );
     }
 }
 
 
-export default withStyles(styles)(NewIngreso);
+export default withRouter(withStyles(styles)(NewIngreso));

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import Input from "components/Input/Input";
+import { Route, Switch, Link, withRouter } from 'react-router-dom';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -116,6 +117,7 @@ class NewInsumo extends Component {
     })
       .then(res => {
         if (res.data.success == 1) {
+          this.props.getInsumos();
           toast.success("Nuevo insumo creado");
           this.resetForm();
         }
@@ -174,7 +176,7 @@ resetForm = () => {
               />
             ))}
 
-            <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
+            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/insumos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
             <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={2000}/>
           </CardBody>
         </Card>
@@ -184,4 +186,4 @@ resetForm = () => {
 }
 
 
-export default withStyles(styles)(NewInsumo);
+export default withRouter(withStyles(styles)(NewInsumo));

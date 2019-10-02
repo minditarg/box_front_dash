@@ -45,7 +45,6 @@ import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 import Users from "views/Users/Users.js";
 import Insumos from "views/Insumos/Insumos";
-import NewInsumo from "views/Insumos/NewInsumo";
 import Ingresos from "views/Ingresos/Ingresos";
 import NewIngreso from "views/Ingresos/NewIngreso";
 import Stock from "views/Stock/Stock";
@@ -146,56 +145,26 @@ const dashboardRoutes = [
       component: AjusteStock,
       layout: "/admin"
 
-    }]
-  },
-  {
-    groupComponent:true,
-    name:'Insumos',
-    open:'open2',
-    icon: ViewComfyIcon,
-    dependences: [
-      {
-      path: "/insumos",
-      name: "Listado",
-      rtlName: "LI",
-      icon: ListIcon,
-      component: Insumos,
-      layout: "/admin"
     },
-    {
-      path: "/nuevoinsumo",
-      name: "Nuevo",
-      rtlName: "NI",
-      icon: AddBoxIcon,
-      component: NewInsumo,
-      layout: "/admin"
-
-    }]
-  },
-  {
-    groupComponent:true,
-    name:'Ingresos',
-    icon: LocalShippingIcon,
-    open:'open3',
-    dependences: [
       {
       path: "/ingresos",
-      name: "Listado",
+      name: "Ingresos",
       rtlName: "NP",
-      icon: ListIcon,
+      icon: LocalShippingIcon,
       component: Ingresos,
       layout: "/admin"
-    },
-    {
-      path: "/nuevoingreso",
-      name: "Nuevo",
-      rtlName: "NI",
-      icon: AddBoxIcon,
-      component: NewIngreso,
-      layout: "/admin"
-
     }]
   },
+   {
+      path: "/insumos",
+      name: "Insumos",
+      rtlName: "NI",
+      icon: ViewComfyIcon,
+      component: Insumos,
+      layout: "/admin"
+
+    },
+  
   {
     path: "/usuarios",
     name: "Usuarios",
