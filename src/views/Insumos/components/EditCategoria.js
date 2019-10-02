@@ -53,7 +53,7 @@ state= JSON.parse(JSON.stringify(StateEditCategoria));
     getCategoriaEdit = (id) => {
         axios.get('/list-categorias/' + id)
               .then(resultado => {
-                  alert(resultado);
+                  //alert(resultado);
                   if(resultado.data.success == 1) {
                       if(resultado.data.result.length > 0) {
                         this.setState({
@@ -63,8 +63,6 @@ state= JSON.parse(JSON.stringify(StateEditCategoria));
                         let editCategoriaFormAlt = {...this.state.editCategoriaForm};
                           editCategoriaFormAlt.codigo.value = resultado.data.result[0].codigo;
                           editCategoriaFormAlt.descripcion.value = resultado.data.result[0].descripcion;
-                          editCategoriaFormAlt.unidad.value = resultado.data.result[0].unidad;
-                          editCategoriaFormAlt.minimo.value = resultado.data.result[0].minimo;
 
                           for(let key in editCategoriaFormAlt){
                             editCategoriaFormAlt[key].touched = true;
@@ -87,7 +85,7 @@ state= JSON.parse(JSON.stringify(StateEditCategoria));
       handleSubmitEditCategoria = (event) => {
 
           event.preventDefault();
-          axios.post(`/update-categorias`, { id:this.state.categoriaEdit.id,codigo: this.state.editCategoriaForm.codigo.value, descripcion: this.state.editCategoriaForm.descripcion.value, unidad: this.state.editCategoriaForm.unidad.value, minimo: this.state.editCategoriaForm.minimo.value})
+          axios.post(`/update-categorias`, { id:this.state.categoriaEdit.id,codigo: this.state.editCategoriaForm.codigo.value, descripcion: this.state.editCategoriaForm.descripcion.value})
               .then(res => {
                   let estadoAlt = null
                   if (res.data.success == 0) {
