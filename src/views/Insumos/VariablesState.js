@@ -4,7 +4,8 @@ export const StateListado = {
 
 
   openDeleteDialog:false,
-      deleteRowData:null
+      deleteRowData:null,
+      isLoading:false
 
 
 }

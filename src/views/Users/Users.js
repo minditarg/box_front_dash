@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-import { Route, Switch ,Link} from 'react-router-dom';
+import { Route, Switch, Link } from 'react-router-dom';
 // core components
-import MaterialTable, { MTableCell, MTableBodyRow} from "material-table";
+import MaterialTable, { MTableCell, MTableBodyRow } from "material-table";
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/styles';
 import GridItem from "components/Grid/GridItem.js";
@@ -18,12 +18,12 @@ import AddIcon from '@material-ui/icons/Add';
 import NewUser from "./components/NewUser";
 import EditUser from "./components/EditUser";
 import ModalDelete from "./components/ModalDelete"
-import {localization} from "variables/general.js";
+import { localization } from "variables/general.js";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { StateListUsers,ColumnsListado } from "./VariablesState";
+import { StateListUsers, ColumnsListado } from "./VariablesState";
 
 import lightGreen from '@material-ui/core/colors/lightGreen';
 
@@ -59,266 +59,275 @@ const styles = {
 
 
 class Users extends Component {
-    state = { ...StateListUsers  };
+  state = { ...StateListUsers };
 
 
-      componentDidMount() {
-        this.getUsersAdmin();
-      }
+  componentDidMount() {
+    this.getUsersAdmin();
+  }
 
 
 
-      handleToggle = value => {
-        const currentIndex = this.state.checked.indexOf(value);
-        const newChecked = [...this.state.checked];
-        let deleteEnabled = false;
-        let editEnabled = false;
-        const botonesAcc = { ...this.state.botonesAcciones }
-        if (currentIndex === -1) {
-          newChecked.push(value);
-        } else {
-          newChecked.splice(currentIndex, 1);
-        }
-        if (newChecked.length > 0) {
-          deleteEnabled = true;
-          if (newChecked.length == 1)
-            editEnabled = true;
-        }
-        botonesAcc.editar.enabled = editEnabled;
-        botonesAcc.delete.enabled = deleteEnabled;
+  handleToggle = value => {
+    const currentIndex = this.state.checked.indexOf(value);
+    const newChecked = [...this.state.checked];
+    let deleteEnabled = false;
+    let editEnabled = false;
+    const botonesAcc = { ...this.state.botonesAcciones }
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+    if (newChecked.length > 0) {
+      deleteEnabled = true;
+      if (newChecked.length == 1)
+        editEnabled = true;
+    }
+    botonesAcc.editar.enabled = editEnabled;
+    botonesAcc.delete.enabled = deleteEnabled;
+    this.setState({
+      botonesAcciones: botonesAcc,
+      checked: newChecked
+    })
+
+  };
+
+  menuHandleClose = (value) => {
+    this.setState({
+      menuContext: null
+    })
+  }
+
+  menuHandleItemClick = (value) => {
+    const newItem = { ...this.state.botonesAcciones[value] };
+    let menuContext = { ...this.state.menuContext };
+    if (newItem.enabled) {
+      menuContext = null;
+
+      if (value == 'nuevo') {
         this.setState({
-          botonesAcciones:botonesAcc,
-          checked:newChecked
+          menuContext: menuContext
         })
+        this.props.history.push(this.props.match.url + '/nuevousuario');
+      }
 
-      };
-
-      menuHandleClose = (value) => {
+      if (value == 'editar' && this.state.checked.length == 1) {
         this.setState({
-          menuContext:null
+          menuContext: menuContext
         })
+        let idUser = this.state.checked[0].id;
+        this.props.history.push(this.props.match.url + '/editarusuario/' + idUser);
       }
+    }
+  }
 
-      menuHandleItemClick = (value) => {
-        const newItem = { ...this.state.botonesAcciones[value] };
-        let menuContext = {...this.state.menuContext};
-        if (newItem.enabled) {
-            menuContext= null;
-
-          if(value == 'nuevo') {
-            this.setState({
-              menuContext:menuContext
-            })
-          this.props.history.push(this.props.match.url + '/nuevousuario');
-        }
-
-        if(value == 'editar' && this.state.checked.length == 1) {
-           this.setState({
-              menuContext:menuContext
-            })
-          let idUser = this.state.checked[0].id;
-          this.props.history.push(this.props.match.url + '/editarusuario/' + idUser);
-        }
-        }
-      }
-
-      menuHandleOpen = event => {
+  menuHandleOpen = event => {
+    this.setState({
+      menuContext: event.currentTarget
+    })
+  }
+  ////////////////////////
+  ////////////////////////
+  //METODOS PARA LISTADO DE USUARIOS
+  ////////////////////////
+  ////////////////////////
+  getUsersAdmin = () => {
+    this.setState({
+      isLoading: true
+    })
+    axios.get('/list-users')
+      .then(res => {
         this.setState({
-          menuContext:event.currentTarget
+          isLoading: false
         })
-      }
-      ////////////////////////
-      ////////////////////////
-      //METODOS PARA LISTADO DE USUARIOS
-      ////////////////////////
-      ////////////////////////
-      getUsersAdmin = () => {
-
-        axios.get('/list-users')
-          .then(res => {
-            if (res.data.success == 1) {
-              let resultado = [...res.data.result];
-              this.setState({
-                users:resultado,
-                checked:[],
-                menuContext:null,
-                botonesAcciones:{
-                  nuevo: {
-                    enabled: true,
-                    texto: 'Nuevo'
-                  },
-                  editar: {
-                    enabled: false,
-                    texto: 'Editar'
-                  },
-                  delete: {
-                    enabled: false,
-                    texto: 'Eliminar'
-                  }
-                }
-              })
+        if (res.data.success == 1) {
+          let resultado = [...res.data.result];
+          this.setState({
+            users: resultado,
+            checked: [],
+            menuContext: null,
+            botonesAcciones: {
+              nuevo: {
+                enabled: true,
+                texto: 'Nuevo'
+              },
+              editar: {
+                enabled: false,
+                texto: 'Editar'
+              },
+              delete: {
+                enabled: false,
+                texto: 'Eliminar'
+              }
             }
           })
         }
+      })
+  }
 
 
-     editSingleUser = value => {
+  editSingleUser = value => {
     this.props.history.push(this.props.match.url + '/editarusuario/' + value);
   }
 
-    handlePagination = offset => {
-      this.setState({
-        offset:offset
-      })
+  handlePagination = offset => {
+    this.setState({
+      offset: offset
+    })
 
-    }
+  }
 
-    handleDeleteUser = rowData => {
-      this.setState({
-        openDeleteDialog:false
-      })
-        axios.post('/delete-user',{id:rowData.id}) .then(res => {
-          if(res.data.success ==1) {
-              let users = [...this.state.users]
-              users = users.filter(elem =>{
-                if(elem.id == rowData.id)
-                  return false;
+  handleDeleteUser = rowData => {
+    this.setState({
+      openDeleteDialog: false
+    })
+    axios.post('/delete-user', { id: rowData.id }).then(res => {
+      if (res.data.success == 1) {
+        let users = [...this.state.users]
+        users = users.filter(elem => {
+          if (elem.id == rowData.id)
+            return false;
 
-                return true
-
-              })
-              toast.success("El usuario se ha eliminado con exito!");
-              this.setState({
-                users: users
-              })
-            } else {
-              toast.error(res.data.error_msj);
-
-            }
+          return true
 
         })
+        toast.success("El usuario se ha eliminado con exito!");
+        this.setState({
+          users: users
+        })
+      } else {
+        toast.error(res.data.error_msj);
 
+      }
+
+    })
+
+  }
+
+  handleDeleteButton = rowData => {
+    this.setState({
+      openDeleteDialog: true,
+      deleteRowData: rowData
+    })
+  }
+
+
+
+
+  handleModalClose() {
+    this.setState({
+      openDeleteDialog: false,
+      deleteRowData: null
+    })
+  }
+
+
+
+
+
+  render() {
+    let style = {}
+    if (this.props.match.url != this.props.location.pathname) {
+      style = { display: 'none' }
     }
-
-    handleDeleteButton = rowData => {
-      this.setState({
-        openDeleteDialog:true,
-        deleteRowData:rowData
-      })
-    }
-
-    handleModalClose() {
-      this.setState({
-        openDeleteDialog:false,
-        deleteRowData:null
-      })
-    }
-
-
-
-
-
-    render() {
-
-        return (
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
-
-            <Switch>
-                  <Route path={ this.props.match.url } exact  render={() =>
-                    <Card>
-                      <CardHeader color="primary">
-                        <h4 className={this.props.classes.cardTitleWhite} >Usuarios</h4>
-                        <p className={this.props.classes.cardCategoryWhite} >
-                          Listado de Usuarios
+    return (
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card style={style}>
+            <CardHeader color="primary">
+              <h4 className={this.props.classes.cardTitleWhite} >Usuarios</h4>
+              <p className={this.props.classes.cardCategoryWhite} >
+                Listado de Usuarios
                       </p>
-                      </CardHeader>
-                      <CardBody>
-                      <Button style={{ marginTop: '25px' }} onClick={()=>this.props.history.push(this.props.match.url + '/nuevousuario')} color="primary"><AddIcon/> Nuevo Usuario</Button>
-                      <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={2000} />
-                    <MaterialTable
-                      columns={ColumnsListado}
-                      data={this.state.users}
-                      title=""
-                      localization={localization}
+            </CardHeader>
+            <CardBody>
+              <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/nuevousuario')} color="primary"><AddIcon /> Nuevo Usuario</Button>
+              <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={2000} />
+              <MaterialTable
+                isLoading={this.state.isLoading}
+                columns={ColumnsListado}
+                data={this.state.users}
+                title=""
+                localization={localization}
 
-                      actions={[ {
-                          icon: 'edit',
-                          tooltip: 'Editar Usuario',
-                          onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarusuario/' + rowData.id)
-                        },
-                        {
-                          icon: 'delete',
-                          tooltip: 'Borrar Ususario',
-                          onClick:(event, rowData) => this.handleDeleteButton(rowData)
+                actions={[{
+                  icon: 'edit',
+                  tooltip: 'Editar Usuario',
+                  onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarusuario/' + rowData.id)
+                },
+                {
+                  icon: 'delete',
+                  tooltip: 'Borrar Ususario',
+                  onClick: (event, rowData) => this.handleDeleteButton(rowData)
 
-                        }]}
-                        components={{
-                            Container: props => (
-                                <Paper elevation={0} {...props} />
-                            )
-                        }}
+                }]}
+                components={{
+                  Container: props => (
+                    <Paper elevation={0} {...props} />
+                  )
+                }}
 
-                        options={{
-                          exportButton: true,
-                          headerStyle: {
-                            backgroundColor: lightGreen[700],
-                            color: '#FFF'
-                          },
-                        }}
-                      />
-                      </CardBody>
-                      </Card>
+                options={{
+                  exportButton: true,
+                  headerStyle: {
+                    backgroundColor: lightGreen[700],
+                    color: '#FFF'
+                  },
+                }}
+                />
+            </CardBody>
+          </Card>
 
+          <Switch>
+            <Route path={this.props.match.url + "/nuevousuario"} render={() =>
 
+              <NewUser
 
-
-                  } />
-                  <Route path={ this.props.match.url + "/nuevousuario"}  render={() =>
-
-                   <NewUser
-
-                     getUsersAdmin={()=>this.getUsersAdmin()}
-
-
-                 />}
-                  />
-
-                  <Route path={ this.props.match.url + "/editarusuario/:iduser"}  render={() =>
-
-                   <EditUser
-                   orderForm={this.state.editUserForm}
-                   editFormIsValid={this.state.editFormIsValid}
-                   successSubmitEdit={this.state.successSubmitEdit}
+                getUsersAdmin={() => this.getUsersAdmin()}
+                handleListNewUser={(rowData) => this.handleListNewUser(rowData)}
 
 
-                   handleSubmitEditUser={(event) => {this.handleSubmitEditUser(event)}}
-                   inputEditChangedHandler={ (event,inputIdentifier)=> this.inputEditChangedHandler(event,inputIdentifier)}
-                   getUserEdit={(id) => { this.getUserEdit(id)}}
-                   resetEditForm={this.resetEditForm}
-                    reloadUsers={this.reloadUsers}
-                    getUsersAdmin={()=>this.getUsersAdmin()}
+                />}
+              />
 
-                 />}
-                  />
+            <Route path={this.props.match.url + "/editarusuario/:iduser"} render={() =>
 
-              </Switch>
+              <EditUser
+                orderForm={this.state.editUserForm}
+                editFormIsValid={this.state.editFormIsValid}
+                successSubmitEdit={this.state.successSubmitEdit}
 
 
-            </GridItem>
-            <ModalDelete
-              openDeleteDialog={this.state.openDeleteDialog}
-              deleteRowData={this.state.deleteRowData}
+                handleSubmitEditUser={(event) => { this.handleSubmitEditUser(event) } }
+                inputEditChangedHandler={(event, inputIdentifier) => this.inputEditChangedHandler(event, inputIdentifier)}
+                getUserEdit={(id) => { this.getUserEdit(id) } }
+                resetEditForm={this.resetEditForm}
+                reloadUsers={this.reloadUsers}
+                getUsersAdmin={() => this.getUsersAdmin()}
 
-              handleClose={()=>this.handleModalClose()}
-              handleDelete={(rowData)=>this.handleDeleteUser(rowData)}
-             />
 
-            <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={3000}/>
-          </GridContainer>
 
-        );
-    }
+                />}
+              />
+
+          </Switch>
+
+
+        </GridItem>
+        <ModalDelete
+          openDeleteDialog={this.state.openDeleteDialog}
+          deleteRowData={this.state.deleteRowData}
+
+          handleClose={() => this.handleModalClose()}
+          handleDelete={(rowData) => this.handleDeleteUser(rowData)}
+          />
+
+
+      </GridContainer>
+
+    );
+  }
 }
 
 

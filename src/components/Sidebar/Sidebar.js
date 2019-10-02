@@ -55,12 +55,12 @@ export default function Sidebar(props) {
         if(prop.groupComponent) {
 
       return(
-        <div>
+        <div key={"sidebar-" + key}>
         <div
 
           className={ classes.item}
 
-          key={key}
+        
         >
         <ListItem button className={classes.itemLink } onClick={()=>handleClick(prop.open)}>
         {typeof prop.icon === "string" ? (
@@ -154,7 +154,7 @@ export default function Sidebar(props) {
             to={prop.layout + prop.path}
             className={activePro + classes.item}
             activeClassName="active"
-            key={key}
+           key={"sidebar-" + key}
           >
             <ListItem button className={classes.itemLink + listItemClasses}>
               {typeof prop.icon === "string" ? (

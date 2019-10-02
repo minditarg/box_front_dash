@@ -48,7 +48,7 @@ class DetalleStock extends Component {
                 <TableBody>
 
 
-                    {this.state.detalle.map(elem => {
+                    {this.state.detalle.map((elem,key) => {
                         let color=null;
                         if(elem.id_movimiento == 1)
                             color={ backgroundColor:green[100]};
@@ -56,7 +56,7 @@ class DetalleStock extends Component {
                             color={ backgroundColor:yellow[100]};
 
                            
-                        return <TableRow key={elem.id}>
+                        return <TableRow key={"detalle-" + key}>
                             <TableCell style={color} >
                                 {elem.descripcion}
                             </TableCell>

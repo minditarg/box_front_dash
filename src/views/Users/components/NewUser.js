@@ -6,7 +6,7 @@ import { StateNewUser } from "../VariablesState";
 
 import axios from "axios";
 
-import { toast } from 'react-toastify';
+import { toast,ToastContainer } from 'react-toastify';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -223,7 +223,7 @@ class NewUser extends Component {
             <div className="mt-3 mb-3">
               {formElementsArray.map(formElement => (
                 <Input
-                  key={formElement.id}
+                  key={"edituser-" + formElement.id}
                   elementType={formElement.config.elementType}
                   elementConfig={formElement.config.elementConfig}
                   value={formElement.config.value}
@@ -243,7 +243,7 @@ class NewUser extends Component {
         </Card>
 
 
-
+          <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={3000}/>
 
       </ form>
 

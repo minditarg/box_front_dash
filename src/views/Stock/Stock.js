@@ -74,8 +74,14 @@ class Stock extends Component {
   }
 
   getInsumos = () => {
+    this.setState({
+      isLoading: true
+    })
     axios.get('/list-insumos')
       .then(res => {
+        this.setState({
+          isLoading: false
+        })
         if (res.data.success == 1) {
           let resultado = [...res.data.result];
           this.setState({
@@ -271,7 +277,7 @@ class Stock extends Component {
   render() {
 
     return ([
-      <Switch>
+      <Switch key={"stock-switch"}>
         <Route path={this.props.match.url} exact render={() =>
           <div style={{ maxWidth: "100%" }}>
             <Card>
@@ -283,6 +289,7 @@ class Stock extends Component {
               </CardHeader>
               <CardBody>
                 <MaterialTable
+                  isLoading={this.state.isLoading}
                   columns={ColumnsListado}
                   data={this.state.insumos}
                   title=""
@@ -325,7 +332,7 @@ class Stock extends Component {
 
                   detailPanel={rowData => {
                     return (
-                     <DetalleStock idInsumo={rowData.id} cantidadRegistros="7" />
+                      <DetalleStock idInsumo={rowData.id} cantidadRegistros="7" />
                     )
                   } }
                   // actions={[ {
@@ -345,7 +352,7 @@ class Stock extends Component {
 
       </Switch>,
 
-      <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={3000} />
+      <ToastContainer key={"insumos-toast"} position={toast.POSITION.BOTTOM_RIGHT} autoClose={3000} />
 
     ]);
   }
