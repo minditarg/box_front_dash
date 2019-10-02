@@ -22,7 +22,9 @@ export const StateListUsers = {
     },
     modalOpen: false,
     openDeleteDialog:false,
-    deleteRowData:null
+    deleteRowData:null,
+    isLoading:false
+
 
 
 

@@ -189,6 +189,7 @@ return (
           total={props.totalUsers}
           onClick={(e, offset) => props.handlePagination(offset)}
         />
+        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={3000}/>
       </Card>
 
 

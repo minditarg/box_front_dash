@@ -4,6 +4,7 @@ import lightGreen from '@material-ui/core/colors/lightGreen';
 export const StateListado = {
     insumos: [],
     editFormIsValid: false,
+    isLoading:false,
     insumoEdit:null,
     editInsumoForm: {
       codigo: {

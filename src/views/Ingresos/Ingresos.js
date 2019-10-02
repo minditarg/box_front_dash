@@ -69,7 +69,8 @@ const styles = {
 class Ingresos extends Component {
   state = {
     ingresos: [],
-    actions: []
+    actions: [],
+    isLoading: false
   };
 
 
@@ -86,9 +87,15 @@ class Ingresos extends Component {
       })
   }
 
-  getPedidos = () => {
+  getIngresos = () => {
+    this.setState({
+      isLoading: true
+    })
     axios.get('/list-ingresos')
       .then(res => {
+        this.setState({
+          isLoading: false
+        })
         if (res.data.success == 1) {
           let resultado = [...res.data.result];
           this.setState({
@@ -113,7 +120,7 @@ class Ingresos extends Component {
           //       onClick: (event, rowData) => this.deleteMaterial(rowData.id)
           //     }
           //   ];
-          this.getPedidos();
+          this.getIngresos();
         }
       })
 
@@ -135,6 +142,7 @@ class Ingresos extends Component {
           <CardBody>
 
             <MaterialTable
+            isLoading={this.state.isLoading}
               columns={columns}
               data={this.state.ingresos}
               title=""
@@ -149,13 +157,13 @@ class Ingresos extends Component {
                   color: '#FFF'
                 },
               }}
-                detailPanel={rowData => {
-                  console.log(rowData);
-                    return (
-                     <DetalleIngresos idIngreso={rowData.id} cantidadRegistros="7" />
-                    )
-                  } }
-            />
+              detailPanel={rowData => {
+                console.log(rowData);
+                return (
+                  <DetalleIngresos idIngreso={rowData.id} cantidadRegistros="7" />
+                )
+              } }
+              />
           </CardBody>
         </Card>
         <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={2000} />

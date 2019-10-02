@@ -55,6 +55,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
         }
     });
     const [formIsValid, setFormIsValid] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(false);
     const [insumos, setInsumos] = React.useState([]);
     const [rowInsumo, setRowInsumo] = React.useState(null);
     const formElementsArray = [];
@@ -145,6 +146,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
         switch (stepIndex) {
             case 0:
                 return <MaterialTable
+                    isLoading={isLoading}
                     columns={props.columnsInsumos}
                     data={insumos}
                     title="Insumo"
@@ -192,8 +194,10 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     }
 
     const getInsumos = () => {
+        setIsLoading(true);
         axios.get('/list-insumos')
             .then(res => {
+                setIsLoading(false);
                 if (res.data.success == 1) {
                     let resultado = [...res.data.result];
                     setInsumos(resultado);

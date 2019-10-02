@@ -63,8 +63,14 @@ class Insumos extends Component {
   }
 
   getInsumos = () => {
+    this.setState({
+      isLoading:true
+    })
     axios.get('/list-insumos')
       .then(res => {
+        this.setState({
+          isLoading:false
+        })
         if (res.data.success == 1) {
           let resultado = [...res.data.result];
           this.setState({
@@ -131,11 +137,12 @@ class Insumos extends Component {
 
 
   render() {
-
+   let style={  maxWidth: "100%"}
+    if(this.props.match.url != this.props.location.pathname) {
+      style={ display:'none', maxWidth: "100%"}
+    }
     return ([
-      <Switch>
-        <Route path={this.props.match.url} exact render={() =>
-          <div style={{ maxWidth: "100%" }}>
+       <div key={"insumos-list-insumos"} style={style}>
             <Card>
               <CardHeader color="primary">
                 <h4 className={this.props.classes.cardTitleWhite} >INSUMOS</h4>
@@ -145,6 +152,7 @@ class Insumos extends Component {
               </CardHeader>
               <CardBody>
                 <MaterialTable
+                isLoading={this.state.isLoading}
                   columns={ColumnsListado}
                   data={this.state.insumos}
                   title=""
@@ -170,23 +178,26 @@ class Insumos extends Component {
               </CardBody>
             </Card>
 
-          </div>} />
-
+          </div>,
+      <Switch  key={"insumos-switch"}>
+       
         <Route path={this.props.match.url + "/editarinsumo/:idinsumo"} exact render={() =>
 
           <EditInsumo
+          getInsumos={()=>this.getInsumos()}
           />
         } />
 
       </Switch>,
       <ModalDelete
+      key={"insumos-modal"}
         openDeleteDialog={this.state.openDeleteDialog}
         deleteRowData={this.state.deleteRowData}
 
         handleClose={() => this.handleClose()}
         handleDelete={(rowData) => this.handleDelete(rowData)}
       />,
-      <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={3000} />
+      <ToastContainer  key={"insumos-toast"} position={toast.POSITION.BOTTOM_RIGHT} autoClose={3000} />
 
     ]);
   }

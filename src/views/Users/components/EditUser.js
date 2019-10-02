@@ -5,7 +5,7 @@ import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
 
 import axios from "axios";
-import { toast } from 'react-toastify';
+import { toast,ToastContainer } from 'react-toastify';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -139,7 +139,6 @@ class EditUser extends Component {
     })
     axios.post(`/update-user`, { id: this.props.match.params.iduser,username:this.state.editUserForm.username.value, nombre: this.state.editUserForm.nombre.value, id_users_type: this.state.editUserForm.tipoUser.value })
       .then(res => {
-
         let estadoAlt = null
 
         if (res.data.success == 1) {
@@ -149,15 +148,16 @@ class EditUser extends Component {
         }
 
         if (estadoAlt) {
-
-
+     
           this.setState({
             successSubmitEdit: true,
             editFormIsValid: false,
             disableAllButtons:false
           },()=>{
               toast.success("El Usuario se ha modificado con exito!");
+              
               this.props.getUsersAdmin();
+          
           })
         } else {
 
@@ -260,7 +260,7 @@ class EditUser extends Component {
             <div className="mt-3 mb-3">
               {formElementsArray.map(formElement => (
                 <Input
-                  key={formElement.id}
+                  key={"edituser-" + formElement.id}
                   elementType={formElement.config.elementType}
                   elementConfig={formElement.config.elementConfig}
                   value={formElement.config.value}
@@ -280,7 +280,7 @@ class EditUser extends Component {
         </Card>
 
 
-
+        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={3000}/>
       </ form>
 
 

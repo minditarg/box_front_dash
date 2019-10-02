@@ -97,7 +97,7 @@ state= JSON.parse(JSON.stringify(StateEditInsumo));
                   }
 
                   if(estadoAlt){
-
+                    this.props.getInsumos();
                     this.setState({
                       editFormIsValid:false
                     })
