@@ -16,6 +16,49 @@ export const ColumnsListado = [
 { title: "Stock Minimo", field: "minimo" }
 ];
 
+export const ColumnsListadoCategorias = [
+  { title: "Codigo", field: "codigo" },
+  { title: "Descripcion", field: "descripcion" }
+  ];
+  
+
+
+export const StateNewCategoria =
+{
+  insumos: [],
+  newCategoriaForm: {
+    codigo: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Codigo Interno',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    descripcion: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Descripcion',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    }
+  },
+  formIsValid: false
+}
+
 export const StateNewInsumo =
 {
   insumos: [],
@@ -143,4 +186,40 @@ export const StateEditInsumo =
     }
   }
 
+}
+
+export const StateEditCategoria =
+{
+ editFormIsValid: false,
+  insumoEdit:null,
+  editCategoriaForm: {
+    codigo: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Codigo Interno',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    descripcion: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Descripcion',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    }
+  }
 }

@@ -45,6 +45,9 @@ import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 import Users from "views/Users/Users.js";
 import Insumos from "views/Insumos/Insumos";
+import NewInsumo from "views/Insumos/NewInsumo";
+import Categorias from "views/Insumos/Categorias";
+import NewCategoria from "views/Insumos/NewCategoria";
 import Ingresos from "views/Ingresos/Ingresos";
 import NewIngreso from "views/Ingresos/NewIngreso";
 import Stock from "views/Stock/Stock";
@@ -56,14 +59,14 @@ import NewModulo from "views/Modulos/NewModulo";
 import RTLPage from "views/RTLPage/RTLPage.js";
 
 const dashboardRoutes = [
-//  {
-//    path: "/dashboard",
-//    name: "Dashboard",
-//    rtlName: "DS",
-//    icon: Dashboard,
-//    component: DashboardPage,
-//    layout: "/admin"
-//  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    rtlName: "DS",
+    icon: Dashboard,
+    component: DashboardPage,
+    layout: "/admin"
+  },
   // {
   //   path: "/user",
   //   name: "User Profile",
@@ -124,26 +127,27 @@ const dashboardRoutes = [
 
 
   {
-    groupComponent:true,
-    name:'Stock',
-    open:'openStock',
+    groupComponent: true,
+    name: 'Stock',
+    open: 'openStock',
     icon: FormatAlignJustifyIcon,
     dependences: [
       {
-      path: "/stock",
-      name: "Listado",
-      rtlName: "LI",
-      icon: ListIcon,
-      component: Stock,
-      layout: "/admin"
-    },
-    {
-      path: "/AjusteStock",
-      name: "Ajuste",
-      rtlName: "NI",
-      icon: AdjustIcon,
-      component: AjusteStock,
-      layout: "/admin"
+        path: "/stock",
+        name: "Listado",
+        rtlName: "LI",
+        icon: ListIcon,
+        component: Stock,
+        layout: "/admin"
+      },
+      {
+        path: "/AjusteStock",
+        name: "Ajuste",
+        rtlName: "NI",
+        icon: AdjustIcon,
+        component: AjusteStock,
+        layout: "/admin"
+
 
     },
       {
@@ -155,16 +159,42 @@ const dashboardRoutes = [
       layout: "/admin"
     }]
   },
-   {
-      path: "/insumos",
-      name: "Insumos",
-      rtlName: "NI",
-      icon: ViewComfyIcon,
-      component: Insumos,
-      layout: "/admin"
-
-    },
   
+  
+
+  {
+    groupComponent: true,
+    name: 'Insumos',
+    open: 'open2',
+    icon: ViewComfyIcon,
+    dependences: [
+     
+      {
+        path: "/categorias",
+        name: "Categorias",
+        rtlName: "LCA",
+        icon: ListIcon,
+        component: Categorias,
+        layout: "/admin"
+      },
+      {
+        path: "/nuevaCategoria",
+        name: "Nueva Categoria",
+        rtlName: "CA",
+        icon: AddBoxIcon,
+        component: NewCategoria,
+        layout: "/admin"
+      },
+      {
+        path: "/insumos",
+        name: "Insumos",
+        rtlName: "LI",
+        icon: ListIcon,
+        component: Insumos,
+        layout: "/admin"
+      }
+     ]
+  },
   {
     path: "/usuarios",
     name: "Usuarios",
@@ -174,28 +204,28 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    groupComponent:true,
-    name:'Modulos',
-    open:'open4',
+    groupComponent: true,
+    name: 'Modulos',
+    open: 'open4',
     icon: PictureInPictureIcon,
     dependences: [
       {
-      path: "/modulos",
-      name: "Listado",
-      rtlName: "LM",
-      icon: ListIcon,
-      component: Modulos,
-      layout: "/admin"
-    },
-    {
-      path: "/nuevomodulo",
-      name: "Nuevo",
-      rtlName: "NM",
-      icon: AddBoxIcon,
-      component: NewModulo,
-      layout: "/admin"
+        path: "/modulos",
+        name: "Listado",
+        rtlName: "LM",
+        icon: ListIcon,
+        component: Modulos,
+        layout: "/admin"
+      },
+      {
+        path: "/nuevomodulo",
+        name: "Nuevo",
+        rtlName: "NM",
+        icon: AddBoxIcon,
+        component: NewModulo,
+        layout: "/admin"
 
-    }]
+      }]
   },
   {
     path: "/panol",
@@ -214,23 +244,23 @@ const dashboardRoutes = [
 
 
 export const breadcrumRoutes = [
-{
-  path:"/admin/usuarios",
-  name:"Usuarios",
-  to:"/admin/usuarios",
-  children:[
-    {
-      path:"/nuevousuario",
-      name:"Nuevo",
-      to:"/admin/usuarios/nuevousuario"
-    },
-    {
-      path:"/editarusuario",
-      name:"Editar",
-      to:"/admin/usuarios/editarusuario"
-    }
-  ]
-}
+  {
+    path: "/admin/usuarios",
+    name: "Usuarios",
+    to: "/admin/usuarios",
+    children: [
+      {
+        path: "/nuevousuario",
+        name: "Nuevo",
+        to: "/admin/usuarios/nuevousuario"
+      },
+      {
+        path: "/editarusuario",
+        name: "Editar",
+        to: "/admin/usuarios/editarusuario"
+      }
+    ]
+  }
 
 ]
 
