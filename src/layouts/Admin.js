@@ -24,6 +24,9 @@ import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 import bgImage from "assets/img/boxside.jpg";
 import boxlogoside from "assets/img/boxlogoside.png";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 let ps;
 
 const switchRoutes = (
@@ -158,8 +161,9 @@ export default function Admin({ ...rest }) {
             .then(res => {
               if (res.data.success == 1) {
                   setUser(res.data.user);
-              } else if (res.data.success == 3) {
-                //rest.history.replace('/');
+              } else {
+               // toast.error("No esta autenticado en el sistema");
+               // rest.history.replace('/');
               }
 
             })
@@ -214,6 +218,7 @@ export default function Admin({ ...rest }) {
                 </Breadcrumbs>
 
             <div className={classes.container}>{switchRoutes}</div>
+             <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={2000}/>
           </div>
         ) : (
             <div className={classes.map}>{switchRoutes}</div>

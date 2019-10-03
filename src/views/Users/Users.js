@@ -20,8 +20,8 @@ import EditUser from "./components/EditUser";
 import ModalDelete from "./components/ModalDelete"
 import { localization } from "variables/general.js";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+
 
 import { StateListUsers, ColumnsListado } from "./VariablesState";
 
@@ -179,9 +179,7 @@ class Users extends Component {
   }
 
   handleDeleteUser = rowData => {
-    this.setState({
-      openDeleteDialog: false
-    })
+  
     axios.post('/delete-user', { id: rowData.id }).then(res => {
       if (res.data.success == 1) {
         let users = [...this.state.users]
@@ -192,11 +190,15 @@ class Users extends Component {
           return true
 
         })
-        toast.success("El usuario se ha eliminado con exito!");
+        
         this.setState({
-          users: users
+          users: users,
+          openDeleteDialog:false
+        },()=>{
+          toast.success("El usuario se ha eliminado con exito!");
         })
       } else {
+        
         toast.error(res.data.error_msj);
 
       }
@@ -243,7 +245,6 @@ class Users extends Component {
             </CardHeader>
             <CardBody>
               <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/nuevousuario')} color="primary"><AddIcon /> Nuevo Usuario</Button>
-              <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={2000} />
               <MaterialTable
                 isLoading={this.state.isLoading}
                 columns={ColumnsListado}

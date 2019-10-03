@@ -77,7 +77,7 @@ ReactDOM.render(
   <Router history={hist}>
    <ThemeProvider theme={theme}>
     <Switch>
-      <Route path="/admin" component={Admin} />
+      <Route path="/admin" component={Admin} />      
       <Route from="/" component={Root}  />
     </Switch>
     </ThemeProvider>

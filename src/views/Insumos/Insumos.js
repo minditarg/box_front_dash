@@ -7,8 +7,7 @@ import { Route, Switch, Link } from 'react-router-dom';
 import MaterialTable from "material-table";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import { CardActions } from "@material-ui/core";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import ModalDelete from "./ModalDelete";
 import EditInsumo from "./components/EditInsumo";
 import Button from "components/CustomButtons/Button.js";
@@ -80,10 +79,7 @@ class Insumos extends Component {
             insumos: resultado
           })
         } else if (res.data.success == 3 || res.data.success == 4) {
-          toast.error(res.data.error_msj);
-          setTimeout(() => {
-            this.props.history.replace('/');
-          }, 3500)
+        
         }
 
       }, err => {
@@ -208,7 +204,7 @@ class Insumos extends Component {
         handleClose={() => this.handleClose()}
         handleDelete={(rowData) => this.handleDelete(rowData)}
       />,
-      <ToastContainer  key={"insumos-toast"} position={toast.POSITION.BOTTOM_RIGHT} autoClose={3000} />
+
 
     ]);
   }

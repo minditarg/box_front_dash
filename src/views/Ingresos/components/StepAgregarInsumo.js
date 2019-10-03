@@ -1,16 +1,24 @@
+//COMPONENTES GENERALES
 import React from 'react';
+import axios from "axios";
+
+//COMPONENTES LOCALES
+import Input from "components/Input/Input";
+import {localization} from "variables/general.js";
+
+//ESTILOS Y COLORES
 import { makeStyles } from '@material-ui/core/styles';
+
+//CONTENEDORES
+import MaterialTable, { MTableBodyRow } from "material-table";
+import Paper from '@material-ui/core/Paper';
+
+//BOTONES Y VARIOS
+import Button from '@material-ui/core/Button';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import MaterialTable, { MTableBodyRow } from "material-table";
-import Input from "components/Input/Input";
-import axios from "axios";
-import Paper from '@material-ui/core/Paper';
-import {localization} from "variables/general.js";
-
 
 
 
@@ -34,6 +42,7 @@ function getSteps() {
 
 
 export default function HorizontalLabelPositionBelowStepper(props) {
+    const classes = useStyles();
     const [orderForm, setOrderForm] = React.useState({
         cantidad: {
             elementType: 'input',
@@ -58,18 +67,31 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const [isLoading, setIsLoading] = React.useState(false);
     const [insumos, setInsumos] = React.useState([]);
     const [rowInsumo, setRowInsumo] = React.useState(null);
-    const formElementsArray = [];
-    for (let key in orderForm) {
-        formElementsArray.push({
-            id: key,
-            config: orderForm[key]
-        });
-    }
-    const classes = useStyles();
+    const formElementsArray = [];  
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
 
 
+     React.useEffect(() => {
+
+        getInsumos();
+
+    }, []);
+
+     const getInsumos = () => {
+        setIsLoading(true);
+        axios.get('/list-insumos')
+            .then(res => {
+                setIsLoading(false);
+                if (res.data.success == 1) {
+                    let resultado = [...res.data.result];
+                    setInsumos(resultado);
+                }
+            })
+    }
+
+
+   
 
     const handleNext = () => {
         let orderFormAlt = { ...orderForm };
@@ -193,24 +215,12 @@ export default function HorizontalLabelPositionBelowStepper(props) {
         }
     }
 
-    const getInsumos = () => {
-        setIsLoading(true);
-        axios.get('/list-insumos')
-            .then(res => {
-                setIsLoading(false);
-                if (res.data.success == 1) {
-                    let resultado = [...res.data.result];
-                    setInsumos(resultado);
-                }
-            })
+     for (let key in orderForm) {
+        formElementsArray.push({
+            id: key,
+            config: orderForm[key]
+        });
     }
-
-
-    React.useEffect(() => {
-
-        getInsumos();
-
-    }, []);
 
     return (
         <div className={classes.root}>

@@ -104,6 +104,23 @@ export default function SignInSide(props) {
   const classes = useStyles();
   const [estado, setEstado] = React.useState(estadoVar);
 
+React.useEffect(() => {
+
+         axios.get('/me')
+            .then(res => {
+              if (res.data.success == 1) {
+                props.history.replace('/admin');
+            
+              } else {
+                if(props.match.params.parameter == 'no-auth')
+                  alert('no esta autenticado');
+              } 
+            })
+
+
+  }, []);
+
+
   const handleSubmit = (event, index) => {
       event.preventDefault();
       axios.post(`/login-json`, { username: estado.orderForm.username.value, password: estado.orderForm.password.value })

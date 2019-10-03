@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import Input from 'components/Input/Input';
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 import { withStyles } from '@material-ui/styles';
 

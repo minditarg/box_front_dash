@@ -60,7 +60,16 @@ const styles = {
 class Modulos extends Component {
   state = {
     modulos: [],
-    actions: []
+    actions: [ {
+              icon: 'edit',
+              tooltip: 'Editar Modulo',
+              onClick: (event, rowData) => alert("Editing " + rowData.descripcion)
+            },
+            {
+              icon: 'delete',
+              tooltip: 'Eliminar Modulo',
+              onClick: (event, rowData) => this.deleteMaterial(rowData.id)
+            }]
   };
 
 
@@ -91,27 +100,9 @@ class Modulos extends Component {
 
   componentDidMount() {
 
-    axios.get('/me')
-      .then(res => {
-        if (res.data.success != 1)
-          this.props.history.replace('/');
-        else {
-          // TODO: REVISAR SI ESTO ESTA BIEN O COMO ES ASINCRONICO PUEDE NO CARGAR EL ACTIONS ANTES DE QUE MUESTRE LA TABLA CON EL getModulos y al tocar el icono pinche
-          this.state.actions = [
-            {
-              icon: 'edit',
-              tooltip: 'Editar Modulo',
-              onClick: (event, rowData) => alert("Editing " + rowData.descripcion)
-            },
-            {
-              icon: 'delete',
-              tooltip: 'Eliminar Modulo',
-              onClick: (event, rowData) => this.deleteMaterial(rowData.id)
-            }
-          ];
-          this.getModulos();
-        }
-      })
+
+    this.getModulos();
+
 
   }
 
@@ -128,26 +119,26 @@ class Modulos extends Component {
                       </p>
           </CardHeader>
           <CardBody>
-          <MaterialTable
-            columns={columns}
-            data={this.state.modulos}
-            title=""
-            actions={this.state.actions}
-            localization={localization}
+            <MaterialTable
+              columns={columns}
+              data={this.state.modulos}
+              title=""
+              actions={this.state.actions}
+              localization={localization}
 
-            options={{
-              exportButton: true,
-              headerStyle: {
-                backgroundColor: lightGreen[700],
-                color: '#FFF'
-              },
-            }}
-          />
-                </CardBody>
-            </Card>
-      <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={2000} />
-            </div >
-        );
+              options={{
+                exportButton: true,
+                headerStyle: {
+                  backgroundColor: lightGreen[700],
+                  color: '#FFF'
+                },
+              }}
+              />
+          </CardBody>
+        </Card>
+        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={2000} />
+      </div >
+    );
   }
 }
 

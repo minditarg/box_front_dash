@@ -32,8 +32,7 @@ import Dialog from '@material-ui/core/Dialog';
 import StepAgregarInsumo from './components/StepAgregarInsumo';
 import Paper from '@material-ui/core/Paper';
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -385,8 +384,7 @@ class NewIngreso extends Component {
 
 
                                 <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/ingresos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
-                                <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={2000} />
-
+                                
                             </CardBody>
                         </Card>
                     </GridItem>
