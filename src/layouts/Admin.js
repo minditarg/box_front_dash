@@ -60,7 +60,10 @@ const switchRoutes = (
 
 const useStyles = makeStyles(styles);
 
-
+toast.configure({
+   position: toast.POSITION.BOTTOM_RIGHT,
+   autoClose: 2000,
+});
 
 
 
@@ -218,7 +221,7 @@ export default function Admin({ ...rest }) {
                 </Breadcrumbs>
 
             <div className={classes.container}>{switchRoutes}</div>
-             <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={2000}/>
+
           </div>
         ) : (
             <div className={classes.map}>{switchRoutes}</div>
