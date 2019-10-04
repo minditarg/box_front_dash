@@ -108,13 +108,11 @@ React.useEffect(() => {
 
          axios.get('/me')
             .then(res => {
+              console.log(res);
               if (res.data.success == 1) {
                 props.history.replace('/admin');
             
-              } else {
-                if(props.match.params.parameter == 'no-auth')
-                  alert('no esta autenticado');
-              } 
+              }
             })
 
 

@@ -35,7 +35,7 @@ export default function Header(props) {
   }
 
 
-
+  console.log(props);
   const { color } = props;
   const appBarClasses = classNames({
     [" " + classes[color]]: color

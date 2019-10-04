@@ -165,7 +165,7 @@ export default function Admin({ ...rest }) {
               if (res.data.success == 1) {
                   setUser(res.data.user);
               } else {
-               // toast.error("No esta autenticado en el sistema");
+                toast.error("No esta autenticado en el sistema");
                // rest.history.replace('/');
               }
 
@@ -184,7 +184,8 @@ export default function Admin({ ...rest }) {
 
     <div className={classes.wrapper}>
       <Sidebar
-
+        handleCloseSession={()=>handleCloseSession()}
+        user={user}
         routes={routes}
         logoText={"box app"}
         logo={boxlogoside}
