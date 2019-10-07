@@ -77,8 +77,30 @@ class NewInsumo extends Component {
     return { isValid: isValid, textValid: textValid };
   }
 
+  getCategorias = () => {
+    axios.get('/list-categorias')
+      .then(res => {
+        if (res.data.success == 1) {
+          let resultadoCategorias = [...res.data.result];
+          let a = [];
+          resultadoCategorias.forEach(function (entry) {
+          //  alert(entry.codigo);
+            a.push({
+              value: entry.id,
+              displayValue: entry.codigo
+            });
+          })
+          let formulario = { ...this.state.newInsumoForm }
+          formulario.categoria.elementConfig.options = [...a];
+          this.setState({
+            newUserForm: formulario
+          })
+        }
+      })
+  }
+
   inputChangedHandler = (event, inputIdentifier) => {
-    //alert("modificado");
+  //  alert(inputIdentifier);
     let checkValid;
     const updatedOrderForm = {
       ...this.state.newInsumoForm
@@ -96,6 +118,14 @@ class NewInsumo extends Component {
     let formIsValidAlt = true;
     for (let inputIdentifier in updatedOrderForm) {
       formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
+    }
+
+    if(inputIdentifier == "categoria")
+    {
+      console.log(updatedOrderForm[inputIdentifier]);
+      alert(updatedOrderForm[inputIdentifier].elementConfig.options.);
+      updatedOrderForm["codigo"].value = updatedOrderForm[inputIdentifier].value;
+      
     }
 
     this.setState({
@@ -136,6 +166,11 @@ resetForm = () => {
     newInsumoForm:newInsumoForm
   })
 
+}
+
+componentDidMount() {
+
+  this.getCategorias();
 }
 
   render() {

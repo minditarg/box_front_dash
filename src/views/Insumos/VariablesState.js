@@ -1,26 +1,26 @@
 export const StateListado = {
   insumos: [],
- 
 
 
-  openDeleteDialog:false,
-      deleteRowData:null,
-      isLoading:false
+
+  openDeleteDialog: false,
+  deleteRowData: null,
+  isLoading: false
 
 
 }
 export const ColumnsListado = [
-{ title: "Codigo", field: "codigo" },
-{ title: "Descripcion", field: "descripcion" },
-{ title: "Unidad", field: "unidad" },
-{ title: "Stock Minimo", field: "minimo" }
+  { title: "Codigo", field: "codigo" },
+  { title: "Descripcion", field: "descripcion" },
+  { title: "Unidad", field: "unidad" },
+  { title: "Stock Minimo", field: "minimo" }
 ];
 
 export const ColumnsListadoCategorias = [
   { title: "Codigo", field: "codigo" },
   { title: "Descripcion", field: "descripcion" }
-  ];
-  
+];
+
 
 
 export const StateNewCategoria =
@@ -63,6 +63,23 @@ export const StateNewInsumo =
 {
   insumos: [],
   newInsumoForm: {
+    categoria: {
+      elementType: 'select',
+      elementConfig: {
+        label: 'Categoria de Insumo',
+        options: [
+
+        ],
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+
+      valid: false,
+      touched: false
+    },
     codigo: {
       elementType: 'input',
       elementConfig: {
@@ -125,9 +142,26 @@ export const StateNewInsumo =
 
 export const StateEditInsumo =
 {
- editFormIsValid: false,
-  insumoEdit:null,
+  editFormIsValid: false,
+  insumoEdit: null,
   editInsumoForm: {
+    categoria: {
+      elementType: 'select',
+      elementConfig: {
+        label: 'Categoria de Insumo',
+        options: [
+
+        ],
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+
+      valid: false,
+      touched: false
+    },
     codigo: {
       elementType: 'input',
       elementConfig: {
@@ -190,8 +224,8 @@ export const StateEditInsumo =
 
 export const StateEditCategoria =
 {
- editFormIsValid: false,
-  insumoEdit:null,
+  editFormIsValid: false,
+  insumoEdit: null,
   editCategoriaForm: {
     codigo: {
       elementType: 'input',
