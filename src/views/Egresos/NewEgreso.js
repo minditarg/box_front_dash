@@ -1,43 +1,36 @@
+//MODULOS GENERALES
 import React, { Component } from "react";
 import axios from "axios";
+import { toast } from 'react-toastify';
+
+//COMPONENTES LOCALES
+import {localization} from "variables/general.js";
 import Input from "components/Input/Input";
 
-// import { AddBox, ArrowUpward } from "@material-ui/icons";
-// import ReactDOM from "react-dom";
-import MaterialTable from "material-table";
-import { CardActions } from "@material-ui/core";
+//ESTILOS
 import { withStyles } from '@material-ui/styles';
-
-import CardHeader from "components/Card/CardHeader.js";
-import CardBody from "components/Card/CardBody.js";
-import Card from "components/Card/Card.js";
-import Button from "components/CustomButtons/Button.js";
-import ArrowBack from '@material-ui/icons/ArrowBack';
-import Save from '@material-ui/icons/Save';
-import SnackbarContent from "components/Snackbar/SnackbarContent.js";
-
+//DIALOGS Y CONTENEDORES
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
+import MaterialTable from "material-table";
+import CardHeader from "components/Card/CardHeader.js";
+import CardBody from "components/Card/CardBody.js";
+import Card from "components/Card/Card.js";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import {localization} from "variables/general.js";
+//ICONOS Y BUTTONS
+import ArrowBack from '@material-ui/icons/ArrowBack';
+import Save from '@material-ui/icons/Save';
+import Button from "components/CustomButtons/Button.js";
 
 
-// const columns = [{ title: "id", field: "id" },
-// { title: "Usuario", field: "username" },
-// { title: "Identificador", field: "identificador" },
-// { title: "Proveedor", field: "proveedor" },
-// { title: "Fecha", field: "fecha" }
-// ];
+
 
 const columnsInsumos = [{ title: "id", field: "id", editable: 'never' },
 { title: "Codigo", field: "codigo", editable: 'never' },
 { title: "Descripcion", field: "descripcion", editable: 'never' },
 { title: "Activo", field: "activo", editable: 'never' },
 { title: "Cantidad", field: "cantidad", type: 'numeric' }
-//{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
 ];
 
 const styles = {
@@ -75,8 +68,17 @@ class NewEgreso extends Component {
         egresos: [],
         open: false,
         detalleegresos: [],
-        actions: [],
-        actionsInsumos: [],
+        actions: [ {
+              icon: 'delete',
+              tooltip: 'Eliminar Insumo',
+              onClick: (event, rowData) => this.deleteInsumo(rowData)
+            }],
+        actionsInsumos: [ {
+              icon: 'save',
+              tooltip: 'Seleccionar Insumo',
+              onClick: (event, rowData) => this.insumoSelectHandler(rowData.id)
+              
+            }],
         insumos: [],
         insumoSeleccionado: 0,
         orderForm: {
@@ -116,6 +118,13 @@ class NewEgreso extends Component {
         egresoInsertado: false
     }
 
+
+    componentDidMount() {
+    
+        this.getInsumos();
+        this.getModulosEnProduccion();
+    }
+
     getInsumos = () => {
         axios.get('/list-insumos')
           .then(res => {
@@ -142,17 +151,11 @@ class NewEgreso extends Component {
                         });
                     })
 
-                   // console.log(a);
                     let ordenformNuevo = { ...this.state.orderForm };
-                   // console.log("antes");
-                   // console.log(ordenformNuevo.codigo.options);
                     ordenformNuevo.codigo.elementConfig.options = [...a];   
-                  //  console.log(ordenformNuevo);
-                  //  console.log("despues");      
-                  //  console.log(ordenformNuevo.codigo.elementConfig.options);
                     this.setState({
                         orderForm: ordenformNuevo
-                    },()=>console.log(this.state))
+                    })
                     
                 }
               })
@@ -183,7 +186,7 @@ class NewEgreso extends Component {
 
 
     updateInfoModulo = (idModulo) => {
-        //alert(idModulo);
+       
         axios.get('/select-modulo/'+idModulo)
           .then(res => {
             if (res.data.success == 1) {
@@ -191,7 +194,7 @@ class NewEgreso extends Component {
               let newOrderForm = {...this.state.orderForm};
 
               console.log("RES: " + resultado);
-             // alert(resultado[0]);
+             
               newOrderForm.descripcion.value = resultado[0].descripcion;
 
               this.setState({
@@ -202,7 +205,7 @@ class NewEgreso extends Component {
     }
 
     inputChangedHandler = (event, inputIdentifier) => {
-        //alert("modificado");
+        
         let checkValid;
         const updatedOrderForm = {
             ...this.state.orderForm
@@ -212,10 +215,8 @@ class NewEgreso extends Component {
         };
 
         if (inputIdentifier == "codigo")
-        {
-           
+        {       
             this.updateInfoModulo(event.target.value);
-
         }
 
         updatedFormElement.value = event.target.value;
@@ -294,8 +295,7 @@ class NewEgreso extends Component {
     }
 
 
-    deleteInsumo = (rowData) => {
-        
+    deleteInsumo = (rowData) => {     
         //alert("eliminando: " + this.state.detalleegresos.indexOf(rowData));
         //data.splice(data.indexOf(oldData), 1);
         let detalleegresosant = [...this.state.detalleegresos];
@@ -307,24 +307,7 @@ class NewEgreso extends Component {
     }
     
 
-    componentDidMount() {
-        this.state.actions=[
-            {
-              icon: 'delete',
-              tooltip: 'Eliminar Insumo',
-              onClick: (event, rowData) => this.deleteInsumo(rowData)
-            }
-          ];
-        this.state.actionsInsumos=[
-            {
-              icon: 'save',
-              tooltip: 'Seleccionar Insumo',
-              onClick: (event, rowData) => this.insumoSelectHandler(rowData.id)
-              
-            }];
-        this.getInsumos();
-        this.getModulosEnProduccion();
-    }
+    
 
     render() {
         const formElementsArray = [];
@@ -427,7 +410,7 @@ class NewEgreso extends Component {
                         />
 
                         <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
-                        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={2000}/>
+                       
 
                     </CardBody>
                 </Card>

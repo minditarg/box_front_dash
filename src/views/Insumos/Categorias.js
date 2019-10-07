@@ -7,8 +7,7 @@ import { Route, Switch, Link } from 'react-router-dom';
 import MaterialTable from "material-table";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import { CardActions } from "@material-ui/core";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
 import ModalDeleteCategoria from "./ModalDeleteCategoria";
 import EditCategoria from "./components/EditCategoria";
 
@@ -71,10 +70,7 @@ class Categorias extends Component {
             categorias: resultado
           })
         } else if (res.data.success == 3 || res.data.success == 4) {
-          toast.error(res.data.error_msj);
-          setTimeout(() => {
-            this.props.history.replace('/');
-          }, 3500)
+          
         }
 
       }, err => {
@@ -186,7 +182,7 @@ class Categorias extends Component {
         handleClose={() => this.handleClose()}
         handleDelete={(rowData) => this.handleDelete(rowData)}
       />,
-      <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={3000} />
+
 
     ]);
   }

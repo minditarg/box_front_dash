@@ -47,8 +47,9 @@ export default function AdminNavbarLinks(props) {
   const handleCloseProfile = () => {
     setOpenProfile(null);
   };
-
-  const handleCloseSession = () => {
+  console.log(props);
+  const f_handleCloseSession = (event) => {
+    event.preventDefault();
     setOpenProfile(null);
     props.handleCloseSession();
   };
@@ -223,7 +224,7 @@ export default function AdminNavbarLinks(props) {
                     <Divider light />
                   */}
                     <MenuItem
-                      onClick={handleCloseSession}
+                      onClick={(event)=>f_handleCloseSession(event)}
                       className={classes.dropdownItem}
                     >
                       Cerrar Sesión

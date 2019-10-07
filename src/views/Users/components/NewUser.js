@@ -6,7 +6,7 @@ import { StateNewUser } from "../VariablesState";
 
 import axios from "axios";
 
-import { toast,ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -243,7 +243,6 @@ class NewUser extends Component {
         </Card>
 
 
-          <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={3000}/>
 
       </ form>
 

@@ -16,8 +16,7 @@ import Button from "components/CustomButtons/Button.js";
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 import { StateNewInsumo } from "./VariablesState";
 
@@ -212,7 +211,7 @@ componentDidMount() {
             ))}
 
             <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/insumos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
-            <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={2000}/>
+            
           </CardBody>
         </Card>
       </ form>

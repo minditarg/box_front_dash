@@ -20,8 +20,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {  toast } from 'react-toastify';
 import {localization} from "variables/general.js";
 
 
@@ -309,7 +308,7 @@ class AjusteStock extends Component {
 
 
                         <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Ajustar </Button>
-                        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={2000} />
+                      
 
                     </CardBody>
                 </Card>

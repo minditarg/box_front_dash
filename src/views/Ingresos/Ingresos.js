@@ -5,8 +5,7 @@ import { Route, Switch, Link } from 'react-router-dom';
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
 import MaterialTable from "material-table";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {toast } from 'react-toastify';
 import { CardActions } from "@material-ui/core";
 import Moment from 'react-moment';
 import { localization } from "variables/general.js";
@@ -172,7 +171,7 @@ class Ingresos extends Component {
         </Switch>
 
 
-        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={2000} />
+      
       </div>
     );
   }

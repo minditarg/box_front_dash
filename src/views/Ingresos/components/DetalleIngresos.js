@@ -1,17 +1,23 @@
+//MODULOS GENERALES
 import React, { Component } from "react";
 import axios from "axios";
-import { withStyles } from '@material-ui/styles';
 import moment from "moment";
 
+//ESTILOS Y COLORES
+import { withStyles } from '@material-ui/styles';
+import yellow from '@material-ui/core/colors/yellow';
+import green from '@material-ui/core/colors/green';
+import blueGrey from '@material-ui/core/colors/blueGrey';
+
+//CONTENEDORES
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-import yellow from '@material-ui/core/colors/yellow';
-import green from '@material-ui/core/colors/green';
-import blueGrey from '@material-ui/core/colors/blueGrey';
+
+
 
 
 const styles = {}
@@ -20,6 +26,8 @@ class DetalleIngresos extends Component {
     state = {
         detalle: []
     }
+    
+    
     componentDidMount() {
         axios.get('/list-ingresos-detalles/' + this.props.idIngreso + '/' + this.props.cantidadRegistros).then(res => {
             console.log(res);
@@ -29,6 +37,7 @@ class DetalleIngresos extends Component {
             })
         })
     }
+    
     render() {
 
 

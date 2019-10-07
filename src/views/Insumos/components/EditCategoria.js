@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import Input from 'components/Input/Input';
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 import { withStyles } from '@material-ui/styles';
 
@@ -48,140 +47,141 @@ const styles = {
 
 
 class EditCategoria extends Component {
-state= JSON.parse(JSON.stringify(StateEditCategoria));
+  state = JSON.parse(JSON.stringify(StateEditCategoria));
 
-    getCategoriaEdit = (id) => {
-        axios.get('/list-categorias/' + id)
-              .then(resultado => {
-                  //alert(resultado);
-                  if(resultado.data.success == 1) {
-                      if(resultado.data.result.length > 0) {
-                        this.setState({
-                          categoriaEdit:resultado.data.result[0]
-                        })
+  getCategoriaEdit = (id) => {
+    axios.get('/list-categorias/' + id)
+      .then(resultado => {
+        //alert(resultado);
+        if (resultado.data.success == 1) {
+          if (resultado.data.result.length > 0) {
+            this.setState({
+              categoriaEdit: resultado.data.result[0]
+            })
 
-                        let editCategoriaFormAlt = {...this.state.editCategoriaForm};
-                          editCategoriaFormAlt.codigo.value = resultado.data.result[0].codigo;
-                          editCategoriaFormAlt.descripcion.value = resultado.data.result[0].descripcion;
+            let editCategoriaFormAlt = { ...this.state.editCategoriaForm };
+            editCategoriaFormAlt.codigo.value = resultado.data.result[0].codigo;
+            editCategoriaFormAlt.descripcion.value = resultado.data.result[0].descripcion;
 
-                          for(let key in editCategoriaFormAlt){
-                            editCategoriaFormAlt[key].touched = true;
-                            editCategoriaFormAlt[key].valid = true;
-                          }
-                          this.setState({
-                            editCategoriaForm:editCategoriaFormAlt
-                          })
-                      }
-                        else
-                    {
-                      this.setState({
-                        categoriaEdit:null
-                      })
-                    }
-                  }
-              })
-      }
-
-      handleSubmitEditCategoria = (event) => {
-
-          event.preventDefault();
-          axios.post(`/update-categorias`, { id:this.state.categoriaEdit.id,codigo: this.state.editCategoriaForm.codigo.value, descripcion: this.state.editCategoriaForm.descripcion.value})
-              .then(res => {
-                  let estadoAlt = null
-                  if (res.data.success == 0) {
-                      estadoAlt = false
-                  }
-                  if (res.data.success == 1) {
-                      estadoAlt = true
-                  }
-
-                  if(estadoAlt){
-
-                    this.setState({
-                      editFormIsValid:false
-                    })
-                    toast.success("Los cambios se realizaron correctamente");
-                    }
-              })
-
-      }
-
-      checkValidity = (value, rules) => {
-          let isValid = true;
-          let textValid = null;
-
-          if (rules.required && isValid) {
-              isValid = value.toString().trim() !== '';
-              textValid = 'El campo es requerido'
+            for (let key in editCategoriaFormAlt) {
+              editCategoriaFormAlt[key].touched = true;
+              editCategoriaFormAlt[key].valid = true;
+            }
+            this.setState({
+              editCategoriaForm: editCategoriaFormAlt
+            })
           }
-
-          if (rules.minLength && isValid) {
-              isValid = value.length >= rules.minLength;
-              textValid = 'La cantidad de caracteres minimos es ' + rules.minLength
+          else {
+            this.setState({
+              categoriaEdit: null
+            })
           }
+        }
+      })
+  }
 
-          if (rules.maxLength && isValid) {
-              isValid = value.length <= rules.maxLength ;
-              textValid = 'Supera el maximo de caracteres';
-          }
+  handleSubmitEditCategoria = (event) => {
 
-          return {isValid:isValid,textValid:textValid};
-      }
-
-
-
-
-      inputEditChangedHandler = (event, inputIdentifier) => {
-          let checkValid;
-          const updatedOrderForm = {
-              ...this.state.editCategoriaForm
-          };
-          const updatedFormElement = {
-              ...updatedOrderForm[inputIdentifier]
-          };
-          updatedFormElement.value = event.target.value;
-          checkValid =  this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
-          updatedFormElement.valid = checkValid.isValid;
-          updatedFormElement.textValid = checkValid.textValid;
-          updatedFormElement.touched = true;
-          updatedOrderForm[inputIdentifier] = updatedFormElement;
-
-          let formIsValidAlt = true;
-          for (let inputIdentifier in updatedOrderForm) {
-              formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
-          }
-          this.setState({
-            editCategoriaForm:updatedOrderForm,
-            editFormIsValid:formIsValidAlt
-          })
-
-      }
-
-
-      editSingleCategoria = value => {
-      this.props.history.push(this.props.match.url + '/editarcategoria/' + value);
-      }
-
-
-      resetEditForm = ()=> {
-      let editCategoriaFormAlt = {...this.state.editCategoriaForm};
-        for(let key in editCategoriaFormAlt){
-          editCategoriaFormAlt[key].value = ''
+    event.preventDefault();
+    axios.post(`/update-categorias`, { id: this.state.categoriaEdit.id, codigo: this.state.editCategoriaForm.codigo.value, descripcion: this.state.editCategoriaForm.descripcion.value })
+      .then(res => {
+        let estadoAlt = null
+        if (res.data.success == 0) {
+          estadoAlt = false
+        }
+        if (res.data.success == 1) {
+          estadoAlt = true
         }
 
-        this.setState({
-          editCategoriaForm:editCategoriaFormAlt,
-          editFormIsValid:false
-        })
+        if (estadoAlt) {
+
+          this.setState({
+            editFormIsValid: false
+          }, () => {
+            toast.success("Los cambios se realizaron correctamente");
+          })
+
+        }
+      })
+
+  }
+
+  checkValidity = (value, rules) => {
+    let isValid = true;
+    let textValid = null;
+
+    if (rules.required && isValid) {
+      isValid = value.toString().trim() !== '';
+      textValid = 'El campo es requerido'
+    }
+
+    if (rules.minLength && isValid) {
+      isValid = value.length >= rules.minLength;
+      textValid = 'La cantidad de caracteres minimos es ' + rules.minLength
+    }
+
+    if (rules.maxLength && isValid) {
+      isValid = value.length <= rules.maxLength;
+      textValid = 'Supera el maximo de caracteres';
+    }
+
+    return { isValid: isValid, textValid: textValid };
+  }
 
 
-      }
 
 
-      componentDidMount() {
-        this.getCategoriaEdit(this.props.match.params.idcategoria);
+  inputEditChangedHandler = (event, inputIdentifier) => {
+    let checkValid;
+    const updatedOrderForm = {
+      ...this.state.editCategoriaForm
+    };
+    const updatedFormElement = {
+      ...updatedOrderForm[inputIdentifier]
+    };
+    updatedFormElement.value = event.target.value;
+    checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+    updatedFormElement.valid = checkValid.isValid;
+    updatedFormElement.textValid = checkValid.textValid;
+    updatedFormElement.touched = true;
+    updatedOrderForm[inputIdentifier] = updatedFormElement;
 
-      }
+    let formIsValidAlt = true;
+    for (let inputIdentifier in updatedOrderForm) {
+      formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
+    }
+    this.setState({
+      editCategoriaForm: updatedOrderForm,
+      editFormIsValid: formIsValidAlt
+    })
+
+  }
+
+
+  editSingleCategoria = value => {
+    this.props.history.push(this.props.match.url + '/editarcategoria/' + value);
+  }
+
+
+  resetEditForm = () => {
+    let editCategoriaFormAlt = { ...this.state.editCategoriaForm };
+    for (let key in editCategoriaFormAlt) {
+      editCategoriaFormAlt[key].value = ''
+    }
+
+    this.setState({
+      editCategoriaForm: editCategoriaFormAlt,
+      editFormIsValid: false
+    })
+
+
+  }
+
+
+  componentDidMount() {
+    this.getCategoriaEdit(this.props.match.params.idcategoria);
+
+  }
 
 
 
