@@ -1,225 +1,233 @@
 export const StateListado = {
   insumos: [],
- 
 
 
-  openDeleteDialog:false,
-      deleteRowData:null,
-      isLoading:false
+
+  openDeleteDialog: false,
+  deleteRowData: null,
+  isLoading: false
 
 
 }
 export const ColumnsListado = [
-{ title: "Codigo", field: "codigo" },
-{ title: "Descripcion", field: "descripcion" },
-{ title: "Unidad", field: "unidad" },
-{ title: "Stock Minimo", field: "minimo" }
+  { title: "Codigo", field: "codigo" },
+  { title: "Descripcion", field: "descripcion" },
+  { title: "Unidad", field: "unidad" },
+  { title: "Stock Minimo", field: "minimo" }
 ];
 
 export const ColumnsListadoCategorias = [
   { title: "Codigo", field: "codigo" },
   { title: "Descripcion", field: "descripcion" }
-  ];
-  
+];
+
 
 
 export const StateNewCategoria =
-{
-  insumos: [],
-  newCategoriaForm: {
-    codigo: {
-      elementType: 'input',
-      elementConfig: {
-        type: 'text',
-        label: 'Codigo Interno',
-        fullWidth: true
+  {
+    insumos: [],
+    newCategoriaForm: {
+      codigo: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          label: 'Codigo Interno',
+          fullWidth: true
+        },
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
       },
-      value: '',
-      validation: {
-        required: true
-      },
-      valid: false,
-      touched: false
+      descripcion: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          label: 'Descripcion',
+          fullWidth: true
+        },
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
+      }
     },
-    descripcion: {
-      elementType: 'input',
-      elementConfig: {
-        type: 'text',
-        label: 'Descripcion',
-        fullWidth: true
-      },
-      value: '',
-      validation: {
-        required: true
-      },
-      valid: false,
-      touched: false
-    }
-  },
-  formIsValid: false
-}
+    formIsValid: false
+  }
 
 export const StateNewInsumo =
-{
-  insumos: [],
-  newInsumoForm: {
-    codigo: {
-      elementType: 'input',
-      elementConfig: {
-        type: 'text',
-        label: 'Codigo Interno',
-        fullWidth: true
+  {
+    insumos: [],
+    newInsumoForm: {
+      codigo: {
+        elementType: 'autosuggest',
+        elementConfig: {
+          type: 'text',
+          label: 'Codigo Interno',
+          fullWidth: true,
+           suggestions: [
+          { label: 'Antarctica' },
+          { label: 'Antigua and Barbuda' },
+          { label: 'Argentina' },
+          { label: 'Armenia' },
+
+        ]
+        },
+       
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
       },
-      value: '',
-      validation: {
-        required: true
+      descripcion: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          label: 'Descripcion',
+          fullWidth: true
+        },
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
       },
-      valid: false,
-      touched: false
+      unidad: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          label: 'Unidad',
+          fullWidth: true
+        },
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
+      },
+      minimo: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          label: 'Stock Minimo',
+          fullWidth: true
+        },
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
+      }
     },
-    descripcion: {
-      elementType: 'input',
-      elementConfig: {
-        type: 'text',
-        label: 'Descripcion',
-        fullWidth: true
-      },
-      value: '',
-      validation: {
-        required: true
-      },
-      valid: false,
-      touched: false
-    },
-    unidad: {
-      elementType: 'input',
-      elementConfig: {
-        type: 'text',
-        label: 'Unidad',
-        fullWidth: true
-      },
-      value: '',
-      validation: {
-        required: true
-      },
-      valid: false,
-      touched: false
-    },
-    minimo: {
-      elementType: 'input',
-      elementConfig: {
-        type: 'text',
-        label: 'Stock Minimo',
-        fullWidth: true
-      },
-      value: '',
-      validation: {
-        required: true
-      },
-      valid: false,
-      touched: false
-    }
-  },
-  formIsValid: false
-}
+    formIsValid: false
+  }
 
 export const StateEditInsumo =
-{
- editFormIsValid: false,
-  insumoEdit:null,
-  editInsumoForm: {
-    codigo: {
-      elementType: 'input',
-      elementConfig: {
-        type: 'text',
-        label: 'Codigo Interno',
-        fullWidth: true
+  {
+    editFormIsValid: false,
+    insumoEdit: null,
+    editInsumoForm: {
+      codigo: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          label: 'Codigo Interno',
+          fullWidth: true
+        },
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
       },
-      value: '',
-      validation: {
-        required: true
+      descripcion: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          label: 'Descripcion',
+          fullWidth: true
+        },
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
       },
-      valid: false,
-      touched: false
-    },
-    descripcion: {
-      elementType: 'input',
-      elementConfig: {
-        type: 'text',
-        label: 'Descripcion',
-        fullWidth: true
+      unidad: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          label: 'Unidad',
+          fullWidth: true
+        },
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
       },
-      value: '',
-      validation: {
-        required: true
-      },
-      valid: false,
-      touched: false
-    },
-    unidad: {
-      elementType: 'input',
-      elementConfig: {
-        type: 'text',
-        label: 'Unidad',
-        fullWidth: true
-      },
-      value: '',
-      validation: {
-        required: true
-      },
-      valid: false,
-      touched: false
-    },
-    minimo: {
-      elementType: 'input',
-      elementConfig: {
-        type: 'text',
-        label: 'Stock Minimo',
-        fullWidth: true
-      },
-      value: '',
-      validation: {
-        required: true
-      },
-      valid: false,
-      touched: false
+      minimo: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          label: 'Stock Minimo',
+          fullWidth: true
+        },
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
+      }
     }
-  }
 
-}
+  }
 
 export const StateEditCategoria =
-{
- editFormIsValid: false,
-  insumoEdit:null,
-  editCategoriaForm: {
-    codigo: {
-      elementType: 'input',
-      elementConfig: {
-        type: 'text',
-        label: 'Codigo Interno',
-        fullWidth: true
+  {
+    editFormIsValid: false,
+    insumoEdit: null,
+    editCategoriaForm: {
+      codigo: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          label: 'Codigo Interno',
+          fullWidth: true
+        },
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
       },
-      value: '',
-      validation: {
-        required: true
-      },
-      valid: false,
-      touched: false
-    },
-    descripcion: {
-      elementType: 'input',
-      elementConfig: {
-        type: 'text',
-        label: 'Descripcion',
-        fullWidth: true
-      },
-      value: '',
-      validation: {
-        required: true
-      },
-      valid: false,
-      touched: false
+      descripcion: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          label: 'Descripcion',
+          fullWidth: true
+        },
+        value: '',
+        validation: {
+          required: true
+        },
+        valid: false,
+        touched: false
+      }
     }
   }
-}

@@ -57,7 +57,6 @@ class NewInsumo extends Component {
   checkValidity = (value, rules) => {
     let isValid = true;
     let textValid = null;
-
     if (rules.required && isValid) {
       isValid = value.toString().trim() !== '';
       textValid = 'El campo es requerido'
@@ -76,7 +75,7 @@ class NewInsumo extends Component {
     return { isValid: isValid, textValid: textValid };
   }
 
-  inputChangedHandler = (event, inputIdentifier) => {
+  inputChangedHandler = (event, inputIdentifier, newValue) => {
     //alert("modificado");
     let checkValid;
     const updatedOrderForm = {
@@ -85,7 +84,12 @@ class NewInsumo extends Component {
     const updatedFormElement = {
       ...updatedOrderForm[inputIdentifier]
     };
-    updatedFormElement.value = event.target.value;
+    if (newValue)
+      updatedFormElement.value = newValue;
+    else
+      updatedFormElement.value = event.target.value;
+
+    console.log(updatedFormElement.value)
     checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
     updatedFormElement.valid = checkValid.isValid;
     updatedFormElement.textValid = checkValid.textValid;
@@ -108,34 +112,35 @@ class NewInsumo extends Component {
 
   handleSubmitNewInsumo = (event) => {
     event.preventDefault();
-    axios.post('/insert-insumos', {
-      codigo: event.target[0].value,
-      descripcion: event.target[1].value,
-      unidad: event.target[2].value,
-      minimo: event.target[3].value
-    })
-      .then(res => {
-        if (res.data.success == 1) {
-          this.props.getInsumos();
-          toast.success("Nuevo insumo creado");
-          this.resetForm();
-        }
-        else {
-          toast.error("Error");
-        }
+    if (this.state.formIsValid) {
+      axios.post('/insert-insumos', {
+        codigo: event.target[0].value,
+        descripcion: event.target[1].value,
+        unidad: event.target[2].value,
+        minimo: event.target[3].value
       })
+        .then(res => {
+          if (res.data.success == 1) {
+            this.props.getInsumos();
+            toast.success("Nuevo insumo creado");
+            this.resetForm();
+          }
+          else {
+            toast.error("Error");
+          }
+        })
+    }
   }
+  resetForm = () => {
+    let newInsumoForm = { ...this.state.newInsumoForm };
+    for (let key in newInsumoForm) {
+      newInsumoForm[key].value = ''
+    }
+    this.setState({
+      newInsumoForm: newInsumoForm
+    })
 
-resetForm = () => {
-  let newInsumoForm = { ...this.state.newInsumoForm };
-  for(let key in newInsumoForm) {
-    newInsumoForm[key].value = ''
   }
-  this.setState({
-    newInsumoForm:newInsumoForm
-  })
-
-}
 
   render() {
     const formElementsArray = [];
@@ -149,7 +154,7 @@ resetForm = () => {
       <form onSubmit={(event) => {
         this.handleSubmitNewInsumo(event)
 
-      }}>
+      } }>
 
         <Card>
           <CardHeader color="primary">
@@ -171,12 +176,12 @@ resetForm = () => {
                 invalid={!formElement.config.valid}
                 shouldValidate={formElement.config.validation}
                 touched={formElement.config.touched}
-                changed={(event) => this.inputChangedHandler(event, formElement.id)}
-              />
+                changed={(event, newValue) => this.inputChangedHandler(event, formElement.id, newValue)}
+                />
             ))}
 
             <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/insumos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
-            
+
           </CardBody>
         </Card>
       </ form>
