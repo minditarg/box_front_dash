@@ -86,13 +86,13 @@ class NewInsumo extends Component {
           //  alert(entry.codigo);
             a.push({
               value: entry.id,
-              displayValue: entry.codigo
+              displayValue: entry.descripcion
             });
           })
           let formulario = { ...this.state.newInsumoForm }
           formulario.categoria.elementConfig.options = [...a];
           this.setState({
-            newUserForm: formulario
+            newInsumoForm: formulario
           })
         }
       })
@@ -121,28 +121,51 @@ class NewInsumo extends Component {
 
     if(inputIdentifier == "categoria")
     {
-      console.log(updatedOrderForm[inputIdentifier]);
-      alert(updatedOrderForm[inputIdentifier].elementConfig.options.);
-      updatedOrderForm["codigo"].value = updatedOrderForm[inputIdentifier].value;
-      
+  //   alert(event.target.value); //el idInsumoCategoria
+
+
+          axios.get('/list-categorias/' + event.target.value)
+      .then(res => {
+        if (res.data.success == 1) {
+          let resultado = [...res.data.result];
+          console.log(updatedOrderForm);
+          console.log(resultado[0].codigo);
+          console.log(resultado[0].siguiente);
+          updatedOrderForm["codigo"].value = resultado[0].codigo + resultado[0].siguiente;
+          
+          this.setState({
+            newInsumoForm: updatedOrderForm,
+            newInsumoForm: updatedOrderForm      
+
+          })
+          
+        } else if (res.data.success == 3 || res.data.success == 4) {        
+        }
+      }, err => {
+        toast.error(err.message);
+      })
     }
-
-    this.setState({
-      newInsumoForm: updatedOrderForm,
-      formIsValid: formIsValidAlt
-
-    })
-
+    else{
+        console.log(updatedOrderForm);
+        this.setState({
+        newInsumoForm: updatedOrderForm,
+        formIsValid: formIsValidAlt
+  
+      })
+    }
+    
   }
 
 
   handleSubmitNewInsumo = (event) => {
     event.preventDefault();
     axios.post('/insert-insumos', {
-      codigo: event.target[0].value,
-      descripcion: event.target[1].value,
-      unidad: event.target[2].value,
-      minimo: event.target[3].value
+
+      codigo: event.target[1].value,
+      descripcion: event.target[2].value,
+      unidad: event.target[3].value,
+      minimo: event.target[4].value,
+      categoria: event.target[0].value
     })
       .then(res => {
         if (res.data.success == 1) {
