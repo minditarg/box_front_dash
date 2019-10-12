@@ -131,11 +131,30 @@ class NewInsumo extends Component {
           console.log(updatedOrderForm);
           console.log(resultado[0].codigo);
           console.log(resultado[0].siguiente);
-          updatedOrderForm["codigo"].value = resultado[0].codigo + resultado[0].siguiente;
-          
+          updatedOrderForm["codigo"].value = resultado[0].codigo;
+          updatedOrderForm["codigo"].valid = true;
+          updatedOrderForm["codigo"].touched = true;
+
+          axios.get('/get-siguiente/' + resultado[0].id)
+          .then(res => {
+            if (res.data.success == 1) {
+              console.log(res.data.result[0].siguiente);
+             // alert('/list-categorias');
+             updatedOrderForm["numero"].value = res.data.result[0].siguiente;
+             updatedOrderForm["numero"].valid = true;
+             updatedOrderForm["numero"].touched = true;
+
+             this.setState({
+              newInsumoForm: updatedOrderForm,
+              formIsValid: formIsValidAlt     
+  
+            })
+            }
+          })
+
           this.setState({
             newInsumoForm: updatedOrderForm,
-            newInsumoForm: updatedOrderForm      
+            formIsValid: formIsValidAlt     
 
           })
           
@@ -159,12 +178,16 @@ class NewInsumo extends Component {
 
   handleSubmitNewInsumo = (event) => {
     event.preventDefault();
+    //console.log("AAAA");
+    //console.log(event.target[0]);
+    //console.log(this.state);
     axios.post('/insert-insumos', {
 
       codigo: event.target[1].value,
-      descripcion: event.target[2].value,
-      unidad: event.target[3].value,
-      minimo: event.target[4].value,
+      numero: event.target[2].value,
+      descripcion: event.target[3].value,
+      unidad: event.target[4].value,
+      minimo: event.target[5].value,
       categoria: event.target[0].value
     })
       .then(res => {

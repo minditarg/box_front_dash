@@ -10,7 +10,8 @@ export const StateListado = {
 
 }
 export const ColumnsListado = [
-  { title: "Codigo", field: "codigo" },
+  { title: "Codigo", field: "codigo", editable: 'never' },
+  { title: "Número", field: "numero" },
   { title: "Descripcion", field: "descripcion" },
   { title: "Unidad", field: "unidad" },
   { title: "Stock Minimo", field: "minimo" }
@@ -85,6 +86,22 @@ export const StateNewInsumo =
       elementConfig: {
         type: 'text',
         label: 'Codigo Interno',
+        disabled: true,
+        fullWidth: true
+        
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    numero: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Número',
         fullWidth: true
       },
       value: '',
