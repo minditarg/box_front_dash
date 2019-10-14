@@ -18,7 +18,7 @@ function renderInputComponent(inputProps) {
   const { classes, inputRef = () => {}, ref, ...other } = inputProps;
 
   return (
-    <TextField 
+    <TextField
       InputProps={{
         inputRef: node => {
           ref(node);
@@ -52,7 +52,7 @@ function renderSuggestion(suggestion, { query, isHighlighted }) {
 
 
 function getSuggestions(value,suggestions) {
-     
+
   const inputValue = deburr(value.trim()).toLowerCase();
   const inputLength = inputValue.length;
   let count = 0;
@@ -118,7 +118,7 @@ const Input = (props) => {
     const [stateSuggestions, setSuggestions] = React.useState([]);
 
     const handleSuggestionsFetchRequested = ({ value }) => {
-        
+
         setSuggestions(getSuggestions(value,props.elementConfig.suggestions));
     };
 
@@ -128,8 +128,13 @@ const Input = (props) => {
 
     const handleChange = (event,{ newValue } ) => {
      props.changed(event,newValue);
-   
+
   };
+
+  const handleChangeSelect = (event) => {
+   props.changed(event);
+
+};
 
     const autosuggestProps = {
         renderInputComponent,
@@ -165,7 +170,7 @@ const Input = (props) => {
                     <Select
                         {...props.elementConfig}
                         value={props.value}
-                        onChange={props.changed}
+                        onChange={handleChangeSelect}
 
                         >
                         {props.elementConfig.options.map(option => (
@@ -180,7 +185,7 @@ const Input = (props) => {
             break;
         case ('autosuggest'):
             inputElement = (
-                
+              <FormControl style={{ minWidth: '180px', marginTop: '15px' }}>
                 <Autosuggest
                     {...autosuggestProps}
                     inputProps={{
@@ -195,14 +200,15 @@ const Input = (props) => {
                         suggestionsList: classes.suggestionsList,
                         suggestion: classes.suggestion,
                     }}
-                    renderSuggestionsContainer={options =>{ 
+                    renderSuggestionsContainer={options =>{
                         return(
                         <Paper {...options.containerProps} square>
                             {options.children}
                         </Paper>
                     )}}
                     />
-                   
+                    </FormControl>
+
             );
             break;
         default:

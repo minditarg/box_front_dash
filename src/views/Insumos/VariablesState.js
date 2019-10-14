@@ -109,11 +109,23 @@ export const StateNewInsumo =
       touched: false
     },
     unidad: {
-      elementType: 'input',
+      elementType: 'autosuggest',
       elementConfig: {
         type: 'text',
         label: 'Unidad',
-        fullWidth: true
+        fullWidth: true,
+        suggestions:[
+          {label: 'kilogramos'},
+          {label: 'gramos'},
+          {label: 'miligramos'},
+          {label: 'litros'},
+          {label: 'mililitros'},
+          {label: 'metros'},
+          {label: 'milimetros'},
+          {label: 'centimetros'},
+          {label: 'unidades'},
+
+        ]
       },
       value: '',
       validation: {

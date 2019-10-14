@@ -98,7 +98,7 @@ class NewInsumo extends Component {
       })
   }
 
-  inputChangedHandler = (event, inputIdentifier) => {
+  inputChangedHandler = (event, inputIdentifier,newValue) => {
   //  alert(inputIdentifier);
     let checkValid;
     const updatedOrderForm = {
@@ -107,7 +107,11 @@ class NewInsumo extends Component {
     const updatedFormElement = {
       ...updatedOrderForm[inputIdentifier]
     };
-    updatedFormElement.value = event.target.value;
+    console.log(newValue);
+    if(newValue)
+      updatedFormElement.value = newValue;
+    else
+      updatedFormElement.value = event.target.value;
     checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
     updatedFormElement.valid = checkValid.isValid;
     updatedFormElement.textValid = checkValid.textValid;
@@ -132,14 +136,14 @@ class NewInsumo extends Component {
           console.log(resultado[0].codigo);
           console.log(resultado[0].siguiente);
           updatedOrderForm["codigo"].value = resultado[0].codigo + resultado[0].siguiente;
-          
+
           this.setState({
             newInsumoForm: updatedOrderForm,
-            newInsumoForm: updatedOrderForm      
+            newInsumoForm: updatedOrderForm
 
           })
-          
-        } else if (res.data.success == 3 || res.data.success == 4) {        
+
+        } else if (res.data.success == 3 || res.data.success == 4) {
         }
       }, err => {
         toast.error(err.message);
@@ -150,15 +154,16 @@ class NewInsumo extends Component {
         this.setState({
         newInsumoForm: updatedOrderForm,
         formIsValid: formIsValidAlt
-  
+
       })
     }
-    
+
   }
 
 
   handleSubmitNewInsumo = (event) => {
     event.preventDefault();
+    if(this.state.newInsumoForm.formIsValid) {
     axios.post('/insert-insumos', {
 
       codigo: event.target[1].value,
@@ -177,6 +182,7 @@ class NewInsumo extends Component {
           toast.error("Error");
         }
       })
+    }
   }
 
 resetForm = () => {
@@ -229,12 +235,12 @@ componentDidMount() {
                 invalid={!formElement.config.valid}
                 shouldValidate={formElement.config.validation}
                 touched={formElement.config.touched}
-                changed={(event) => this.inputChangedHandler(event, formElement.id)}
+                changed={(event,newValue) => this.inputChangedHandler(event, formElement.id,newValue)}
               />
             ))}
 
             <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/insumos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
-            
+
           </CardBody>
         </Card>
       </ form>
