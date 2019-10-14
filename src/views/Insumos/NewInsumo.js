@@ -197,7 +197,8 @@ class NewInsumo extends Component {
           this.resetForm();
         }
         else {
-          toast.error("Error");
+          console.log(res);
+          toast.error(res.data.error_msj);
         }
       })
   }
