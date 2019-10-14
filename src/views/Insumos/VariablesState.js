@@ -196,6 +196,21 @@ export const StateEditInsumo =
       elementConfig: {
         type: 'text',
         label: 'Codigo Interno',
+        fullWidth: true,
+        disabled: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    numero: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Número',
         fullWidth: true
       },
       value: '',

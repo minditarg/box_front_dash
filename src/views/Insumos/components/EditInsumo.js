@@ -49,6 +49,28 @@ const styles = {
 class EditInsumo extends Component {
 state= JSON.parse(JSON.stringify(StateEditInsumo));
 
+
+getCategorias = () => {
+  axios.get('/list-categorias')
+    .then(res => {
+      if (res.data.success == 1) {
+        let resultadoCategorias = [...res.data.result];
+        let a = [];
+        resultadoCategorias.forEach(function (entry) {
+        //  alert(entry.codigo);
+          a.push({
+            value: entry.id,
+            displayValue: entry.descripcion
+          });
+        })
+        let formulario = { ...this.state.editInsumoForm }
+        formulario.categoria.elementConfig.options = [...a];
+        this.setState({
+          editInsumoForm: formulario
+        })
+      }
+    })
+}
     getInsumoEdit = (id) => {
         axios.get('/list-insumos/' + id)
               .then(resultado => {
@@ -60,6 +82,7 @@ state= JSON.parse(JSON.stringify(StateEditInsumo));
 
                         let editInsumoFormAlt = {...this.state.editInsumoForm};
                           editInsumoFormAlt.codigo.value = resultado.data.result[0].codigo;
+                          editInsumoFormAlt.numero.value = resultado.data.result[0].numero;
                           editInsumoFormAlt.descripcion.value = resultado.data.result[0].descripcion;
                           editInsumoFormAlt.unidad.value = resultado.data.result[0].unidad;
                           editInsumoFormAlt.minimo.value = resultado.data.result[0].minimo;
@@ -85,7 +108,15 @@ state= JSON.parse(JSON.stringify(StateEditInsumo));
       handleSubmitEditInsumo = (event) => {
 
           event.preventDefault();
-          axios.post(`/update-insumos`, { id:this.state.insumoEdit.id,codigo: this.state.editInsumoForm.codigo.value, descripcion: this.state.editInsumoForm.descripcion.value, unidad: this.state.editInsumoForm.unidad.value, minimo: this.state.editInsumoForm.minimo.value})
+          axios.post(`/update-insumos`, { 
+            id:this.state.insumoEdit.id,
+            codigo: this.state.editInsumoForm.codigo.value, 
+            descripcion: this.state.editInsumoForm.descripcion.value, 
+            unidad: this.state.editInsumoForm.unidad.value, 
+            minimo: this.state.editInsumoForm.minimo.value,
+            categoria: this.state.editInsumoForm.categoria.value,
+            numero: this.state.editInsumoForm.numero.value
+          })
               .then(res => {
                   let estadoAlt = null
                   if (res.data.success == 0) {
@@ -150,10 +181,59 @@ state= JSON.parse(JSON.stringify(StateEditInsumo));
           for (let inputIdentifier in updatedOrderForm) {
               formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
           }
-          this.setState({
-            editInsumoForm:updatedOrderForm,
-            editFormIsValid:formIsValidAlt
-          })
+          if(inputIdentifier == "categoria")
+          {
+           //alert(event.target.value); //el idInsumoCategoria
+      
+      
+                axios.get('/list-categorias/' + event.target.value)
+            .then(res => {
+              if (res.data.success == 1) {
+                let resultado = [...res.data.result];
+                console.log(updatedOrderForm);
+                console.log(resultado[0].codigo);
+                console.log(resultado[0].siguiente);
+                updatedOrderForm["codigo"].value = resultado[0].codigo;
+                updatedOrderForm["codigo"].valid = true;
+                updatedOrderForm["codigo"].touched = true;
+      
+                axios.get('/get-siguiente/' + resultado[0].id)
+                .then(res => {
+                  if (res.data.success == 1) {
+                    console.log(res.data.result[0].siguiente);
+                   // alert('/list-categorias');
+                   updatedOrderForm["numero"].value = res.data.result[0].siguiente;
+                   updatedOrderForm["numero"].valid = true;
+                   updatedOrderForm["numero"].touched = true;
+      
+                   this.setState({
+                    editInsumoForm: updatedOrderForm,
+                    formIsValid: formIsValidAlt
+      
+                  })
+                  }
+                })
+      
+                this.setState({
+                  editInsumoForm: updatedOrderForm,
+                  formIsValid: formIsValidAlt
+      
+                })
+      
+              } else if (res.data.success == 3 || res.data.success == 4) {
+              }
+            }, err => {
+              toast.error(err.message);
+            })
+          }
+          else{
+              console.log(updatedOrderForm);
+              this.setState({
+              editInsumoForm: updatedOrderForm,
+              formIsValid: formIsValidAlt
+      
+            })
+          }
 
       }
 
@@ -180,7 +260,7 @@ state= JSON.parse(JSON.stringify(StateEditInsumo));
 
       componentDidMount() {
         this.getInsumoEdit(this.props.match.params.idinsumo);
-
+        this.getCategorias();
       }
 
 
@@ -226,7 +306,7 @@ state= JSON.parse(JSON.stringify(StateEditInsumo));
               ))}
             </div>
 
-            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/insumos')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.editFormIsValid} type="submit" ><Save /> Guardar</Button>
+            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/insumos')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" type="submit" ><Save /> Guardar</Button>
 
 
           </CardBody>
