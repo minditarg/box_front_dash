@@ -34,6 +34,11 @@ import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 import Language from "@material-ui/icons/Language";
 import AllInbox from "@material-ui/icons/AllInbox";
+import CompareArrows from "@material-ui/icons/CompareArrows";
+import ArrowForward from "@material-ui/icons/ArrowForward";
+import ArrowBack from "@material-ui/icons/ArrowBack";
+
+
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
@@ -52,7 +57,7 @@ import Ingresos from "views/Ingresos/Ingresos";
 import NewIngreso from "views/Ingresos/NewIngreso";
 import Stock from "views/Stock/Stock";
 import AjusteStock from "views/Stock/AjusteStock";
-import Egresos from "views/Egresos/NewEgreso";
+import EntregaInsumos from "views/Paniol/EntregaInsumos";
 import Modulos from "views/Modulos/Modulos";
 import NewModulo from "views/Modulos/NewModulo";
 // core components/views for RTL layout
@@ -159,8 +164,8 @@ const dashboardRoutes = [
       layout: "/admin"
     }]
   },
-  
-  
+
+
 
   {
     groupComponent: true,
@@ -168,7 +173,7 @@ const dashboardRoutes = [
     open: 'open2',
     icon: ViewComfyIcon,
     dependences: [
-     
+
       {
         path: "/categorias",
         name: "Categorias",
@@ -227,14 +232,31 @@ const dashboardRoutes = [
 
       }]
   },
+
   {
-    path: "/panol",
-    name: "Pañol",
-    rtlName: "Pa",
-    icon: ArrowForwardIosIcon,
-    component: Egresos,
-    layout: "/admin"
-  },
+    groupComponent: true,
+    name: 'Pañol',
+    open: 'open5',
+    icon: CompareArrows,
+    dependences: [
+      {
+        path: "/entregainsumos",
+        name: "Entrega",
+        rtlName: "LM",
+        icon: ArrowForward,
+        component: EntregaInsumos,
+        layout: "/admin"
+      },
+      {
+        path: "/nuevomodulo",
+        name: "Devolución",
+        rtlName: "NM",
+        icon: ArrowBack,
+        component: ArrowBack,
+        layout: "/admin"
+
+      }]
+  }
 
 
 
