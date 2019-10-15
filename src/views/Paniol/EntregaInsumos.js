@@ -102,6 +102,7 @@ class EntregaInsumos extends Component {
         detalleEntregas: [],
         actions: [],
         actionsEntregas: [],
+        disableAllButtons:false,
 
         insumoSeleccionado: 0,
         orderForm: {
@@ -197,7 +198,9 @@ class EntregaInsumos extends Component {
 
     handleSubmitNewPedido = (event) => {
         event.preventDefault();
-
+        this.setState ({
+          disableAllButtons:true
+        })
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
             axios.post('/insert-entregas', {
@@ -206,8 +209,19 @@ class EntregaInsumos extends Component {
                 detalle: this.state.detalleEntregas
             })
                 .then(res => {
+                  this.setState ({
+                    disableAllButtons:false
+                  })
                     if (res.data.success == 1) {
                         toast.success("Nueva entrega creada");
+                        let orderForm =  {...this.state.orderForm};
+                        for(let key in orderForm) {
+                          orderForm[key].value = ''
+                        };
+                        this.setState({
+                          orderForm: orderForm,
+                          detalleEntregas: []
+                        })
 
                     }
                     else {
@@ -262,7 +276,7 @@ class EntregaInsumos extends Component {
 
     getModulos = () => {
       axios.get('/list-modulos') .then((res) => {
-      
+
         let options = [];
         let orderForm = {...this.state.orderForm};
         res.data.result.forEach((elem) => {
@@ -341,7 +355,7 @@ class EntregaInsumos extends Component {
                                         />
                                 ))}
 
-                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
+                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons}  color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
 
                                 <MaterialTable
                                     columns={columnsInsumos}
@@ -384,7 +398,7 @@ class EntregaInsumos extends Component {
                                     />
 
 
-                              <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save />Entregar</Button>
+                              <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Entregar</Button>
 
                             </CardBody>
                         </Card>

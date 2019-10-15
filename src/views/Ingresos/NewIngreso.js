@@ -201,7 +201,7 @@ class NewIngreso extends Component {
 
     handleSubmitNewPedido = (event) => {
         event.preventDefault();
-      
+
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
             axios.post('/insert-ingresos', {
@@ -215,7 +215,10 @@ class NewIngreso extends Component {
                         // this.setState({pedidoInsertado: true});
                         this.props.getIngresos();
                         toast.success("Nuevo ingreso creado");
-                        this.props.history.push("/admin/ingresos");
+
+                        setTimeout(()=>{
+                          this.props.history.push("/admin/ingresos");
+                        },1000)
                     }
                     else {
                         toast.error("Error");
@@ -269,7 +272,7 @@ class NewIngreso extends Component {
 
 
     componentDidMount() {
-       
+
         this.state.actions = [
             {
                 icon: 'delete',
@@ -384,7 +387,7 @@ class NewIngreso extends Component {
 
 
                                 <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/ingresos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
-                                
+
                             </CardBody>
                         </Card>
                     </GridItem>
