@@ -12,7 +12,7 @@ import Card from "components/Card/Card.js";
 import Button from "components/CustomButtons/Button.js";
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
-import { StateEditInsumo } from "../VariablesState";
+import { StateEditPlantilla } from "../VariablesState";
 
 
 const styles = {
@@ -46,8 +46,8 @@ const styles = {
 };
 
 
-class EditInsumo extends Component {
-state= JSON.parse(JSON.stringify(StateEditInsumo));
+class EditPlantilla extends Component {
+state= JSON.parse(JSON.stringify(StateEditPlantilla));
 
 
 getCategorias = () => {
@@ -63,59 +63,59 @@ getCategorias = () => {
             displayValue: entry.descripcion
           });
         })
-        let formulario = { ...this.state.editInsumoForm }
+        let formulario = { ...this.state.editPlantillaForm }
         formulario.categoria.elementConfig.options = [...a];
         this.setState({
-          editInsumoForm: formulario
+          editPlantillaForm: formulario
         })
       }
     })
 }
-    getInsumoEdit = (id) => {
-        axios.get('/list-insumos/' + id)
+    getPlantillaEdit = (id) => {
+        axios.get('/list-plantillas/' + id)
               .then(resultado => {
                   if(resultado.data.success == 1) {
                       if(resultado.data.result.length > 0) {
                         this.setState({
-                          insumoEdit:resultado.data.result[0]
+                          plantillaEdit:resultado.data.result[0]
                         })
 
-                        let editInsumoFormAlt = {...this.state.editInsumoForm};
-                          editInsumoFormAlt.codigo.value = resultado.data.result[0].codigo;
-                          editInsumoFormAlt.numero.value = resultado.data.result[0].numero;
-                          editInsumoFormAlt.descripcion.value = resultado.data.result[0].descripcion;
-                          editInsumoFormAlt.unidad.value = resultado.data.result[0].unidad;
-                          editInsumoFormAlt.minimo.value = resultado.data.result[0].minimo;
+                        let editPlantillaFormAlt = {...this.state.editPlantillaForm};
+                          editPlantillaFormAlt.codigo.value = resultado.data.result[0].codigo;
+                          editPlantillaFormAlt.numero.value = resultado.data.result[0].numero;
+                          editPlantillaFormAlt.descripcion.value = resultado.data.result[0].descripcion;
+                          editPlantillaFormAlt.unidad.value = resultado.data.result[0].unidad;
+                          editPlantillaFormAlt.minimo.value = resultado.data.result[0].minimo;
 
-                          for(let key in editInsumoFormAlt){
-                            editInsumoFormAlt[key].touched = true;
-                            editInsumoFormAlt[key].valid = true;
+                          for(let key in editPlantillaFormAlt){
+                            editPlantillaFormAlt[key].touched = true;
+                            editPlantillaFormAlt[key].valid = true;
                           }
                           this.setState({
-                            editInsumoForm:editInsumoFormAlt
+                            editPlantillaForm:editPlantillaFormAlt
                           })
                       }
                         else
                     {
                       this.setState({
-                        insumoEdit:null
+                        plantillaEdit:null
                       })
                     }
                   }
               })
       }
 
-      handleSubmitEditInsumo = (event) => {
+      handleSubmitEditPlantilla = (event) => {
 
           event.preventDefault();
-          axios.post(`/update-insumos`, { 
-            id:this.state.insumoEdit.id,
-            codigo: this.state.editInsumoForm.codigo.value, 
-            descripcion: this.state.editInsumoForm.descripcion.value, 
-            unidad: this.state.editInsumoForm.unidad.value, 
-            minimo: this.state.editInsumoForm.minimo.value,
-            categoria: this.state.editInsumoForm.categoria.value,
-            numero: this.state.editInsumoForm.numero.value
+          axios.post(`/update-plantillas`, { 
+            id:this.state.plantillaEdit.id,
+            codigo: this.state.editPlantillaForm.codigo.value, 
+            descripcion: this.state.editPlantillaForm.descripcion.value, 
+            unidad: this.state.editPlantillaForm.unidad.value, 
+            minimo: this.state.editPlantillaForm.minimo.value,
+            categoria: this.state.editPlantillaForm.categoria.value,
+            numero: this.state.editPlantillaForm.numero.value
           })
               .then(res => {
                   let estadoAlt = null
@@ -127,7 +127,7 @@ getCategorias = () => {
                   }
 
                   if(estadoAlt){
-                    this.props.getInsumos();
+                    this.props.getPlantillas();
                     this.setState({
                       editFormIsValid:false
                     })
@@ -165,7 +165,7 @@ getCategorias = () => {
       inputEditChangedHandler = (event, inputIdentifier) => {
           let checkValid;
           const updatedOrderForm = {
-              ...this.state.editInsumoForm
+              ...this.state.editPlantillaForm
           };
           const updatedFormElement = {
               ...updatedOrderForm[inputIdentifier]
@@ -183,7 +183,7 @@ getCategorias = () => {
           }
           if(inputIdentifier == "categoria")
           {
-           //alert(event.target.value); //el idInsumoCategoria
+           //alert(event.target.value); //el idPlantillaCategoria
       
       
                 axios.get('/list-categorias/' + event.target.value)
@@ -207,7 +207,7 @@ getCategorias = () => {
                    updatedOrderForm["numero"].touched = true;
       
                    this.setState({
-                    editInsumoForm: updatedOrderForm,
+                    editPlantillaForm: updatedOrderForm,
                     formIsValid: formIsValidAlt
       
                   })
@@ -215,7 +215,7 @@ getCategorias = () => {
                 })
       
                 this.setState({
-                  editInsumoForm: updatedOrderForm,
+                  editPlantillaForm: updatedOrderForm,
                   formIsValid: formIsValidAlt
       
                 })
@@ -229,7 +229,7 @@ getCategorias = () => {
           else{
               console.log(updatedOrderForm);
               this.setState({
-              editInsumoForm: updatedOrderForm,
+              editPlantillaForm: updatedOrderForm,
               formIsValid: formIsValidAlt
       
             })
@@ -238,19 +238,19 @@ getCategorias = () => {
       }
 
 
-      editSingleInsumo = value => {
-      this.props.history.push(this.props.match.url + '/editarinsumo/' + value);
+      editSinglePlantilla = value => {
+      this.props.history.push(this.props.match.url + '/editarplantilla/' + value);
       }
 
 
       resetEditForm = ()=> {
-      let editInsumoFormAlt = {...this.state.editInsumoForm};
-        for(let key in editInsumoFormAlt){
-          editInsumoFormAlt[key].value = ''
+      let editPlantillaFormAlt = {...this.state.editPlantillaForm};
+        for(let key in editPlantillaFormAlt){
+          editPlantillaFormAlt[key].value = ''
         }
 
         this.setState({
-          editInsumoForm:editInsumoFormAlt,
+          editPlantillaForm:editPlantillaFormAlt,
           editFormIsValid:false
         })
 
@@ -259,7 +259,7 @@ getCategorias = () => {
 
 
       componentDidMount() {
-        this.getInsumoEdit(this.props.match.params.idinsumo);
+        this.getPlantillaEdit(this.props.match.params.idplantilla);
         this.getCategorias();
       }
 
@@ -267,25 +267,25 @@ getCategorias = () => {
 
   render() {
     const formElementsArray = [];
-    for (let key in this.state.editInsumoForm) {
+    for (let key in this.state.editPlantillaForm) {
       formElementsArray.push({
         id: key,
-        config: this.state.editInsumoForm[key]
+        config: this.state.editPlantillaForm[key]
       });
     }
     return (
 
       <form onSubmit={(event) => {
-        this.handleSubmitEditInsumo(event)
+        this.handleSubmitEditPlantilla(event)
 
       } }>
 
 
         <Card>
           <CardHeader color="primary">
-            <h4 className={this.props.classes.cardTitleWhite}>Insumo</h4>
+            <h4 className={this.props.classes.cardTitleWhite}>Plantilla</h4>
             <p className={this.props.classes.cardCategoryWhite}>
-              Detalles del Insumo
+              Detalles del Plantilla
       </p>
           </CardHeader>
           <CardBody>
@@ -306,7 +306,7 @@ getCategorias = () => {
               ))}
             </div>
 
-            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/insumos')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" type="submit" ><Save /> Guardar</Button>
+            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/plantillas')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" type="submit" ><Save /> Guardar</Button>
 
 
           </CardBody>
@@ -323,4 +323,4 @@ getCategorias = () => {
 
 };
 
-export default withRouter(withStyles(styles)(EditInsumo));
+export default withRouter(withStyles(styles)(EditPlantilla));

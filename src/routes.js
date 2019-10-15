@@ -60,6 +60,8 @@ import AjusteStock from "views/Stock/AjusteStock";
 import EntregaInsumos from "views/Paniol/EntregaInsumos";
 import Modulos from "views/Modulos/Modulos";
 import NewModulo from "views/Modulos/NewModulo";
+import NewPlantilla from "views/Plantillas/NewPlantilla";
+import Plantillas from "views/Plantillas/Plantillas";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 
@@ -152,9 +154,7 @@ const dashboardRoutes = [
         icon: AdjustIcon,
         component: AjusteStock,
         layout: "/admin"
-
-
-    },
+      },
       {
       path: "/ingresos",
       name: "Ingresos",
@@ -206,6 +206,14 @@ const dashboardRoutes = [
     rtlName: "Us",
     icon: Person,
     component: Users,
+    layout: "/admin"
+  },
+  {
+    path: "/plantillas",
+    name: "Plantillas",
+    rtlName: "Pla",
+    icon: Person,
+    component: Plantillas,
     layout: "/admin"
   },
   {

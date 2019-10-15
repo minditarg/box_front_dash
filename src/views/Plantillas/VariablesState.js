@@ -11,10 +11,7 @@ export const StateListado = {
 }
 export const ColumnsListado = [
   { title: "Codigo", field: "codigo", editable: 'never' },
-  { title: "Número", field: "numero" },
-  { title: "Descripcion", field: "descripcion" },
-  { title: "Unidad", field: "unidad" },
-  { title: "Stock Minimo", field: "minimo" }
+  { title: "Descripcion", field: "descripcion" }
 ];
 
 export const ColumnsListadoCategorias = [
@@ -60,7 +57,7 @@ export const StateNewCategoria =
   formIsValid: false
 }
 
-export const StateNewInsumo =
+export const StateNewPlantilla =
 {
   insumos: [],
   newInsumoForm: {
@@ -169,11 +166,11 @@ export const StateNewInsumo =
   formIsValid: false
 }
 
-export const StateEditInsumo =
+export const StateEditPlantilla =
 {
   editFormIsValid: false,
   insumoEdit: null,
-  editInsumoForm: {
+  editPlantillaForm: {
     categoria: {
       elementType: 'select',
       elementConfig: {

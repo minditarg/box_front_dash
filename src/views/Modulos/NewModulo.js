@@ -358,7 +358,7 @@ class NewModulo extends Component {
                                       }
                                       resolve()
                                     }, 1000)
-                                  }),
+                                  }),/*
                                 onRowDelete: oldData =>
                                   new Promise((resolve, reject) => {
                                     setTimeout(() => {
@@ -370,7 +370,7 @@ class NewModulo extends Component {
                                       }
                                       resolve()
                                     }, 1000)
-                                  }),
+                                  }),*/
                               }}
                         />
 
