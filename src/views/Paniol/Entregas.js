@@ -18,8 +18,8 @@ import Card from "components/Card/Card.js";
 import Paper from '@material-ui/core/Paper';
 import AddIcon from '@material-ui/icons/Add';
 
-import DetalleIngresos from './components/DetalleIngresos'
-import NewIngreso from './NewIngreso'
+//import DetalleIngresos from './components/DetalleIngresos'
+import EntregaInsumos from './EntregaInsumos';
 
 
 import { withStyles } from '@material-ui/styles';
@@ -156,7 +156,7 @@ class Entregas extends Component {
         <Switch>
 
           <Route path={this.props.match.url + "/nuevaentrega"} exact render={() =>
-            <NewIngreso
+            <EntregaInsumos
             getEntregas={()=>this.getEntregas()}
              />
           } />

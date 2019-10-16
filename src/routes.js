@@ -57,7 +57,7 @@ import Ingresos from "views/Ingresos/Ingresos";
 import NewIngreso from "views/Ingresos/NewIngreso";
 import Stock from "views/Stock/Stock";
 import AjusteStock from "views/Stock/AjusteStock";
-import EntregaInsumos from "views/Paniol/EntregaInsumos";
+import Entregas from "views/Paniol/Entregas";
 import Modulos from "views/Modulos/Modulos";
 import NewModulo from "views/Modulos/NewModulo";
 import NewPlantilla from "views/Plantillas/NewPlantilla";
@@ -248,11 +248,11 @@ const dashboardRoutes = [
     icon: CompareArrows,
     dependences: [
       {
-        path: "/entregainsumos",
+        path: "/entregas",
         name: "Entrega",
         rtlName: "LM",
         icon: ArrowForward,
-        component: EntregaInsumos,
+        component: Entregas,
         layout: "/admin"
       },
       {
