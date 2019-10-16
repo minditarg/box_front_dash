@@ -95,7 +95,7 @@ const styles = {
     }
 };
 
-class EntregaInsumos extends Component {
+class NewEntrega extends Component {
     state = {
         entregas: [],
         open: false,
@@ -433,4 +433,4 @@ class EntregaInsumos extends Component {
 }
 
 
-export default withRouter(withStyles(styles)(EntregaInsumos));
+export default withRouter(withStyles(styles)(NewEntrega));

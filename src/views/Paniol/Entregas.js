@@ -19,17 +19,19 @@ import Paper from '@material-ui/core/Paper';
 import AddIcon from '@material-ui/icons/Add';
 
 //import DetalleIngresos from './components/DetalleIngresos'
-import EntregaInsumos from './EntregaInsumos';
+import NewEntrega from './NewEntrega';
+import DetalleEntregas from './components/DetalleEntregas';
 
 
 import { withStyles } from '@material-ui/styles';
 
 
 const columns = [
-  { title: "Identificador", field: "identificador" },
-  { title: "Fecha Identificador", field: "fecha", render: rowData => <Moment format="DD/MM/YYYY">{rowData.fecha_identificador}</Moment> },
-  { title: "Proveedor", field: "proveedor" },
+  { title: "Descripcion", field: "descripcion" },
+
+  { title: "Modulo desc", field: "mdescripcion" },
   { title: "Usuario", field: "username" },
+  { title: "Fecha", field: "fecha", render: rowData => <Moment format="DD/MM/YYYY">{rowData.fecha}</Moment> },
 ];
 
 /*
@@ -148,6 +150,12 @@ class Entregas extends Component {
                   color: '#FFF'
                 },
               }}
+              detailPanel={rowData => {
+                console.log(rowData);
+                return (
+                  <DetalleEntregas idEntrega={rowData.id} cantidadRegistros="7" />
+                )
+              } }
 
               />
           </CardBody>
@@ -156,7 +164,7 @@ class Entregas extends Component {
         <Switch>
 
           <Route path={this.props.match.url + "/nuevaentrega"} exact render={() =>
-            <EntregaInsumos
+            <NewEntrega
             getEntregas={()=>this.getEntregas()}
              />
           } />

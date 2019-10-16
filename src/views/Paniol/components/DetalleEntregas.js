@@ -22,14 +22,14 @@ import TableRow from '@material-ui/core/TableRow';
 
 const styles = {}
 
-class DetalleIngresos extends Component {
+class DetalleEntregas extends Component {
     state = {
         detalle: []
     }
-    
-    
+
+
     componentDidMount() {
-        axios.get('/list-ingresos-detalles/' + this.props.idIngreso + '/' + this.props.cantidadRegistros).then(res => {
+        axios.get('/list-entregas-detalles/' + this.props.idEntrega + '/' + this.props.cantidadRegistros).then(res => {
             console.log(res);
             //console.log(moment(res.data.result[0].fecha).format('DD/MM/YYYY'));
             this.setState({
@@ -37,7 +37,7 @@ class DetalleIngresos extends Component {
             })
         })
     }
-    
+
     render() {
 
 
@@ -49,22 +49,22 @@ class DetalleIngresos extends Component {
                         <TableCell>Código</TableCell>
                         <TableCell>Descripción</TableCell>
                         <TableCell >Cantidad</TableCell>
-                    
+
                     </TableRow>
                 </TableHead>
                 <TableBody>
 
 
                     {this.state.detalle.map(elem => {
-                      
-                            
+
+
                         return <TableRow key={elem.id}>
                             <TableCell >
                                 {elem.codigo}
                             </TableCell>
                             <TableCell >{elem.descripcion}</TableCell>
                             <TableCell >{elem.cantidad + ' ' + elem.unidad}</TableCell>
-                            
+
 
                         </TableRow>
 
@@ -79,7 +79,4 @@ class DetalleIngresos extends Component {
 
 }
 
-export default withStyles(styles)(DetalleIngresos);
-
-
-
+export default withStyles(styles)(DetalleEntregas);
