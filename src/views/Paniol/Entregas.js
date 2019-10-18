@@ -27,6 +27,7 @@ import { withStyles } from '@material-ui/styles';
 
 
 const columns = [
+    { title: "Identificador", field: "identificador"},
   { title: "Descripcion", field: "descripcion" },
 
   { title: "Modulo desc", field: "mdescripcion" },
@@ -103,6 +104,12 @@ class Entregas extends Component {
         })
         if (res.data.success == 1) {
           let resultado = [...res.data.result];
+          resultado = resultado.map(elem=>{
+            return {
+              ...elem,
+              identificador: elem.descripcion_id + elem.id 
+            }
+          })
           this.setState({
             entregas: resultado
           })

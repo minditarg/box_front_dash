@@ -107,11 +107,11 @@ class NewIngreso extends Component {
 
         insumoSeleccionado: 0,
         orderForm: {
-            codigo: {
+            referencia: {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    label: 'Identificador',
+                    label: 'Referencia',
                     fullWidth: true
                 },
                 value: '',
@@ -121,7 +121,7 @@ class NewIngreso extends Component {
                 valid: false,
                 touched: false
             },
-            descripcion: {
+            proveedor: {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
@@ -205,8 +205,8 @@ class NewIngreso extends Component {
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
             axios.post('/insert-ingresos', {
-                fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
-                identificador: event.target[2].value,
+                fechaReferencia: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
+                referencia: event.target[2].value,
                 proveedor: event.target[3].value,
                 detalle: this.state.detalleingresos
             })
@@ -319,7 +319,7 @@ class NewIngreso extends Component {
                                     <KeyboardDatePicker
                                         margin="normal"
                                         id="date-picker-dialog"
-                                        label="Fecha"
+                                        label="Fecha Referencia"
                                         format="MM/dd/yyyy"
                                         value={this.state.selectedDate}
                                         onChange={this.handleDateChange}

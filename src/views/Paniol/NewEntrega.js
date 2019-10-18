@@ -221,7 +221,10 @@ class NewEntrega extends Component {
                         this.setState({
                           orderForm: orderForm,
                           detalleEntregas: []
-                        })
+                        });
+                        this.props.getEntregas();
+                        this.props.history.push('/admin/entregas');
+
 
                     }
                     else {
@@ -398,7 +401,7 @@ class NewEntrega extends Component {
                                     />
 
 
-                              <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Entregar</Button>
+                              <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/entregas')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Entregar</Button>
 
                             </CardBody>
                         </Card>

@@ -26,8 +26,8 @@ import { withStyles } from '@material-ui/styles';
 
 
 const columns = [
-  { title: "Identificador", field: "identificador" },
-  { title: "Fecha Identificador", field: "fecha", render: rowData => <Moment format="DD/MM/YYYY">{rowData.fecha_identificador}</Moment> },
+  { title: "Referencia", field: "referencia" },
+  { title: "Fecha Referencia", field: "fecha", render: rowData => <Moment format="DD/MM/YYYY">{rowData.fecha_referencia}< /Moment> },
   { title: "Proveedor", field: "proveedor" },
   { title: "Usuario", field: "username" },
 ];
@@ -120,7 +120,7 @@ class Ingresos extends Component {
       style = { display: 'none' }
     }
     return (
-      
+
       <div style={{ maxWidth: "100%" }}>
         <Card style={style}>
           <CardHeader color="primary">
@@ -171,7 +171,7 @@ class Ingresos extends Component {
         </Switch>
 
 
-      
+
       </div>
     );
   }

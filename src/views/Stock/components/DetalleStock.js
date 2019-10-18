@@ -50,18 +50,24 @@ class DetalleStock extends Component {
 
                     {this.state.detalle.map((elem,key) => {
                         let color=null;
+                        let identificador = null;
                         if(elem.id_movimiento == 1)
                             color={ backgroundColor:green[100]};
                         if(elem.id_movimiento == 3)
                             color={ backgroundColor:yellow[100]};
 
-                           
+                        if(elem.id_entrega) {
+                          identificador = elem.descripcion_id + elem.id_entrega;
+                        } else if(elem.id_ingreso) {
+                          identificador = elem.descripcion_id + elem.id_ingreso;
+                        }
+
                         return <TableRow key={"detalle-" + key}>
                             <TableCell style={color} >
                                 {elem.descripcion}
                             </TableCell>
                             <TableCell align="right">{elem.cantidad}</TableCell>
-                            <TableCell align="right">{elem.identificador}</TableCell>
+                            <TableCell align="right">{identificador}</TableCell>
                             <TableCell align="right">{elem.username}</TableCell>
 
                             <TableCell align="right">{moment(elem.fecha).format('DD/MM/YYYY')}</TableCell>
@@ -79,6 +85,3 @@ class DetalleStock extends Component {
 }
 
 export default withStyles(styles)(DetalleStock);
-
-
-
