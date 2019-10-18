@@ -20,7 +20,11 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Typography from '@material-ui/core/Typography';
 
-
+const columnsInsumosDetalle = [
+    { title: "Codigo", field: "codigo", editable: 'never' },
+    { title: "Descripcion", field: "descripcion", editable: 'never' },
+  
+];
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -169,7 +173,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
             case 0:
                 return <MaterialTable
                     isLoading={isLoading}
-                    columns={props.columnsInsumos}
+                    columns={columnsInsumosDetalle}
                     data={insumos}
                     title="Insumo"
                     localization={localization}
@@ -194,6 +198,8 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                       {rowInsumo.codigo}</p>
                      <p><span style={{ fontWeight:'300'}}>Descripción: </span>
                       {rowInsumo.descripcion}</p>
+                       <p><span style={{ fontWeight:'300'}}>Cantidad actual: </span>
+                      {rowInsumo.cantidad + " " +  rowInsumo.unidad}</p>
 
                     {
                         formElementsArray.map(formElement => (

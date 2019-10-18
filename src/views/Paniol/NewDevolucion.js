@@ -56,10 +56,12 @@ const columnsInsumos = [
     { title: "Codigo", field: "codigo", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },
     { title: "Cantidad", field: "cantidad", editable: 'numeric' },
-    { title: "Unidad", field: "unidad", editable: 'never' },
+      { title: "Unidad", field: "unidad", editable: 'never' },
 
     //{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
 ];
+
+
 
 const styles = {
     cardCategoryWhite: {
@@ -97,13 +99,13 @@ const styles = {
     }
 };
 
-class NewEntrega extends Component {
+class NewDevolucion extends Component {
     state = {
-        entregas: [],
+        devoluciones: [],
         open: false,
-        detalleEntregas: [],
+        detalleDevoluciones: [],
         actions: [],
-        actionsEntregas: [],
+        actionsDevoluciones: [],
         disableAllButtons:false,
 
         insumoSeleccionado: 0,
@@ -205,27 +207,27 @@ class NewEntrega extends Component {
         })
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
-            axios.post('/insert-entregas', {
+            axios.post('/insert-devoluciones', {
                 id_modulo: this.state.orderForm.modulo.value,
                 descripcion: this.state.orderForm.descripcion.value,
-                detalle: this.state.detalleEntregas
+                detalle: this.state.detalleDevoluciones
             })
                 .then(res => {
                   this.setState ({
                     disableAllButtons:false
                   })
                     if (res.data.success == 1) {
-                        toast.success("Nueva entrega creada");
+                        toast.success("Nueva devolucion creada");
                         let orderForm =  {...this.state.orderForm};
                         for(let key in orderForm) {
                           orderForm[key].value = ''
                         };
                         this.setState({
                           orderForm: orderForm,
-                          detalleEntregas: []
+                          detalleDevoluciones: []
                         });
-                        this.props.getEntregas();
-                        this.props.history.push('/admin/entregas');
+                        this.props.getDevoluciones();
+                        this.props.history.push('/admin/devoluciones');
 
 
                     }
@@ -252,11 +254,11 @@ class NewEntrega extends Component {
                 if (res.data.success == 1) {
                     let resultado = [...res.data.result];
                     resultado[0].cantidad = cantidad;
-                    let detalleEntregas = [...this.state.detalleEntregas];
+                    let detalleDevoluciones = [...this.state.detalleDevoluciones];
 
-                    detalleEntregas = detalleEntregas.concat(resultado);
+                    detalleDevoluciones = detalleDevoluciones.concat(resultado);
                     this.setState({
-                        detalleEntregas: [...detalleEntregas]
+                        detalleDevoluciones: [...detalleDevoluciones]
                     })
                 }
                 else {
@@ -338,9 +340,9 @@ class NewEntrega extends Component {
                     <GridItem xs={12} sm={10} md={10} >
                         <Card>
                             <CardHeader color="primary">
-                                <h4 className={this.props.classes.cardTitleWhite} >ENTREGA DE INSUMOS</h4>
+                                <h4 className={this.props.classes.cardTitleWhite} >DEVOLUCIÓN DE INSUMOS</h4>
                                 <p className={this.props.classes.cardCategoryWhite} >
-                                  Se entregan insumos para los diferentes módulos
+                                  Se devuelven insumos para los diferentes módulos
                                   </p>
                             </CardHeader>
                             <CardBody>
@@ -364,7 +366,7 @@ class NewEntrega extends Component {
 
                                 <MaterialTable
                                     columns={columnsInsumos}
-                                    data={this.state.detalleEntregas}
+                                    data={this.state.detalleDevoluciones}
                                     title="Listado de Insumos"
                                     actions={this.state.actions}
                                     localization={localization}
@@ -403,7 +405,7 @@ class NewEntrega extends Component {
                                     />
 
 
-                              <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/entregas')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Entregar</Button>
+                              <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/entregas')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Devolver</Button>
 
                             </CardBody>
                         </Card>
@@ -437,4 +439,4 @@ class NewEntrega extends Component {
 }
 
 
-export default withRouter(withStyles(styles)(NewEntrega));
+export default withRouter(withStyles(styles)(NewDevolucion));

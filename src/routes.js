@@ -58,6 +58,7 @@ import NewIngreso from "views/Ingresos/NewIngreso";
 import Stock from "views/Stock/Stock";
 import AjusteStock from "views/Stock/AjusteStock";
 import Entregas from "views/Paniol/Entregas";
+import Devoluciones from "views/Paniol/Devoluciones";
 import Modulos from "views/Modulos/Modulos";
 import NewModulo from "views/Modulos/NewModulo";
 import NewPlantilla from "views/Plantillas/NewPlantilla";
@@ -256,11 +257,11 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
-        path: "/nuevomodulo",
+        path: "/devoluciones",
         name: "Devolución",
         rtlName: "NM",
         icon: ArrowBack,
-        component: ArrowBack,
+        component: Devoluciones,
         layout: "/admin"
 
       }]
