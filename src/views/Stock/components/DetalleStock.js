@@ -39,8 +39,9 @@ class DetalleStock extends Component {
                         <TableCell>Movimiento</TableCell>
                         <TableCell>Cantidad</TableCell>
                         <TableCell align="right">Identificador</TableCell>
-                        <TableCell align="right">Usuario</TableCell>
-
+                        <TableCell align="right">Usuario</TableCell>      
+                        <TableCell align="right">Minimo</TableCell>
+                        <TableCell align="right">Parcial</TableCell>
                         <TableCell align="right">Fecha</TableCell>
 
                     </TableRow>
@@ -74,6 +75,8 @@ class DetalleStock extends Component {
                             <TableCell style={color} align="right">{elem.cantidad}</TableCell>
                             <TableCell style={color} align="right">{identificador}</TableCell>
                             <TableCell style={color} align="right">{elem.username}</TableCell>
+                            <TableCell style={color} align="right">{elem.minimo}</TableCell>
+                            <TableCell style={color} align="right">{elem.parcial}</TableCell>
 
                             <TableCell style={color} align="right">{moment(elem.fecha).format('DD/MM/YYYY')}</TableCell>
                         </TableRow>

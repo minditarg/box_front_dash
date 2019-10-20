@@ -107,7 +107,7 @@ class Entregas extends Component {
           resultado = resultado.map(elem=>{
             return {
               ...elem,
-              identificador: elem.descripcion_id + elem.id 
+              identificador: elem.descripcion_id + elem.id
             }
           })
           this.setState({
@@ -139,7 +139,7 @@ class Entregas extends Component {
                       </p>
           </CardHeader>
           <CardBody>
-          <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/nuevaentrega')} color="primary"><AddIcon /> Nuevo Entrega</Button>
+          <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/nuevaentrega')} color="primary"><AddIcon /> Nueva Entrega</Button>
 
             <MaterialTable
               isLoading={this.state.isLoading}

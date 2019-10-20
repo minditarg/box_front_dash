@@ -3,6 +3,7 @@ import axios from "axios";
 import Input from "components/Input/Input";
 import moment from "moment";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
+import esLocale from "date-fns/locale/es";
 
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
@@ -55,6 +56,8 @@ import { localization } from "variables/general";
 const columnsInsumos = [
     { title: "Codigo", field: "codigo", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },
+    { title: "Cantidad", field: "cantidad", type: 'numeric' },
+    { title: "Unidades", field: "unidad", editable: 'never'},
     //{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
 ];
 
@@ -136,13 +139,27 @@ class NewIngreso extends Component {
             }
         },
         formIsValid: false,
-        ingresoInsertado: false
+        ingresoInsertado: false,
+        disableAllButtons: false,
+        dateFormIsValid: true
     }
 
-    handleDateChange = (date) => {
-        this.setState({
-            selectedDate: date
-        })
+    handleDateChange = (date,value) => {
+      let dateState = null;
+      let dateFormIsValid = false;
+      if(date == "Invalid Date") {
+
+      } else {
+        dateState = date;
+        dateFormIsValid = true
+      }
+      this.setState({
+          selectedDate: date,
+          dateFormIsValid:dateFormIsValid
+      },()=>{
+        this.inputChangedHandler(null,null)
+      })
+
 
     };
 
@@ -170,10 +187,13 @@ class NewIngreso extends Component {
 
     inputChangedHandler = (event, inputIdentifier) => {
         //alert("modificado");
-        let checkValid;
+
         const updatedOrderForm = {
             ...this.state.orderForm
         };
+        if(inputIdentifier) {
+        let checkValid;
+
         const updatedFormElement = {
             ...updatedOrderForm[inputIdentifier]
         };
@@ -183,11 +203,14 @@ class NewIngreso extends Component {
         updatedFormElement.textValid = checkValid.textValid;
         updatedFormElement.touched = true;
         updatedOrderForm[inputIdentifier] = updatedFormElement;
-
+        }
         let formIsValidAlt = true;
         for (let inputIdentifier in updatedOrderForm) {
             formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
         }
+
+      formIsValidAlt = this.state.dateFormIsValid && formIsValidAlt;
+      formIsValidAlt = (this.state.detalleingresos.length > 0) && formIsValidAlt;
 
         this.setState({
             orderForm: updatedOrderForm,
@@ -203,6 +226,9 @@ class NewIngreso extends Component {
 
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
+          this.setState({
+            disableAllButtons:true
+          })
             axios.post('/insert-ingresos', {
                 fechaReferencia: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 referencia: event.target[2].value,
@@ -210,6 +236,7 @@ class NewIngreso extends Component {
                 detalle: this.state.detalleingresos
             })
                 .then(res => {
+
                     if (res.data.success == 1) {
                         // this.setState({pedidoInsertado: true});
                         this.props.getIngresos();
@@ -220,6 +247,9 @@ class NewIngreso extends Component {
                         },1000)
                     }
                     else {
+                      this.setState({
+                        disableAllButtons:false
+                      })
                         toast.error("Error");
                     }
                 })
@@ -234,25 +264,20 @@ class NewIngreso extends Component {
         this.setState({ open: false });
     }
 
-    onClickInsumo = (id, cantidad) => {
+    onClickInsumo = (rowInsumo, cantidad) => {
         this.closeDialog();
 
-        axios.get('/select-insumos/' + id)
-            .then(res => {
-                if (res.data.success == 1) {
-                    let resultado = [...res.data.result];
-                    resultado[0].cantidad = cantidad;
+                    let resultado = {...rowInsumo};
+                    resultado.cantidad = cantidad;
                     let detalleingresoant = [...this.state.detalleingresos];
 
-                    detalleingresoant = detalleingresoant.concat(resultado);
+                    detalleingresoant.push(resultado);
                     this.setState({
                         detalleingresos: [...detalleingresoant]
+                    },()=>{
+                      this.inputChangedHandler(null,null);
                     })
-                }
-                else {
-                    alert("error");
-                }
-            })
+
 
     }
 
@@ -265,6 +290,8 @@ class NewIngreso extends Component {
         detalleingresosant.splice(detalleingresosant.indexOf(rowData), 1);
         this.setState({
             detalleingresos: detalleingresosant
+        },()=>{
+          this.inputChangedHandler(null,null);
         });
         //this.state.detallepedidos.splice(this.state.detallepedidos.indexOf(rowData), 1);
     }
@@ -314,14 +341,16 @@ class NewIngreso extends Component {
                             </CardHeader>
                             <CardBody>
 
-                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <MuiPickersUtilsProvider locale={esLocale} utils={DateFnsUtils}>
                                     <KeyboardDatePicker
                                         margin="normal"
                                         id="date-picker-dialog"
                                         label="Fecha Referencia"
-                                        format="MM/dd/yyyy"
+                                        format="dd/MM/yyyy"
                                         value={this.state.selectedDate}
                                         onChange={this.handleDateChange}
+                                        autoOk={true}
+                                        cancelLabel={"Cancelar"}
                                         KeyboardButtonProps={{
                                             'aria-label': 'change date',
                                         }}
@@ -342,7 +371,7 @@ class NewIngreso extends Component {
                                         />
                                 ))}
 
-                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
+                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
 
                                 <MaterialTable
                                     columns={columnsInsumos}
@@ -364,18 +393,7 @@ class NewIngreso extends Component {
 
                                                 }, 200)
                                             }),
-                                        onRowDelete: oldData =>
-                                            new Promise((resolve, reject) => {
-                                                setTimeout(() => {
-                                                    {
-                                                        let data = this.state.detalleingresos;
-                                                        const index = data.indexOf(oldData);
-                                                        data.splice(index, 1);
-                                                        this.setState({ data }, () => resolve());
-                                                    }
 
-                                                }, 200)
-                                            }),
                                     }}
                                     components={{
                                         Container: props => (
@@ -385,7 +403,7 @@ class NewIngreso extends Component {
                                     />
 
 
-                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/ingresos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
+                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/ingresos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
                             </CardBody>
                         </Card>

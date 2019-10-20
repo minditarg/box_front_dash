@@ -8,6 +8,7 @@ import MaterialTable from "material-table";
 import {toast } from 'react-toastify';
 import { CardActions } from "@material-ui/core";
 import Moment from 'react-moment';
+import moment from 'moment';
 import { localization } from "variables/general.js";
 import lightGreen from '@material-ui/core/colors/lightGreen';
 import Button from "components/CustomButtons/Button.js";
@@ -26,10 +27,12 @@ import { withStyles } from '@material-ui/styles';
 
 
 const columns = [
+  { title: "Identificador", field: "identificador" ,customSort: (a, b) => a.id - b.id},
   { title: "Referencia", field: "referencia" },
-  { title: "Fecha Referencia", field: "fecha", render: rowData => <Moment format="DD/MM/YYYY">{rowData.fecha_referencia}< /Moment> },
+  { title: "Fecha Referencia", field: "fecha_referencia",customSort: (a, b) => moment(a.fecha_referencia,"DD/MM/YYYY").format("YYYYMMDD") - moment(b.fecha_referencia,"DD/MM/YYYY").format("YYYYMMDD") },
   { title: "Proveedor", field: "proveedor" },
   { title: "Usuario", field: "username" },
+  { title: "Fecha", field: "fecha",customSort: (a, b) => moment(a.fecha,"DD/MM/YYYY").format("YYYYMMDD") - moment(b.fecha,"DD/MM/YYYY").format("YYYYMMDD")  },
 ];
 
 /*
@@ -73,7 +76,8 @@ class Ingresos extends Component {
   state = {
     ingresos: [],
     actions: [],
-    isLoading: false
+    isLoading: false,
+    disableAllButtons:false
   };
 
 
@@ -101,6 +105,17 @@ class Ingresos extends Component {
         })
         if (res.data.success == 1) {
           let resultado = [...res.data.result];
+          resultado = resultado.map(elem =>{
+            return { ...elem,
+              identificador: elem.descripcion_id + elem.id,
+              fecha: moment(elem.fecha).format("DD/MM/YYYY"),
+              fecha_referencia:moment(elem.fecha_referencia).format("DD/MM/YYYY")
+            }
+          })
+
+
+
+
           this.setState({
             ingresos: resultado
           })
@@ -143,6 +158,9 @@ class Ingresos extends Component {
 
               options={{
                 exportButton: true,
+                exportAllData:true,
+                exportFileName:"Stock " + moment().format("DD-MM-YYYY"),
+                exportDelimiter:";",
                 headerStyle: {
                   backgroundColor: lightGreen[700],
                   color: '#FFF'

@@ -45,6 +45,7 @@ const styles = {
   }
 };
 
+var minimoAnt = null;
 
 class EditInsumo extends Component {
 state= JSON.parse(JSON.stringify(StateEditInsumo));
@@ -79,7 +80,7 @@ getCategorias = () => {
                         this.setState({
                           insumoEdit:resultado.data.result[0]
                         })
-
+                        minimoAnt= resultado.data.result[0].minimo;
                         let editInsumoFormAlt = {...this.state.editInsumoForm};
                           editInsumoFormAlt.codigo.value = resultado.data.result[0].codigo;
                           editInsumoFormAlt.numero.value = resultado.data.result[0].numero;
@@ -108,15 +109,20 @@ getCategorias = () => {
       handleSubmitEditInsumo = (event) => {
 
           event.preventDefault();
-          axios.post(`/update-insumos`, { 
+          let objetoUpdate = {
             id:this.state.insumoEdit.id,
-            codigo: this.state.editInsumoForm.codigo.value, 
-            descripcion: this.state.editInsumoForm.descripcion.value, 
-            unidad: this.state.editInsumoForm.unidad.value, 
-            minimo: this.state.editInsumoForm.minimo.value,
+            codigo: this.state.editInsumoForm.codigo.value,
+            descripcion: this.state.editInsumoForm.descripcion.value,
+            unidad: this.state.editInsumoForm.unidad.value,
             categoria: this.state.editInsumoForm.categoria.value,
             numero: this.state.editInsumoForm.numero.value
-          })
+
+          }
+            if(this.state.editInsumoForm.minimo.value != minimoAnt)
+              objetoUpdate.minimo = this.state.editInsumoForm.minimo.value;
+
+
+          axios.post(`/update-insumos`, objetoUpdate)
               .then(res => {
                   let estadoAlt = null
                   if (res.data.success == 0) {
@@ -127,11 +133,12 @@ getCategorias = () => {
                   }
 
                   if(estadoAlt){
+                    toast.success("Los cambios se realizaron correctamente");
                     this.props.getInsumos();
                     this.setState({
                       editFormIsValid:false
                     })
-                    toast.success("Los cambios se realizaron correctamente");
+
                     }
               })
 
@@ -184,8 +191,8 @@ getCategorias = () => {
           if(inputIdentifier == "categoria")
           {
            //alert(event.target.value); //el idInsumoCategoria
-      
-      
+
+
                 axios.get('/list-categorias/' + event.target.value)
             .then(res => {
               if (res.data.success == 1) {
@@ -196,7 +203,7 @@ getCategorias = () => {
                 updatedOrderForm["codigo"].value = resultado[0].codigo;
                 updatedOrderForm["codigo"].valid = true;
                 updatedOrderForm["codigo"].touched = true;
-      
+
                 axios.get('/get-siguiente/' + resultado[0].id)
                 .then(res => {
                   if (res.data.success == 1) {
@@ -205,21 +212,21 @@ getCategorias = () => {
                    updatedOrderForm["numero"].value = res.data.result[0].siguiente;
                    updatedOrderForm["numero"].valid = true;
                    updatedOrderForm["numero"].touched = true;
-      
+
                    this.setState({
                     editInsumoForm: updatedOrderForm,
                     formIsValid: formIsValidAlt
-      
+
                   })
                   }
                 })
-      
+
                 this.setState({
                   editInsumoForm: updatedOrderForm,
                   formIsValid: formIsValidAlt
-      
+
                 })
-      
+
               } else if (res.data.success == 3 || res.data.success == 4) {
               }
             }, err => {
@@ -231,7 +238,7 @@ getCategorias = () => {
               this.setState({
               editInsumoForm: updatedOrderForm,
               formIsValid: formIsValidAlt
-      
+
             })
           }
 
