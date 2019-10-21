@@ -144,7 +144,11 @@ class NewInsumo extends Component {
             if (res.data.success == 1) {
               console.log(res.data.result[0].siguiente);
              // alert('/list-categorias');
-             updatedOrderForm["numero"].value = res.data.result[0].siguiente;
+             if(res.data.result[0].siguiente == null)
+                updatedOrderForm["numero"].value = 1;
+             else 
+                updatedOrderForm["numero"].value = res.data.result[0].siguiente;
+                
              updatedOrderForm["numero"].valid = true;
              updatedOrderForm["numero"].touched = true;
 

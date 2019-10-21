@@ -37,6 +37,7 @@ import AllInbox from "@material-ui/icons/AllInbox";
 import CompareArrows from "@material-ui/icons/CompareArrows";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import ArrowBack from "@material-ui/icons/ArrowBack";
+import AssignmentIcon from '@material-ui/icons/Assignment';
 
 
 // core components/views for Admin layout
@@ -157,14 +158,6 @@ const dashboardRoutes = [
         component: Categorias,
         layout: "/admin"
       },
-      /*{
-        path: "/nuevaCategoria",
-        name: "Nueva Categoria",
-        rtlName: "CA",
-        icon: AddBoxIcon,
-        component: NewCategoria,
-        layout: "/admin"
-      },*/
       {
         path: "/insumos",
         name: "Insumos",
@@ -175,7 +168,7 @@ const dashboardRoutes = [
       }
      ]
   },
-  
+
   {
     groupComponent: true,
     name: 'Stock',
@@ -207,19 +200,6 @@ const dashboardRoutes = [
       layout: "/admin"
     }]
   },
-
-
-
-  
- 
-  // {
-  //   path: "/plantillas",
-  //   name: "Plantillas",
-  //   rtlName: "Pla",
-  //   icon: Person,
-  //   component: Plantillas,
-  //   layout: "/admin"
-  // },
   // {
   //   groupComponent: true,
   //   name: 'Modulos',
@@ -268,8 +248,15 @@ const dashboardRoutes = [
         layout: "/admin"
 
       }]
+  },
+  {
+    path: "/plantillas",
+    name: "Plantillas",
+    rtlName: "Pla",
+    icon: AssignmentIcon,
+    component: Plantillas,
+    layout: "/admin"
   }
-
 
 
 
