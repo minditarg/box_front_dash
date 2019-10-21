@@ -10,6 +10,7 @@ import { CardActions } from "@material-ui/core";
 import {  toast } from 'react-toastify';
 import ModalDeleteCategoria from "./ModalDeleteCategoria";
 import EditCategoria from "./components/EditCategoria";
+import NewCategoria from './NewCategoria';
 
 import { ColumnsListadoCategorias, StateListado } from "./VariablesState";
 import { localization } from "variables/general.js";
@@ -21,6 +22,9 @@ import Card from "components/Card/Card.js";
 import Paper from '@material-ui/core/Paper';
 
 import { withStyles } from '@material-ui/styles';
+
+import AddIcon from '@material-ui/icons/Add';
+import Button from "components/CustomButtons/Button.js";
 
 const styles = {
   cardCategoryWhite: {
@@ -62,8 +66,14 @@ class Categorias extends Component {
   }
 
   getCategorias = () => {
+    this.setState({
+      isLoading:true
+    })
     axios.get('/list-categorias')
       .then(res => {
+        this.setState({
+          isLoading:false
+        })
         if (res.data.success == 1) {
           let resultado = [...res.data.result];
           this.setState({
@@ -140,7 +150,10 @@ class Categorias extends Component {
                       </p>
               </CardHeader>
               <CardBody>
+              <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/nuevaCategoria')} color="primary"><AddIcon /> Nueva Categoria</Button>
+
                 <MaterialTable
+                  isLoading={this.state.isLoading}
                   columns={ColumnsListadoCategorias}
                   data={this.state.categorias}
                   title=""
@@ -172,6 +185,13 @@ class Categorias extends Component {
 
           <EditCategoria
           />
+        } />
+
+        <Route path={this.props.match.url + "/nuevacategoria/"} exact render={() =>
+
+        <NewCategoria
+        
+        />
         } />
 
       </Switch>,

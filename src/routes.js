@@ -67,14 +67,14 @@ import Plantillas from "views/Plantillas/Plantillas";
 import RTLPage from "views/RTLPage/RTLPage.js";
 
 const dashboardRoutes = [
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    rtlName: "DS",
-    icon: Dashboard,
-    component: DashboardPage,
-    layout: "/admin"
-  },
+  // {
+  //   path: "/dashboard",
+  //   name: "Dashboard",
+  //   rtlName: "DS",
+  //   icon: Dashboard,
+  //   component: DashboardPage,
+  //   layout: "/admin"
+  // },
   // {
   //   path: "/user",
   //   name: "User Profile",
@@ -133,7 +133,49 @@ const dashboardRoutes = [
   // },
 
 
+  {
+    path: "/usuarios",
+    name: "Usuarios",
+    rtlName: "Us",
+    icon: Person,
+    component: Users,
+    layout: "/admin"
+  },
 
+  {
+    groupComponent: true,
+    name: 'Insumos',
+    open: 'open2',
+    icon: ViewComfyIcon,
+    dependences: [
+
+      {
+        path: "/categorias",
+        name: "Categorias",
+        rtlName: "LCA",
+        icon: ListIcon,
+        component: Categorias,
+        layout: "/admin"
+      },
+      /*{
+        path: "/nuevaCategoria",
+        name: "Nueva Categoria",
+        rtlName: "CA",
+        icon: AddBoxIcon,
+        component: NewCategoria,
+        layout: "/admin"
+      },*/
+      {
+        path: "/insumos",
+        name: "Insumos",
+        rtlName: "LI",
+        icon: ListIcon,
+        component: Insumos,
+        layout: "/admin"
+      }
+     ]
+  },
+  
   {
     groupComponent: true,
     name: 'Stock',
@@ -168,79 +210,40 @@ const dashboardRoutes = [
 
 
 
-  {
-    groupComponent: true,
-    name: 'Insumos',
-    open: 'open2',
-    icon: ViewComfyIcon,
-    dependences: [
+  
+ 
+  // {
+  //   path: "/plantillas",
+  //   name: "Plantillas",
+  //   rtlName: "Pla",
+  //   icon: Person,
+  //   component: Plantillas,
+  //   layout: "/admin"
+  // },
+  // {
+  //   groupComponent: true,
+  //   name: 'Modulos',
+  //   open: 'open4',
+  //   icon: PictureInPictureIcon,
+  //   dependences: [
+  //     {
+  //       path: "/modulos",
+  //       name: "Listado",
+  //       rtlName: "LM",
+  //       icon: ListIcon,
+  //       component: Modulos,
+  //       layout: "/admin"
+  //     },
+  //     {
+  //       path: "/nuevomodulo",
+  //       name: "Nuevo",
+  //       rtlName: "NM",
+  //       icon: AddBoxIcon,
+  //       component: NewModulo,
+  //       layout: "/admin"
 
-      {
-        path: "/categorias",
-        name: "Categorias",
-        rtlName: "LCA",
-        icon: ListIcon,
-        component: Categorias,
-        layout: "/admin"
-      },
-      {
-        path: "/nuevaCategoria",
-        name: "Nueva Categoria",
-        rtlName: "CA",
-        icon: AddBoxIcon,
-        component: NewCategoria,
-        layout: "/admin"
-      },
-      {
-        path: "/insumos",
-        name: "Insumos",
-        rtlName: "LI",
-        icon: ListIcon,
-        component: Insumos,
-        layout: "/admin"
-      }
-     ]
-  },
-  {
-    path: "/usuarios",
-    name: "Usuarios",
-    rtlName: "Us",
-    icon: Person,
-    component: Users,
-    layout: "/admin"
-  },
-  {
-    path: "/plantillas",
-    name: "Plantillas",
-    rtlName: "Pla",
-    icon: Person,
-    component: Plantillas,
-    layout: "/admin"
-  },
-  {
-    groupComponent: true,
-    name: 'Modulos',
-    open: 'open4',
-    icon: PictureInPictureIcon,
-    dependences: [
-      {
-        path: "/modulos",
-        name: "Listado",
-        rtlName: "LM",
-        icon: ListIcon,
-        component: Modulos,
-        layout: "/admin"
-      },
-      {
-        path: "/nuevomodulo",
-        name: "Nuevo",
-        rtlName: "NM",
-        icon: AddBoxIcon,
-        component: NewModulo,
-        layout: "/admin"
-
-      }]
-  },
+  //     }]
+  // },
 
   {
     groupComponent: true,
