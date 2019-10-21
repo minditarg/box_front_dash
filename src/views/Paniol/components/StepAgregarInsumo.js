@@ -23,7 +23,7 @@ import Typography from '@material-ui/core/Typography';
 const columnsInsumosDetalle = [
     { title: "Codigo", field: "codigo", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },
-  
+
 ];
 
 const useStyles = makeStyles(theme => ({
@@ -71,7 +71,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const [isLoading, setIsLoading] = React.useState(false);
     const [insumos, setInsumos] = React.useState([]);
     const [rowInsumo, setRowInsumo] = React.useState(null);
-    const formElementsArray = [];  
+    const formElementsArray = [];
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
 
@@ -95,19 +95,19 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     }
 
 
-   
+
 
     const handleNext = () => {
         let orderFormAlt = { ...orderForm };
         orderFormAlt.cantidad.value = '';
-        
+
        // alert("handleNext");
         setOrderForm(orderFormAlt);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
     };
 
     const handleFinish = () => {
-        props.onClickInsumo(rowInsumo.id, orderForm.cantidad.value);
+        props.onClickInsumo(rowInsumo, orderForm.cantidad.value);
     }
 
     const handleBack = () => {

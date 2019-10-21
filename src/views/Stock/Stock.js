@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Route, Switch, Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
+import moment from 'moment';
 
 import DetalleStock from './components/DetalleStock';
 
@@ -10,8 +11,7 @@ import DetalleStock from './components/DetalleStock';
 import MaterialTable, { MTableCell, MTableBodyRow } from "material-table";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import { CardActions } from "@material-ui/core";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 //import ModalDelete from "./ModalDelete";
 //import EditInsumo from "./components/EditInsumo";
 
@@ -324,6 +324,9 @@ class Stock extends Component {
 
                   options={{
                     exportButton: true,
+                    exportAllData:true,
+                    exportFileName:"Stock " + moment().format("DD-MM-YYYY"),
+                    exportDelimiter:";",
                     headerStyle: {
                       backgroundColor: lightGreen[700],
                       color: '#FFF'
@@ -350,9 +353,8 @@ class Stock extends Component {
             </Card>
           </div>} />
 
-      </Switch>,
+      </Switch>
 
-      <ToastContainer key={"insumos-toast"} position={toast.POSITION.BOTTOM_RIGHT} autoClose={3000} />
 
     ]);
   }

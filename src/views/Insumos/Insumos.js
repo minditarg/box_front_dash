@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Route, Switch, Link } from 'react-router-dom';
+import moment from 'moment';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -79,7 +80,7 @@ class Insumos extends Component {
             insumos: resultado
           })
         } else if (res.data.success == 3 || res.data.success == 4) {
-        
+
         }
 
       }, err => {
@@ -169,6 +170,9 @@ class Insumos extends Component {
                   }]}
                   options={{
                     exportButton: true,
+                    exportAllData:true,
+                    exportFileName:"Insumos " + moment().format("DD-MM-YYYY"),
+                    exportDelimiter:";",
                     headerStyle: {
                       backgroundColor: lightGreen[700],
                       color: '#FFF'
@@ -180,7 +184,7 @@ class Insumos extends Component {
 
           </div>,
       <Switch  key={"insumos-switch"}>
-       
+
         <Route path={this.props.match.url + "/editarinsumo/:idinsumo"} exact render={() =>
 
           <EditInsumo

@@ -76,8 +76,7 @@ class Ingresos extends Component {
   state = {
     ingresos: [],
     actions: [],
-    isLoading: false,
-    disableAllButtons:false
+    isLoading: false
   };
 
 
@@ -159,7 +158,7 @@ class Ingresos extends Component {
               options={{
                 exportButton: true,
                 exportAllData:true,
-                exportFileName:"Stock " + moment().format("DD-MM-YYYY"),
+                exportFileName:"Ingresos " + moment().format("DD-MM-YYYY"),
                 exportDelimiter:";",
                 headerStyle: {
                   backgroundColor: lightGreen[700],

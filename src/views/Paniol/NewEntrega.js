@@ -55,7 +55,7 @@ import { localization } from "variables/general";
 const columnsInsumos = [
     { title: "Codigo", field: "codigo", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },
-    { title: "Cantidad", field: "cantidad", editable: 'numeric' },
+    { title: "Cantidad", field: "cantidad", type: 'numeric' },
     { title: "Unidad", field: "unidad", editable: 'never' },
 
     //{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
@@ -124,11 +124,25 @@ class NewEntrega extends Component {
                 valid: false,
                 touched: false
             },
-            descripcion: {
+            referencia: {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    label: 'Descripción',
+                    label: 'Referencia',
+                    fullWidth: true
+                },
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
+            },
+            comentario: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    label: 'Comentario',
                     fullWidth: true
                 },
                 value: '',
@@ -174,6 +188,8 @@ class NewEntrega extends Component {
         const updatedOrderForm = {
             ...this.state.orderForm
         };
+
+        if(inputIdentifier) {
         const updatedFormElement = {
             ...updatedOrderForm[inputIdentifier]
         };
@@ -183,11 +199,12 @@ class NewEntrega extends Component {
         updatedFormElement.textValid = checkValid.textValid;
         updatedFormElement.touched = true;
         updatedOrderForm[inputIdentifier] = updatedFormElement;
-
+        }
         let formIsValidAlt = true;
         for (let inputIdentifier in updatedOrderForm) {
             formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
         }
+        formIsValidAlt = (this.state.detalleEntregas.length > 0) && formIsValidAlt;
 
         this.setState({
             orderForm: updatedOrderForm,
@@ -200,14 +217,16 @@ class NewEntrega extends Component {
 
     handleSubmitNewPedido = (event) => {
         event.preventDefault();
-        this.setState ({
-          disableAllButtons:true
-        })
+
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
+          this.setState ({
+            disableAllButtons:true
+          })
             axios.post('/insert-entregas', {
                 id_modulo: this.state.orderForm.modulo.value,
-                descripcion: this.state.orderForm.descripcion.value,
+                referencia: this.state.orderForm.referencia.value,
+                comentario:this.state.orderForm.comentario.value,
                 detalle: this.state.detalleEntregas
             })
                 .then(res => {
@@ -244,25 +263,23 @@ class NewEntrega extends Component {
         this.setState({ open: false });
     }
 
-    onClickInsumo = (id, cantidad) => {
+    onClickInsumo = (rowInsumo, cantidad) => {
         this.closeDialog();
 
-        axios.get('/select-insumos/' + id)
-            .then(res => {
-                if (res.data.success == 1) {
-                    let resultado = [...res.data.result];
-                    resultado[0].cantidad = cantidad;
+                    let resultado = {...rowInsumo};
+                    resultado.cantidad = cantidad;
                     let detalleEntregas = [...this.state.detalleEntregas];
 
-                    detalleEntregas = detalleEntregas.concat(resultado);
+                    detalleEntregas.push(resultado);
+
                     this.setState({
                         detalleEntregas: [...detalleEntregas]
+                    },()=>{
+                      this.inputChangedHandler(null,null);
                     })
-                }
-                else {
-                    alert("error");
-                }
-            })
+
+
+
 
     }
 
@@ -271,10 +288,12 @@ class NewEntrega extends Component {
 
         //alert("eliminando: " + this.state.detallepedidos.indexOf(rowData));
         //data.splice(data.indexOf(oldData), 1);
-        let detalleingresosant = [...this.state.detalleingresos];
-        detalleingresosant.splice(detalleingresosant.indexOf(rowData), 1);
+        let detalleentregasant = [...this.state.detalleEntregas];
+        detalleentregasant.splice(detalleentregasant.indexOf(rowData), 1);
         this.setState({
-            detalleingresos: detalleingresosant
+            detalleEntregas: detalleentregasant
+        },()=>{
+          this.inputChangedHandler(null,null);
         });
         //this.state.detallepedidos.splice(this.state.detallepedidos.indexOf(rowData), 1);
     }
@@ -382,18 +401,7 @@ class NewEntrega extends Component {
 
                                                 }, 200)
                                             }),
-                                        onRowDelete: oldData =>
-                                            new Promise((resolve, reject) => {
-                                                setTimeout(() => {
-                                                    {
-                                                        let data = this.state.detalleEntregas;
-                                                        const index = data.indexOf(oldData);
-                                                        data.splice(index, 1);
-                                                        this.setState({ data }, () => resolve());
-                                                    }
 
-                                                }, 200)
-                                            }),
                                     }}
                                     components={{
                                         Container: props => (

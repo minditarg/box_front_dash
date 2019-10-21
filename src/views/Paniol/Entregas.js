@@ -8,6 +8,7 @@ import MaterialTable from "material-table";
 import {toast } from 'react-toastify';
 import { CardActions } from "@material-ui/core";
 import Moment from 'react-moment';
+import moment from 'moment';
 import { localization } from "variables/general.js";
 import lightGreen from '@material-ui/core/colors/lightGreen';
 import Button from "components/CustomButtons/Button.js";
@@ -27,12 +28,13 @@ import { withStyles } from '@material-ui/styles';
 
 
 const columns = [
-    { title: "Identificador", field: "identificador"},
-  { title: "Descripcion", field: "descripcion" },
+    { title: "Identificador", field: "identificador",customSort: (a, b) => a.id - b.id},
 
-  { title: "Modulo desc", field: "mdescripcion" },
+  { title: "Modulo", field: "mdescripcion" },
+  { title: "Referencia", field: "referencia" },
+
   { title: "Usuario", field: "username" },
-  { title: "Fecha", field: "fecha", render: rowData => <Moment format="DD/MM/YYYY">{rowData.fecha}</Moment> },
+  { title: "Fecha", field: "fecha", customSort: (a, b) => moment(a.fecha,"DD/MM/YYYY").format("YYYYMMDD") - moment(b.fecha,"DD/MM/YYYY").format("YYYYMMDD")  },
 ];
 
 /*
@@ -107,7 +109,8 @@ class Entregas extends Component {
           resultado = resultado.map(elem=>{
             return {
               ...elem,
-              identificador: elem.descripcion_id + elem.id
+              identificador: elem.descripcion_id + elem.id,
+              fecha: moment(elem.fecha).format("DD/MM/YYYY")
             }
           })
           this.setState({
@@ -152,6 +155,9 @@ class Entregas extends Component {
 
               options={{
                 exportButton: true,
+                exportAllData:true,
+                exportFileName:"Entregas " + moment().format("DD-MM-YYYY"),
+                exportDelimiter:";",
                 headerStyle: {
                   backgroundColor: lightGreen[700],
                   color: '#FFF'

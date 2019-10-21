@@ -233,7 +233,7 @@ const dashboardRoutes = [
     dependences: [
       {
         path: "/entregas",
-        name: "Entrega",
+        name: "Entregas",
         rtlName: "LM",
         icon: ArrowForward,
         component: Entregas,
@@ -241,7 +241,7 @@ const dashboardRoutes = [
       },
       {
         path: "/devoluciones",
-        name: "Devolución",
+        name: "Devoluciones",
         rtlName: "NM",
         icon: ArrowBack,
         component: Devoluciones,

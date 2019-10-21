@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Route, Switch, Link } from 'react-router-dom';
+import moment from 'moment';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -27,12 +28,12 @@ import { withStyles } from '@material-ui/styles';
 
 
 const columns = [
-    { title: "Identificador", field: "identificador"},
-  { title: "Descripcion", field: "descripcion" },
+    { title: "Identificador", field: "identificador",customSort: (a, b) => a.id - b.id},
+  { title: "Referencia", field: "referencia" },
 
   { title: "Modulo desc", field: "mdescripcion" },
   { title: "Usuario", field: "username" },
-  { title: "Fecha", field: "fecha", render: rowData => <Moment format="DD/MM/YYYY">{rowData.fecha}</Moment> },
+  { title: "Fecha", field: "fecha", customSort: (a, b) => moment(a.fecha,"DD/MM/YYYY").format("YYYYMMDD") - moment(b.fecha,"DD/MM/YYYY").format("YYYYMMDD") },
 ];
 
 /*
@@ -80,18 +81,7 @@ class Devoluciones extends Component {
   };
 
 
-  deleteMaterial = (id) => {
-    //alert("You want to delete " + id);
-    axios.post('/delete-entregas', {
-      id: id
-    })
-      .then(res => {
-        if (res.data.success == 1) {
-          this.getPedidos();
-          toast.info("Devolucion eliminada");
-        }
-      })
-  }
+
 
   getDevoluciones = () => {
     this.setState({
@@ -107,7 +97,8 @@ class Devoluciones extends Component {
           resultado = resultado.map(elem=>{
             return {
               ...elem,
-              identificador: elem.descripcion_id + elem.id 
+              identificador: elem.descripcion_id + elem.id,
+              fecha: moment(elem.fecha).format("DD/MM/YYYY")
             }
           })
           this.setState({
@@ -152,6 +143,9 @@ class Devoluciones extends Component {
 
               options={{
                 exportButton: true,
+                exportAllData:true,
+                exportFileName:"Devoluciones " + moment().format("DD-MM-YYYY"),
+                exportDelimiter:";",
                 headerStyle: {
                   backgroundColor: lightGreen[700],
                   color: '#FFF'
