@@ -53,7 +53,7 @@ import { localization } from "variables/general";
 // ];
 
 const columnsInsumos = [
-    { title: "Codigo", field: "codigo", editable: 'never' },
+    { title: "Identificador", field: "identificador", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },
     { title: "Cantidad", field: "cantidad", type: 'numeric' },
       { title: "Unidad", field: "unidad", editable: 'never' },
@@ -412,7 +412,7 @@ class NewDevolucion extends Component {
                                     />
 
 
-                              <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/entregas')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Devolver</Button>
+                              <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/devoluciones')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Devolver</Button>
 
                             </CardBody>
                         </Card>

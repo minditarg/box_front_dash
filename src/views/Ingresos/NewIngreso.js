@@ -54,7 +54,7 @@ import { localization } from "variables/general";
 // ];
 
 const columnsInsumos = [
-    { title: "Codigo", field: "codigo", editable: 'never' },
+    { title: "Identificador", field: "identificador", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },
     { title: "Cantidad", field: "cantidad", type: 'numeric' },
     { title: "Unidades", field: "unidad", editable: 'never'},

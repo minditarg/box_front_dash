@@ -84,6 +84,13 @@ class Stock extends Component {
         })
         if (res.data.success == 1) {
           let resultado = [...res.data.result];
+          resultado = resultado.map(elem=>{
+            return {
+              ...elem,
+              identificador: elem.codigo + elem.numero
+            }
+
+          })
           this.setState({
             insumos: resultado
           })

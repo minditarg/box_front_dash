@@ -53,7 +53,7 @@ import { localization } from "variables/general";
 // ];
 
 const columnsInsumos = [
-    { title: "Codigo", field: "codigo", editable: 'never' },
+    { title: "Identificador", field: "identificador", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },
     { title: "Cantidad", field: "cantidad", type: 'numeric' }
     //{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
@@ -97,11 +97,11 @@ const styles = {
 
 class NewPlantilla extends Component {
     state = {
-        ingresos: [],
+        plantillas: [],
         open: false,
-        detalleingresos: [],
+        detallePlantillas: [],
         actions: [],
-        actionsInsumos: [],
+        actionsPlantillas: [],
 
         selectedDate: new Date(),
 
@@ -137,10 +137,12 @@ class NewPlantilla extends Component {
             }
         },
         formIsValid: false,
-        ingresoInsertado: false
+        plantillaInsertada: false,
+        disableAllButtons: false
+
     }
 
-    
+
 
     checkValidity = (value, rules) => {
         let isValid = true;
@@ -170,6 +172,7 @@ class NewPlantilla extends Component {
         const updatedOrderForm = {
             ...this.state.orderForm
         };
+        if(inputIdentifier) {
         const updatedFormElement = {
             ...updatedOrderForm[inputIdentifier]
         };
@@ -179,11 +182,12 @@ class NewPlantilla extends Component {
         updatedFormElement.textValid = checkValid.textValid;
         updatedFormElement.touched = true;
         updatedOrderForm[inputIdentifier] = updatedFormElement;
-
+        }
         let formIsValidAlt = true;
         for (let inputIdentifier in updatedOrderForm) {
             formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
         }
+        formIsValidAlt = this.state.detallePlantillas.length > 0 && formIsValidAlt;
 
         this.setState({
             orderForm: updatedOrderForm,
@@ -194,25 +198,26 @@ class NewPlantilla extends Component {
 
     handleSubmitNewPlantilla = (event) => {
         event.preventDefault();
-        console.log(this.props);
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
-        if (this.state.formIsValid) {      
+        if (this.state.formIsValid) {
+            this.setState({disableAllButtons:true});
             axios.post('/insert-plantilla', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 codigo: this.state.orderForm.codigo.value,
                 descripcion: this.state.orderForm.descripcion.value,
-                detalle: this.state.detalleingresos
+                detalle: this.state.detallePlantillas
             })
                 .then(res => {
                     if (res.data.success == 1) {
                         // this.setState({pedidoInsertado: true});
-                       // this.props.getIngresos();
-                       // toast.success("Nueva plantilla creada");
+                        // this.props.getIngresos();
+                        toast.success("Nueva plantilla creada");
                         this.props.getPlantillas();
                         this.props.history.push("/admin/plantillas");
                     }
                     else {
-                        toast.error("Error");
+                        this.setState({disableAllButtons:false});
+                        toast.error(" Error");
                     }
                 })
         }
@@ -226,25 +231,18 @@ class NewPlantilla extends Component {
         this.setState({ open: false });
     }
 
-    onClickInsumo = (id, cantidad) => {
+    onClickInsumo = (rowInsumo, cantidad) => {
         this.closeDialog();
 
-        axios.get('/select-insumos/' + id)
-            .then(res => {
-                if (res.data.success == 1) {
-                    let resultado = [...res.data.result];
-                    resultado[0].cantidad = cantidad;
-                    let detalleingresoant = [...this.state.detalleingresos];
+        let resultado = {...rowInsumo};
+        resultado.cantidad = cantidad;
+        let detallePlantillas = [...this.state.detallePlantillas];
 
-                    detalleingresoant = detalleingresoant.concat(resultado);
-                    this.setState({
-                        detalleingresos: [...detalleingresoant]
-                    })
-                }
-                else {
-                    alert("error");
-                }
-            })
+        detallePlantillas.push(resultado);
+        this.setState({
+            detallePlantillas: [...detallePlantillas]
+        },()=>this.inputChangedHandler())
+
 
     }
 
@@ -253,17 +251,17 @@ class NewPlantilla extends Component {
 
         //alert("eliminando: " + this.state.detallepedidos.indexOf(rowData));
         //data.splice(data.indexOf(oldData), 1);
-        let detalleingresosant = [...this.state.detalleingresos];
-        detalleingresosant.splice(detalleingresosant.indexOf(rowData), 1);
+        let detallePlantillas = [...this.state.detallePlantillas];
+        detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
         this.setState({
-            detalleingresos: detalleingresosant
-        });
+            detallePlantillas: detallePlantillas
+        },()=> this.inputChangedHandler());
         //this.state.detallepedidos.splice(this.state.detallepedidos.indexOf(rowData), 1);
     }
 
 
     componentDidMount() {
-       
+
         this.state.actions = [
             {
                 icon: 'delete',
@@ -304,7 +302,7 @@ class NewPlantilla extends Component {
                                     Creación de plantillas para la construcción de Módulos
                                   </p>
                             </CardHeader>
-                            <CardBody>                                
+                            <CardBody>
                                 {formElementsArray.map(formElement => (
                                     <Input
                                         key={formElement.id}
@@ -319,11 +317,11 @@ class NewPlantilla extends Component {
                                         />
                                 ))}
 
-                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
+                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
 
                                 <MaterialTable
                                     columns={columnsInsumos}
-                                    data={this.state.detalleingresos}
+                                    data={this.state.detallePlantillas}
                                     title="Listado de Insumos"
                                     actions={this.state.actions}
                                     localization={localization}
@@ -333,7 +331,7 @@ class NewPlantilla extends Component {
                                             new Promise((resolve, reject) => {
                                                 setTimeout(() => {
                                                     {
-                                                        const data = this.state.detalleingresos;
+                                                        const data = this.state.detallePlantillas;
                                                         const index = data.indexOf(oldData);
                                                         data[index] = newData;
                                                         this.setState({ data }, () => resolve());
@@ -350,8 +348,8 @@ class NewPlantilla extends Component {
                                     />
 
 
-                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/ingresos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
-                                
+                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/plantillas')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+
                             </CardBody>
                         </Card>
                     </GridItem>

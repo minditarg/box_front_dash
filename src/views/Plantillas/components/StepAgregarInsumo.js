@@ -35,6 +35,11 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const columns = [
+    { title: "Identificador", field: "identificador", editable: 'never' },
+    { title: "Descripcion", field: "descripcion", editable: 'never' },
+];
+
 function getSteps() {
     return ['Seleccione un Insumo', 'Modificar cantidad'];
 }
@@ -67,7 +72,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const [isLoading, setIsLoading] = React.useState(false);
     const [insumos, setInsumos] = React.useState([]);
     const [rowInsumo, setRowInsumo] = React.useState(null);
-    const formElementsArray = [];  
+    const formElementsArray = [];
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
 
@@ -85,25 +90,31 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                 setIsLoading(false);
                 if (res.data.success == 1) {
                     let resultado = [...res.data.result];
+                    resultado = resultado.map(elem=>{
+                        return {
+                            ...elem,
+                            identificador: elem.codigo + elem.numero
+                        }
+                    })
                     setInsumos(resultado);
                 }
             })
     }
 
 
-   
+
 
     const handleNext = () => {
         let orderFormAlt = { ...orderForm };
         orderFormAlt.cantidad.value = '';
-        
+
        // alert("handleNext");
         setOrderForm(orderFormAlt);
         setActiveStep(prevActiveStep => prevActiveStep + 1);
     };
 
     const handleFinish = () => {
-        props.onClickInsumo(rowInsumo.id, orderForm.cantidad.value);
+        props.onClickInsumo(rowInsumo, orderForm.cantidad.value);
     }
 
     const handleBack = () => {
@@ -169,7 +180,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
             case 0:
                 return <MaterialTable
                     isLoading={isLoading}
-                    columns={props.columnsInsumos}
+                    columns={columns}
                     data={insumos}
                     title="Insumo"
                     localization={localization}
@@ -190,10 +201,11 @@ export default function HorizontalLabelPositionBelowStepper(props) {
             case 1:
 
                 return (<React.Fragment>
-                    <p><span style={{ fontWeight:'300'}}>Código: </span>
-                      {rowInsumo.codigo}</p>
+                    <p><span style={{ fontWeight:'300'}}>Identificador: </span>
+                      {rowInsumo.codigo + rowInsumo.numero}</p>
                      <p><span style={{ fontWeight:'300'}}>Descripción: </span>
                       {rowInsumo.descripcion}</p>
+                     
 
                     {
                         formElementsArray.map(formElement => (
@@ -243,7 +255,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                             Atras
               </Button>
                         {activeStep === steps.length - 1 ? (
-                            <Button variant="contained" color="primary" disabled={!formIsValid} onClick={handleFinish}>
+                            <Button variant="contained" color="primary" disabled={!formIsValid } onClick={handleFinish}>
                                 Agregar
                               </Button>
                         ) : null}

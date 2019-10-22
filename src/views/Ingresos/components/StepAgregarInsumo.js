@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const columns = [
-    { title: "Codigo", field: "codigo", editable: 'never' },
+    { title: "Identificador", field: "identificador", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },
 ];
 
@@ -90,6 +90,12 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                 setIsLoading(false);
                 if (res.data.success == 1) {
                     let resultado = [...res.data.result];
+                    resultado = resultado.map(elem=>{
+                        return {
+                            ...elem,
+                            identificador: elem.codigo + elem.numero
+                        }
+                    })
                     setInsumos(resultado);
                 }
             })
@@ -195,8 +201,8 @@ export default function HorizontalLabelPositionBelowStepper(props) {
             case 1:
 
                 return (<React.Fragment>
-                    <p><span style={{ fontWeight:'300'}}>Código: </span>
-                      {rowInsumo.codigo}</p>
+                    <p><span style={{ fontWeight:'300'}}>Identificador: </span>
+                      {rowInsumo.codigo + rowInsumo.numero}</p>
                      <p><span style={{ fontWeight:'300'}}>Descripción: </span>
                       {rowInsumo.descripcion}</p>
                       <p><span style={{ fontWeight:'300'}}>Cantidad actual: </span>
