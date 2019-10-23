@@ -172,16 +172,16 @@ class NewPlantilla extends Component {
         const updatedOrderForm = {
             ...this.state.orderForm
         };
-        if(inputIdentifier) {
-        const updatedFormElement = {
-            ...updatedOrderForm[inputIdentifier]
-        };
-        updatedFormElement.value = event.target.value;
-        checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
-        updatedFormElement.valid = checkValid.isValid;
-        updatedFormElement.textValid = checkValid.textValid;
-        updatedFormElement.touched = true;
-        updatedOrderForm[inputIdentifier] = updatedFormElement;
+        if (inputIdentifier) {
+            const updatedFormElement = {
+                ...updatedOrderForm[inputIdentifier]
+            };
+            updatedFormElement.value = event.target.value;
+            checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+            updatedFormElement.valid = checkValid.isValid;
+            updatedFormElement.textValid = checkValid.textValid;
+            updatedFormElement.touched = true;
+            updatedOrderForm[inputIdentifier] = updatedFormElement;
         }
         let formIsValidAlt = true;
         for (let inputIdentifier in updatedOrderForm) {
@@ -200,7 +200,7 @@ class NewPlantilla extends Component {
         event.preventDefault();
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
-            this.setState({disableAllButtons:true});
+            this.setState({ disableAllButtons: true });
             axios.post('/insert-plantilla', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 codigo: this.state.orderForm.codigo.value,
@@ -216,8 +216,8 @@ class NewPlantilla extends Component {
                         this.props.history.push("/admin/plantillas");
                     }
                     else {
-                        this.setState({disableAllButtons:false});
-                        toast.error(" Error");
+                        this.setState({ disableAllButtons: false });
+                        toast.error("Error");
                     }
                 })
         }
@@ -234,14 +234,14 @@ class NewPlantilla extends Component {
     onClickInsumo = (rowInsumo, cantidad) => {
         this.closeDialog();
 
-        let resultado = {...rowInsumo};
+        let resultado = { ...rowInsumo };
         resultado.cantidad = cantidad;
         let detallePlantillas = [...this.state.detallePlantillas];
 
         detallePlantillas.push(resultado);
         this.setState({
             detallePlantillas: [...detallePlantillas]
-        },()=>this.inputChangedHandler())
+        }, () => this.inputChangedHandler())
 
 
     }
@@ -249,14 +249,13 @@ class NewPlantilla extends Component {
 
     deleteInsumo = (rowData) => {
 
-        //alert("eliminando: " + this.state.detallepedidos.indexOf(rowData));
-        //data.splice(data.indexOf(oldData), 1);
+       
         let detallePlantillas = [...this.state.detallePlantillas];
         detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
         this.setState({
             detallePlantillas: detallePlantillas
-        },()=> this.inputChangedHandler());
-        //this.state.detallepedidos.splice(this.state.detallepedidos.indexOf(rowData), 1);
+        }, () => this.inputChangedHandler());
+       
     }
 
 

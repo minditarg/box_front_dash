@@ -145,9 +145,10 @@ class NewIngreso extends Component {
     }
 
     handleDateChange = (date,value) => {
+        
       let dateState = null;
       let dateFormIsValid = false;
-      if(date == "Invalid Date") {
+      if(date == "Invalid date") {
 
       } else {
         dateState = date;
@@ -230,7 +231,7 @@ class NewIngreso extends Component {
             disableAllButtons:true
           })
             axios.post('/insert-ingresos', {
-                fechaReferencia: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
+                fechaReferencia: moment(event.target[0].value, "DD/MM/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 referencia: event.target[2].value,
                 proveedor: event.target[3].value,
                 detalle: this.state.detalleingresos
