@@ -10,6 +10,8 @@ import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import MaterialTable from "material-table";
 import { CardActions } from "@material-ui/core";
 import { withStyles } from '@material-ui/styles';
+import {sortableContainer, sortableElement} from 'react-sortable-hoc';
+import arrayMove from 'array-move';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -21,6 +23,13 @@ import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
 
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -94,6 +103,37 @@ const styles = {
         color: 'grey',
     }
 };
+
+const SortableItem = sortableElement(({value}) =>
+<TableRow>
+    <TableCell>
+    {value.codigo}
+    </TableCell>
+    <TableCell>
+    {value.descripcion}
+    </TableCell>
+    <TableCell>
+    {value.cantidad}
+    </TableCell>
+</TableRow>
+);
+
+const SortableContainer = sortableContainer(({children}) => {
+  return <Table style={{ backgroundColor:'#F9F9F9'}} size="small">
+      <TableHead>
+          <TableRow>
+              <TableCell>Codigo</TableCell>
+              <TableCell>Descripcion</TableCell>
+              <TableCell align="right">Cantidad</TableCell>
+
+
+          </TableRow>
+      </TableHead>
+      <TableBody>
+      {children}
+      </TableBody>
+  </Table>
+});
 
 class EditPlantilla extends Component {
     state = {
@@ -294,14 +334,20 @@ class EditPlantilla extends Component {
 
      deleteInsumo = (rowData) => {
 
-       
+
         let detallePlantillas = [...this.state.detallePlantillas];
         detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
         this.setState({
             detallePlantillas: detallePlantillas
         }, () => this.inputChangedHandler());
-       
+
     }
+
+    onSortEnd = ({oldIndex, newIndex}) => {
+    this.setState(({detallePlantillas}) => ({
+      detallePlantillas: arrayMove(detallePlantillas, oldIndex, newIndex),
+    }));
+  };
 
 
     componentDidMount() {
@@ -364,7 +410,11 @@ class EditPlantilla extends Component {
                                 ))}
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
-
+                                <SortableContainer onSortEnd={this.onSortEnd}>
+                                    {this.state.detallePlantillas.map((elem, index) => (
+                                        <SortableItem key={`item-${elem.id}`} index={index} value={elem} />
+                                        ))}
+                                </SortableContainer>
                                 <MaterialTable
                                     columns={columnsInsumos}
                                     data={this.state.detallePlantillas}
