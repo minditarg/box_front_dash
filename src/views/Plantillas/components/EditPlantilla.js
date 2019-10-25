@@ -10,7 +10,7 @@ import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import MaterialTable from "material-table";
 import { CardActions } from "@material-ui/core";
 import { withStyles } from '@material-ui/styles';
-import {sortableContainer, sortableElement} from 'react-sortable-hoc';
+import {sortableContainer, sortableElement,sortableHandle} from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 
 import CardHeader from "components/Card/CardHeader.js";
@@ -18,11 +18,13 @@ import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
 import Button from "components/CustomButtons/Button.js";
 import ArrowBack from '@material-ui/icons/ArrowBack';
+import ControlCamera from '@material-ui/icons/ControlCamera';
 import Save from '@material-ui/icons/Save';
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -104,10 +106,15 @@ const styles = {
     }
 };
 
-const SortableItem = sortableElement(({value}) =>
+const SortableItem = sortableElement(({value,deleteInsumo}) =>
 <TableRow>
     <TableCell>
-    {value.codigo}
+    <DragHandle />
+    </TableCell>
+    <TableCell>
+    <IconButton onClick={()=> deleteInsumo(value.id)}>
+    <DeleteIcon />
+    </IconButton>
     </TableCell>
     <TableCell>
     {value.descripcion}
@@ -118,13 +125,16 @@ const SortableItem = sortableElement(({value}) =>
 </TableRow>
 );
 
+const DragHandle = sortableHandle(() => <span><ControlCamera /></span>);
+
 const SortableContainer = sortableContainer(({children}) => {
   return <Table style={{ backgroundColor:'#F9F9F9'}} size="small">
       <TableHead>
           <TableRow>
-              <TableCell>Codigo</TableCell>
+              <TableCell>Ordenar</TableCell>
+               <TableCell>Acciones</TableCell>
               <TableCell>Descripcion</TableCell>
-              <TableCell align="right">Cantidad</TableCell>
+              <TableCell>Cantidad</TableCell>
 
 
           </TableRow>
@@ -410,9 +420,9 @@ class EditPlantilla extends Component {
                                 ))}
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
-                                <SortableContainer onSortEnd={this.onSortEnd}>
+                                <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
                                     {this.state.detallePlantillas.map((elem, index) => (
-                                        <SortableItem key={`item-${elem.id}`} index={index} value={elem} />
+                                        <SortableItem key={`item-${elem.id}`} index={index} value={elem} deleteInsumo={this.deleteInsumo} />
                                         ))}
                                 </SortableContainer>
                                 <MaterialTable
