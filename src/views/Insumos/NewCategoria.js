@@ -114,6 +114,8 @@ class NewCategoria extends Component {
     })
       .then(res => {
         if (res.data.success == 1) {
+          this.props.getCategorias();
+
           toast.success("Nueva categoria creada");
           this.resetForm();
         }
@@ -171,7 +173,7 @@ resetForm = () => {
                 changed={(event) => this.inputChangedHandler(event, formElement.id)}
               />
             ))}
-
+            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/categorias')} ><ArrowBack />Volver</Button>
             <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
             
           </CardBody>

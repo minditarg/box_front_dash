@@ -184,13 +184,14 @@ class Categorias extends Component {
         <Route path={this.props.match.url + "/editarcategoria/:idcategoria"} exact render={() =>
 
           <EditCategoria
+            getCategorias= {()=>this.getCategorias()}
           />
         } />
 
         <Route path={this.props.match.url + "/nuevacategoria/"} exact render={() =>
 
         <NewCategoria
-        
+          getCategorias= {()=>this.getCategorias()}
         />
         } />
 

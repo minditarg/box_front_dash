@@ -11,7 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import yellow from '@material-ui/core/colors/yellow';
 import green from '@material-ui/core/colors/green';
-import blueGrey from '@material-ui/core/colors/blueGrey';
+import blue from '@material-ui/core/colors/blue';
 
 const styles = {}
 
@@ -53,10 +53,13 @@ class DetalleStock extends Component {
                         let color=null;
                         let identificador = null;
                         if(elem.id_movimiento == 1)
-                            color={backgroundColor:green[50], borderBottomColor:green[400],borderBottomWidth:'1px'};
+                            color={backgroundColor:green[100], borderBottomColor:green[400],borderBottomWidth:'1px'};
                         if(elem.id_movimiento == 3)
+                            color={backgroundColor:blue[50], borderBottomColor:blue[800],borderBottomWidth:'1px'};
+                            if(elem.id_movimiento == 4)
+                            color={backgroundColor:green[50], borderBottomColor:green[800],borderBottomWidth:'1px'};
+                            if(elem.id_movimiento == 2)
                             color={backgroundColor:yellow[50], borderBottomColor:yellow[800],borderBottomWidth:'1px'};
-
 
                             console.log(elem);
 

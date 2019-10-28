@@ -95,6 +95,8 @@ class EditCategoria extends Component {
 
         if (estadoAlt) {
 
+          this.props.getCategorias();
+
           this.setState({
             editFormIsValid: false
           }, () => {
