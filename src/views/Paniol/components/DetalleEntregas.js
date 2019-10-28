@@ -46,7 +46,7 @@ class DetalleEntregas extends Component {
             <Table style={{ backgroundColor:blueGrey[50]}} size="small">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Código</TableCell>
+                        <TableCell>Identificador</TableCell>
                         <TableCell>Descripción</TableCell>
                         <TableCell >Cantidad</TableCell>
 
@@ -60,7 +60,7 @@ class DetalleEntregas extends Component {
 
                         return <TableRow key={elem.id}>
                             <TableCell >
-                                {elem.codigo}
+                                {elem.codigo + elem.numero}
                             </TableCell>
                             <TableCell >{elem.descripcion}</TableCell>
                             <TableCell >{elem.cantidad + ' ' + elem.unidad}</TableCell>

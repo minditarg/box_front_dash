@@ -189,12 +189,12 @@ class NewInsumo extends Component {
     if(this.state.formIsValid) {
     axios.post('/insert-insumos', {
 
-      codigo: event.target[1].value,
-      numero: event.target[2].value,
-      descripcion: event.target[3].value,
-      unidad: event.target[4].value,
-      minimo: event.target[5].value,
-      categoria: event.target[0].value
+      
+      numero: this.state.newInsumoForm.numero.value,
+      descripcion: this.state.newInsumoForm.descripcion.value,
+      unidad: this.state.newInsumoForm.unidad.value,
+      minimo: this.state.newInsumoForm.minimo.value,
+      categoria: this.state.newInsumoForm.categoria.value
     })
       .then(res => {
         if (res.data.success == 1) {

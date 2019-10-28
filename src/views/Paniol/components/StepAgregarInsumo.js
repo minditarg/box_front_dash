@@ -21,7 +21,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Typography from '@material-ui/core/Typography';
 
 const columnsInsumosDetalle = [
-    { title: "Codigo", field: "codigo", editable: 'never' },
+    { title: "Identificador", field: "identificador", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },
 
 ];
@@ -89,6 +89,12 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                 setIsLoading(false);
                 if (res.data.success == 1) {
                     let resultado = [...res.data.result];
+                    resultado = resultado.map(elem=>{
+                        return {
+                            ...elem,
+                            identificador:elem.codigo + elem.numero
+                        }
+                    })
                     setInsumos(resultado);
                 }
             })

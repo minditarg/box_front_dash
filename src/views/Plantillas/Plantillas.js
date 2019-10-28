@@ -177,7 +177,7 @@ class Plantillas extends Component {
           </div>,
       <Switch  key={"plantillas-switch"}>
        
-        <Route path={this.props.match.url + "/editarplantilla/:idplantilla"} exact render={() =>
+        <Route path={this.props.match.url + "/editarplantilla/:idPlantilla"} exact render={() =>
 
           <EditPlantilla getPlantillas={()=>this.getPlantillas()} />
         } />
