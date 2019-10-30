@@ -252,7 +252,7 @@ class EditPlantilla extends Component {
         for (let inputIdentifier in updatedOrderForm) {
             formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
         }
-        formIsValidAlt = this.state.detallePlantillas.length > 0 && formIsValidAlt;
+        formIsValidAlt = this.detallePlantillas.length > 0 && formIsValidAlt;
 
         this.setState({
             orderForm: updatedOrderForm,
@@ -295,25 +295,25 @@ class EditPlantilla extends Component {
         this.setState({ open: false });
     }
 
-    onClickInsumo = (id, cantidad) => {
+    onClickInsumo = (rowInsumo, cantidad) => {
         this.closeDialog();
 
-        axios.get('/select-insumos/' + id)
-            .then(res => {
-                if (res.data.success == 1) {
-                    let resultado = [...res.data.result];
-                    resultado[0].cantidad = cantidad;
-                    let detalleingresoant = [...this.state.detalleingresos];
+              
+                    let resultado = {...rowInsumo};
+                    resultado.cantidad = cantidad;
+                    let detallePlantillas = [...this.state.detallePlantillas];
 
-                    detalleingresoant = detalleingresoant.concat(resultado);
+                    detallePlantillas = detallePlantillas.concat(resultado);
+                    this.detallePlantillas = this.detallePlantillas.concat(resultado);
+
                     this.setState({
-                        detalleingresos: [...detalleingresoant]
+                        detallePlantillas: [...detallePlantillas]
+                    },()=>{
+                        this.buscarInsumo(this.buscarRef.current.value);
+                        this.inputChangedHandler()
                     })
-                }
-                else {
-                    alert("error");
-                }
-            })
+                
+              
 
     }
 
@@ -361,8 +361,12 @@ class EditPlantilla extends Component {
     deleteInsumo = (rowData) => {
 
 
+
+
         let detallePlantillas = [...this.state.detallePlantillas];
         detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
+       this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
+
         this.setState({
             detallePlantillas: detallePlantillas
         }, () => this.inputChangedHandler());
@@ -370,9 +374,11 @@ class EditPlantilla extends Component {
     }
 
     onSortEnd = ({oldIndex, newIndex}) => {
+        if(this.detallePlantillas.length == this.state.detallePlantillas.length) {
         this.setState(({detallePlantillas}) => ({
             detallePlantillas: arrayMove(detallePlantillas, oldIndex, newIndex),
         }));
+        }
     };
 
     buscarInsumo = (value) => {
