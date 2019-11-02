@@ -261,16 +261,20 @@ class EditPlantilla extends Component {
     }
 
 
-    handleSubmitNewPlantilla = (event) => {
+    handleSubmitEditPlantilla = (event) => {
         event.preventDefault();
         console.log(this.props);
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
-            axios.post('/insert-plantilla', {
+
+            console.log(this.detallePlantillas);
+
+            axios.post('/update-plantilla', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 codigo: this.state.orderForm.codigo.value,
                 descripcion: this.state.orderForm.descripcion.value,
-                detalle: this.state.detalleingresos
+                detalle: this.detallePlantillas,
+                id: this.props.match.params.idPlantilla
             })
                 .then(res => {
                     if (res.data.success == 1) {
@@ -433,7 +437,7 @@ class EditPlantilla extends Component {
         }
         return (
             <form onSubmit={(event) => {
-                this.handleSubmitNewPlantilla(event);
+                this.handleSubmitEditPlantilla(event);
 
             } }>
                 <GridContainer>
