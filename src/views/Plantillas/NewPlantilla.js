@@ -7,9 +7,11 @@ import { Route, Switch, Link, withRouter } from 'react-router-dom';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
-import MaterialTable from "material-table";
 import { CardActions } from "@material-ui/core";
 import { withStyles } from '@material-ui/styles';
+import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
+import arrayMove from 'array-move';
+import TextField from '@material-ui/core/TextField';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -21,9 +23,21 @@ import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import ControlCamera from '@material-ui/icons/ControlCamera';
+import Search from '@material-ui/icons/Search';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
+import Grid from '@material-ui/core/Grid';
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
+
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -95,6 +109,47 @@ const styles = {
     }
 };
 
+
+const SortableItem = sortableElement(({value, deleteInsumo}) =>
+    <TableRow>
+        <TableCell>
+            <DragHandle />
+        </TableCell>
+        <TableCell>
+            <IconButton onClick={() => deleteInsumo(value.id)}>
+                <DeleteIcon />
+            </IconButton>
+        </TableCell>
+        <TableCell>
+            {value.descripcion}
+        </TableCell>
+        <TableCell>
+            {value.cantidad}
+        </TableCell>
+    </TableRow>
+);
+
+const DragHandle = sortableHandle(() => <span><ControlCamera /></span>);
+
+const SortableContainer = sortableContainer(({children}) => {
+    return <Table style={{ backgroundColor: '#F9F9F9' }} size="small">
+        <TableHead>
+            <TableRow>
+                <TableCell>Ordenar</TableCell>
+                <TableCell>Acciones</TableCell>
+                <TableCell>Descripcion</TableCell>
+                <TableCell>Cantidad</TableCell>
+
+
+            </TableRow>
+        </TableHead>
+        <TableBody>
+            {children}
+        </TableBody>
+    </Table>
+});
+
+
 class NewPlantilla extends Component {
     state = {
         plantillas: [],
@@ -142,6 +197,15 @@ class NewPlantilla extends Component {
 
     }
 
+
+      constructor(props) {
+        super(props);
+        this.buscarRef = React.createRef();
+
+        this.detallePlantillas = [];
+
+
+    }
 
 
     checkValidity = (value, rules) => {
@@ -234,28 +298,69 @@ class NewPlantilla extends Component {
     onClickInsumo = (rowInsumo, cantidad) => {
         this.closeDialog();
 
+
         let resultado = { ...rowInsumo };
         resultado.cantidad = cantidad;
         let detallePlantillas = [...this.state.detallePlantillas];
 
-        detallePlantillas.push(resultado);
+        detallePlantillas = detallePlantillas.concat(resultado);
+        this.detallePlantillas = this.detallePlantillas.concat(resultado);
+
         this.setState({
             detallePlantillas: [...detallePlantillas]
-        }, () => this.inputChangedHandler())
+        }, () => {
+            this.buscarInsumo(this.buscarRef.current.value);
+            this.inputChangedHandler()
+        })
+
 
 
     }
 
 
-    deleteInsumo = (rowData) => {
+   deleteInsumo = (rowData) => {
 
-       
+
+
+
         let detallePlantillas = [...this.state.detallePlantillas];
         detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
+       this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
+
         this.setState({
             detallePlantillas: detallePlantillas
         }, () => this.inputChangedHandler());
-       
+
+    }
+
+    onSortEnd = ({oldIndex, newIndex}) => {
+        if(this.detallePlantillas.length == this.state.detallePlantillas.length) {       
+           this.detallePlantillas =  arrayMove(this.detallePlantillas, oldIndex, newIndex);
+        this.setState(({detallePlantillas}) => ({
+            detallePlantillas: arrayMove(detallePlantillas, oldIndex, newIndex),
+        }));
+        }
+    };
+
+    buscarInsumo = (value) => {
+        let detalle;
+        if (value && value != '') {
+            detalle = this.detallePlantillas.filter(elem => {
+                if (elem.descripcion.toLowerCase().indexOf(value.toLowerCase()) >= 0)
+                    return true;
+
+                return false;
+
+            })
+        } else {
+            detalle = this.detallePlantillas
+        }
+
+        this.setState({
+            detallePlantillas: detalle
+        })
+
+
     }
 
 
@@ -318,33 +423,32 @@ class NewPlantilla extends Component {
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
 
-                                <MaterialTable
-                                    columns={columnsInsumos}
-                                    data={this.state.detallePlantillas}
-                                    title="Listado de Insumos"
-                                    actions={this.state.actions}
-                                    localization={localization}
-                                    editable={{
+                                  <div style={{ padding: 20 }} >
+                                    <Grid container alignItems="flex-end" justify="flex-end" spacing={2}>
+                                        <Grid item>
+                                            <Search />
+                                        </Grid>
+                                        <Grid item>
+                                            <TextField id="input-with-icon-grid" label="Buscar Insumo" inputProps={{ ref: this.buscarRef }} onChange={(event) => this.buscarInsumo(event.target.value)} />
+                                        </Grid>
+                                    </Grid>
+                                </div>
 
-                                        onRowUpdate: (newData, oldData) =>
-                                            new Promise((resolve, reject) => {
-                                                setTimeout(() => {
-                                                    {
-                                                        const data = this.state.detallePlantillas;
-                                                        const index = data.indexOf(oldData);
-                                                        data[index] = newData;
-                                                        this.setState({ data }, () => resolve());
-                                                    }
 
-                                                }, 200)
-                                            }),
-                                    }}
-                                    components={{
-                                        Container: props => (
-                                            <Paper elevation={0} {...props} />
-                                        )
-                                    }}
-                                    />
+
+                                 <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
+                                    {this.state.detallePlantillas.map((elem, index) => (
+                                        <SortableItem key={`item-${elem.id}`} index={index} value={elem} deleteInsumo={this.deleteInsumo} />
+                                    ))}
+                                   
+                                
+                                </SortableContainer>
+                                { this.state.isLoading &&
+                                        <div style={{ textAlign:'center'}}>
+                                         <CircularProgress />
+                                         </div>
+
+                                }
 
 
                                 <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/plantillas')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>

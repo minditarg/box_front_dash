@@ -302,22 +302,22 @@ class EditPlantilla extends Component {
     onClickInsumo = (rowInsumo, cantidad) => {
         this.closeDialog();
 
-              
-                    let resultado = {...rowInsumo};
-                    resultado.cantidad = cantidad;
-                    let detallePlantillas = [...this.state.detallePlantillas];
 
-                    detallePlantillas = detallePlantillas.concat(resultado);
-                    this.detallePlantillas = this.detallePlantillas.concat(resultado);
+        let resultado = { ...rowInsumo };
+        resultado.cantidad = cantidad;
+        let detallePlantillas = [...this.state.detallePlantillas];
 
-                    this.setState({
-                        detallePlantillas: [...detallePlantillas]
-                    },()=>{
-                        this.buscarInsumo(this.buscarRef.current.value);
-                        this.inputChangedHandler()
-                    })
-                
-              
+        detallePlantillas = detallePlantillas.concat(resultado);
+        this.detallePlantillas = this.detallePlantillas.concat(resultado);
+
+        this.setState({
+            detallePlantillas: [...detallePlantillas]
+        }, () => {
+            this.buscarInsumo(this.buscarRef.current.value);
+            this.inputChangedHandler()
+        })
+
+
 
     }
 
@@ -369,7 +369,7 @@ class EditPlantilla extends Component {
 
         let detallePlantillas = [...this.state.detallePlantillas];
         detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
-       this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
+        this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
 
         this.setState({
             detallePlantillas: detallePlantillas
@@ -378,10 +378,11 @@ class EditPlantilla extends Component {
     }
 
     onSortEnd = ({oldIndex, newIndex}) => {
-        if(this.detallePlantillas.length == this.state.detallePlantillas.length) {
-        this.setState(({detallePlantillas}) => ({
-            detallePlantillas: arrayMove(detallePlantillas, oldIndex, newIndex),
-        }));
+        if (this.detallePlantillas.length == this.state.detallePlantillas.length) {
+            this.detallePlantillas = arrayMove(this.detallePlantillas, oldIndex, newIndex);
+            this.setState(({detallePlantillas}) => ({
+                detallePlantillas: arrayMove(detallePlantillas, oldIndex, newIndex),
+            }));
         }
     };
 
@@ -482,13 +483,13 @@ class EditPlantilla extends Component {
                                     {this.state.detallePlantillas.map((elem, index) => (
                                         <SortableItem key={`item-${elem.id}`} index={index} value={elem} deleteInsumo={this.deleteInsumo} />
                                     ))}
-                                   
-                                
+
+
                                 </SortableContainer>
-                                { this.state.isLoading &&
-                                        <div style={{ textAlign:'center'}}>
-                                         <CircularProgress />
-                                         </div>
+                                {this.state.isLoading &&
+                                    <div style={{ textAlign: 'center' }}>
+                                        <CircularProgress />
+                                    </div>
 
                                 }
                                 <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/plantillas')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
