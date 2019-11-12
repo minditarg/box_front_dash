@@ -212,39 +212,29 @@ class AjusteStock extends Component {
         this.setState({ open: false });
     }
 
-    insumoSelectHandler = (id) => {
+    insumoSelectHandler = (rowData) => {
         this.closeDialog();
 
-        //{"success":1,
-        //"result":[{"id":25,"codigo":"PCs","descripcion":"computadoras","activo":1,"unidad":"unidad","minimo":3,"stock":6}]}
-        axios.get('/select-insumos/' + id)
-            .then(res => {
-                if (res.data.success == 1) {
-
-                    let resultado = [...res.data.result];
+                    let resultado = {...rowData};
                     let ordenformNuevo = { ...this.state.orderForm };
-                    ordenformNuevo.codigo.value = resultado[0].id;
+                    ordenformNuevo.codigo.value = resultado.id;
                      ordenformNuevo.codigo.elementConfig.disabled = false;
                      ordenformNuevo.codigo.elementConfig.InputProps = { readOnly: true};
                     ordenformNuevo.codigo.touched = true;
                     ordenformNuevo.codigo.valid = true;
-                    ordenformNuevo.descripcion.value = resultado[0].descripcion;
+                    ordenformNuevo.descripcion.value = resultado.descripcion;
                      ordenformNuevo.descripcion.elementConfig.disabled = false;
                      ordenformNuevo.descripcion.elementConfig.InputProps = { readOnly: true};
 
                     ordenformNuevo.descripcion.touched = true;
                     ordenformNuevo.descripcion.valid = true;
-                    ordenformNuevo.cantidad.value = resultado[0].cantidad;
+                    ordenformNuevo.cantidad.value = resultado.cantidad;
                     ordenformNuevo.cantidad.touched = false;
                     this.setState({
                         orderForm: ordenformNuevo,
                         formIsValid: false
                     })
-                }
-                else {
-                    alert("error");
-                }
-            })
+              
 
     }
 
@@ -299,7 +289,7 @@ class AjusteStock extends Component {
                                     data={this.state.insumos}
                                     title="Insumo"
                                     localization={localization}
-                                    onRowClick={(event, rowData) => this.insumoSelectHandler(rowData.id)}
+                                    onRowClick={(event, rowData) => this.insumoSelectHandler(rowData)}
                                     />
                                 <Button onClick={this.closeDialog.bind(this)} >Cerrar</Button>
                             </DialogContent>
