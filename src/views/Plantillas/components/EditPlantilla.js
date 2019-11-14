@@ -3,6 +3,7 @@ import axios from "axios";
 import Input from "components/Input/Input";
 import moment from "moment";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
+import CsvDownloader from 'react-csv-downloader';
 
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
@@ -73,6 +74,16 @@ const columnsInsumos = [
     { title: "Cantidad", field: "cantidad", type: 'numeric' }
     //{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
 ];
+
+
+const columnsCsv = [
+    { displayName: "Descripcion", id: "descripcion" },
+    { displayName: "Cantidad", id: "cantidad" }
+    //{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
+];
+
+
+
 
 const styles = {
     cardCategoryWhite: {
@@ -345,8 +356,11 @@ class EditPlantilla extends Component {
                         }
 
                     }
-
+                    
                     this.detallePlantillas = [...res.data.insumos];
+                   
+                  
+
                     this.setState({
                         orderForm: orderForm,
                         detallePlantillas: res.data.insumos
@@ -468,6 +482,10 @@ class EditPlantilla extends Component {
                                 ))}
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
+                                <CsvDownloader style={{display:'inline-block'}} columns={columnsCsv} datas={this.detallePlantillas} filename={"plantilla detalle-" + moment().format('DD-MM-YYYY HH:mm')}
+                                    separator="," >
+                                    <Button color="info" >Descargar</Button>
+                                </CsvDownloader>
                                 <div style={{ padding: 20 }} >
                                     <Grid container alignItems="flex-end" justify="flex-end" spacing={2}>
                                         <Grid item>
