@@ -4,7 +4,7 @@ import Input from "components/Input/Input";
 import moment from "moment";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import CsvDownloader from 'react-csv-downloader';
-
+import { CSVLink, CSVDownload } from "react-csv";
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -83,7 +83,11 @@ const columnsCsv = [
 ];
 
 
-
+const headers = [
+ { label: "Codigo", key: "codigo" },
+    { label: "Descripcion", key: "descripcion" },
+    { label: "Cantidad", key: "cantidad"}
+];
 
 const styles = {
     cardCategoryWhite: {
@@ -482,10 +486,10 @@ class EditPlantilla extends Component {
                                 ))}
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
-                                <CsvDownloader style={{display:'inline-block'}} columns={columnsCsv} datas={this.detallePlantillas} filename={"plantilla detalle-" + moment().format('DD-MM-YYYY HH:mm')}
-                                    separator="," >
-                                    <Button color="info" >Descargar</Button>
-                                </CsvDownloader>
+                        
+                                <CSVLink data={this.detallePlantillas} headers={headers}>
+                                    <Button color="info" >Descargar csv</Button>
+                                </CSVLink>
                                 <div style={{ padding: 20 }} >
                                     <Grid container alignItems="flex-end" justify="flex-end" spacing={2}>
                                         <Grid item>
