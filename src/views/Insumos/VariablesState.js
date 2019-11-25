@@ -10,7 +10,8 @@ export const StateListado = {
 
 }
 export const ColumnsListado = [
-  { title: "Identificador", field: "identificador", editable: 'never',sort:(a,b) => { if(a.identificador.localeCompare(b.identificador) == 0) { return a.numero - b.numero } else { return a.identificador.localeCompare(b.identificador) } } },
+  { title: "Codigo", field: "codigo" },
+  { title: "Número", field: "numero" },
   { title: "Descripcion", field: "descripcion" },
   { title: "Unidad", field: "unidad" },
   { title: "Stock Minimo", field: "minimo" }
@@ -87,7 +88,7 @@ export const StateNewInsumo =
         label: 'Codigo Interno',
         disabled: true,
         fullWidth: true
-        
+
       },
       value: '',
       validation: {
@@ -153,7 +154,7 @@ export const StateNewInsumo =
     minimo: {
       elementType: 'input',
       elementConfig: {
-        type: 'number',
+        type: 'text',
         label: 'Stock Minimo',
         fullWidth: true
       },

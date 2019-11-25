@@ -136,6 +136,9 @@ const SortableItem = sortableElement(({value, deleteInsumo}) =>
             </IconButton>
         </TableCell>
         <TableCell>
+            {value.codigo + value.numero}
+        </TableCell>
+        <TableCell>
             {value.descripcion}
         </TableCell>
         <TableCell>
@@ -152,6 +155,7 @@ const SortableContainer = sortableContainer(({children}) => {
             <TableRow>
                 <TableCell>Ordenar</TableCell>
                 <TableCell>Acciones</TableCell>
+                <TableCell>Identificador</TableCell>
                 <TableCell>Descripcion</TableCell>
                 <TableCell>Cantidad</TableCell>
 
@@ -216,6 +220,7 @@ class EditPlantilla extends Component {
         this.buscarRef = React.createRef();
 
         this.detallePlantillas = [];
+        this.copiaDetallePlantillas = [];
 
 
     }
@@ -275,14 +280,45 @@ class EditPlantilla extends Component {
         })
     }
 
+    compararArrays = () => {
+      this.detallePlantillas.forEach((elem,index) => {
+        let indexEncontrado =  this.copiaDetallePlantillas.findIndex(elem2 => {
+          if(elem.codigo == elem2.codigo && elem.numero == elem2.numero)
+            return true;
+          return false
+        })
+
+        if(indexEncontrado < 0)
+        {
+          console.log("insert element");
+          console.log(elem);
+        } else {
+          if(elem.cantidad != this.copiaDetallePlantillas[indexEncontrado].cantidad)
+          {
+            console.log("update cantidad")
+            console.log(elem);
+          }
+          if(index != indexEncontrado)
+          {
+            console.log("cambiar orden");
+            console.log(elem);
+          }
+
+
+        }
+
+
+      })
+    }
+
 
     handleSubmitEditPlantilla = (event) => {
         event.preventDefault();
-        console.log(this.props);
+
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
+          this.compararArrays();
 
-            console.log(this.detallePlantillas);
 
             axios.post('/update-plantilla', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
@@ -360,10 +396,10 @@ class EditPlantilla extends Component {
                         }
 
                     }
-                    
+
                     this.detallePlantillas = [...res.data.insumos];
-                   
-                  
+                    this.copiaDetallePlantillas =  JSON.parse( JSON.stringify( res.data.insumos ) );
+                    console.log(this.copiaDetallePlantillas);
 
                     this.setState({
                         orderForm: orderForm,
@@ -486,7 +522,7 @@ class EditPlantilla extends Component {
                                 ))}
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
-                        
+
                                 <CSVLink data={this.detallePlantillas} headers={headers}>
                                     <Button color="info" >Descargar csv</Button>
                                 </CSVLink>
