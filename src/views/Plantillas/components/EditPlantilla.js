@@ -29,6 +29,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import UndoIcon from '@material-ui/icons/Undo';
 import Search from '@material-ui/icons/Search';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -126,23 +127,57 @@ const styles = {
     }
 };
 
-const SortableItem = sortableElement(({value, deleteInsumo,editInsumo}) => {
+const SortableItem = sortableElement(({value, deleteInsumo,editInsumo,undoDelete}) => {
     let style = null;
-    if(value.modificado)
-      style={backgroundColor: 'lightblue'};
+    let iconos = null
+    if(value.eliminado) {
+         style={backgroundColor: 'lightsalmon'};
+         iconos = <TableCell>
+            <IconButton  size="small" onClick={() => undoDelete(value)}>
+              < UndoIcon />
+          </IconButton> 
+          </TableCell>
+
+    } else if (value.modificado) {
+         style={backgroundColor: 'lightblue'};
+       iconos =   <TableCell>
+              <IconButton size="small" onClick={() => deleteInsumo(value)}>
+                <DeleteIcon />
+            </IconButton>
+            <IconButton  size="small" onClick={() => editInsumo(value)}>
+                <EditIcon />
+          </IconButton> 
+          </TableCell>
+
+    } else if(value.insertado) {
+         style={backgroundColor: 'lightgreen'};
+         iconos = <TableCell>
+              <IconButton size="small" onClick={() => deleteInsumo(value)}>
+                <DeleteIcon />
+            </IconButton>
+            <IconButton  size="small" onClick={() => editInsumo(value)}>
+                <EditIcon />
+          </IconButton> 
+          </TableCell>
+    } else {
+         iconos = <TableCell>
+              <IconButton size="small" onClick={() => deleteInsumo(value)}>
+                <DeleteIcon />
+            </IconButton>
+            <IconButton  size="small" onClick={() => editInsumo(value)}>
+                <EditIcon />
+          </IconButton> 
+          </TableCell>
+    }
+     
+     
 
   return  ( <TableRow style={style}>
         <TableCell>
             <DragHandle />
         </TableCell>
-        <TableCell>
-            <IconButton size="small" onClick={() => deleteInsumo(value)}>
-                <DeleteIcon />
-            </IconButton>
-            <IconButton  size="small" onClick={() => editInsumo(value)}>
-                <EditIcon />
-            </IconButton>
-        </TableCell>
+        { iconos}
+        
         <TableCell>
             {value.codigo + value.numero}
         </TableCell>
@@ -364,12 +399,12 @@ class EditPlantilla extends Component {
         this.closeDialog();
         let detallePlantillas;
         let resultado = { ...rowInsumo };
-        resultado.modificado = true;
+       
         resultado.cantidad = cantidad;
 
         if(this.state.rowEditInsumo)
         {
-
+         resultado.modificado = true;
           let indexEncontrado = this.detallePlantillas.indexOf(rowInsumo);
           if(indexEncontrado >= 0)
           {
@@ -377,6 +412,7 @@ class EditPlantilla extends Component {
           }
         } else
         {
+             resultado.insertado = true;
           this.detallePlantillas = this.detallePlantillas.concat(resultado);
         }
         detallePlantillas = [...this.detallePlantillas];
@@ -437,14 +473,22 @@ class EditPlantilla extends Component {
 
 
     deleteInsumo = (rowData) => {
-
-        let detallePlantillas = [...this.state.detallePlantillas];
-        detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
-        this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
+        console.log(rowData);
+        let resultado = {...rowData};
+        let indexDelete = this.detallePlantillas.indexOf(rowData);
+        resultado.eliminado = true;
+        this.detallePlantillas[indexDelete] = resultado;
+       
+       // detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
+       // this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
 
         this.setState({
-            detallePlantillas: detallePlantillas
-        }, () => this.inputChangedHandler());
+            detallePlantillas: [ ...this.detallePlantillas ]
+        }, () => 
+        {
+            this.inputChangedHandler()
+            this.buscarInsumo();
+        });
 
     }
 
@@ -455,6 +499,21 @@ class EditPlantilla extends Component {
         rowEditInsumo:rowData
       })
 
+    }
+
+     undoDelete = (rowData) => {
+         let resultado = {...rowData};
+         resultado.eliminado = null;
+         let indexEliminado = this.detallePlantillas.indexOf(rowData);
+         this.detallePlantillas[indexEliminado] = resultado;
+         this.setState({
+            detallePlantillas: [ ...this.detallePlantillas ]
+        }, () => 
+        {
+            this.inputChangedHandler()
+            this.buscarInsumo();
+        });
+      
     }
 
     onSortEnd = ({oldIndex, newIndex}) => {
@@ -565,7 +624,7 @@ class EditPlantilla extends Component {
 
                                 <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
                                     {this.state.detallePlantillas.map((elem, index) => (
-                                        <SortableItem key={`item-${index}`} index={index} value={elem} deleteInsumo={this.deleteInsumo} editInsumo={this.editInsumo} />
+                                        <SortableItem key={`item-${index}`} index={index} value={elem} deleteInsumo={this.deleteInsumo} editInsumo={this.editInsumo} undoDelete={this.undoDelete} />
                                     ))}
 
 
