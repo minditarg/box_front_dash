@@ -80,6 +80,16 @@ export default function HorizontalLabelPositionBelowStepper(props) {
      React.useEffect(() => {
 
         getInsumos();
+        if(props.rowEditInsumo)
+        {
+          setRowInsumo(props.rowEditInsumo);
+          handleNext();
+          let orderFormAlt = {...orderForm};
+
+          orderFormAlt.cantidad.value = props.rowEditInsumo.cantidad;
+          setOrderForm(orderFormAlt);
+
+        }
 
     }, []);
 
@@ -205,7 +215,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                       {rowInsumo.codigo + rowInsumo.numero}</p>
                      <p><span style={{ fontWeight:'300'}}>Descripción: </span>
                       {rowInsumo.descripcion}</p>
-                     
+
 
                     {
                         formElementsArray.map(formElement => (
@@ -243,17 +253,17 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                     </Step>
                 ))}
             </Stepper>
-            <div>
-                <div >
-                    <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+
+                    {getStepContent(activeStep)}
                     <div style={{ marginTop:'2em'}}>
-                        <Button
+                  { !props.rowEditInsumo &&   <Button
                             disabled={activeStep === 0}
                             onClick={handleBack}
                             className={classes.backButton}
                             >
                             Atras
               </Button>
+            }
                         {activeStep === steps.length - 1 ? (
                             <Button variant="contained" color="primary" disabled={!formIsValid } onClick={handleFinish}>
                                 Agregar
@@ -261,9 +271,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                         ) : null}
 
                     </div>
-                </div>
 
-            </div>
         </div>
     );
 }

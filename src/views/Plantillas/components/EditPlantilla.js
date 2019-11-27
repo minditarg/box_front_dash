@@ -28,6 +28,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import Search from '@material-ui/icons/Search';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -125,14 +126,21 @@ const styles = {
     }
 };
 
-const SortableItem = sortableElement(({value, deleteInsumo}) =>
-    <TableRow>
+const SortableItem = sortableElement(({value, deleteInsumo,editInsumo}) => {
+    let style = null;
+    if(value.modificado)
+      style={backgroundColor: 'lightblue'};
+
+  return  ( <TableRow style={style}>
         <TableCell>
             <DragHandle />
         </TableCell>
         <TableCell>
-            <IconButton onClick={() => deleteInsumo(value.id)}>
+            <IconButton size="small" onClick={() => deleteInsumo(value)}>
                 <DeleteIcon />
+            </IconButton>
+            <IconButton  size="small" onClick={() => editInsumo(value)}>
+                <EditIcon />
             </IconButton>
         </TableCell>
         <TableCell>
@@ -144,7 +152,8 @@ const SortableItem = sortableElement(({value, deleteInsumo}) =>
         <TableCell>
             {value.cantidad}
         </TableCell>
-    </TableRow>
+    </TableRow> )
+  }
 );
 
 const DragHandle = sortableHandle(() => <span><ControlCamera /></span>);
@@ -173,6 +182,7 @@ class EditPlantilla extends Component {
     state = {
         plantillas: [],
         open: false,
+        rowEditInsumo:null,
         detallePlantillas: [],
         actions: [],
         actionsInsumos: [],
@@ -343,7 +353,7 @@ class EditPlantilla extends Component {
     }
 
     openDialog() {
-        this.setState({ open: true });
+        this.setState({ open: true,rowEditInsumo:null });
     }
 
     closeDialog() {
@@ -352,17 +362,27 @@ class EditPlantilla extends Component {
 
     onClickInsumo = (rowInsumo, cantidad) => {
         this.closeDialog();
-
-
+        let detallePlantillas;
         let resultado = { ...rowInsumo };
+        resultado.modificado = true;
         resultado.cantidad = cantidad;
-        let detallePlantillas = [...this.state.detallePlantillas];
 
-        detallePlantillas = detallePlantillas.concat(resultado);
-        this.detallePlantillas = this.detallePlantillas.concat(resultado);
+        if(this.state.rowEditInsumo)
+        {
+
+          let indexEncontrado = this.detallePlantillas.indexOf(rowInsumo);
+          if(indexEncontrado >= 0)
+          {
+            this.detallePlantillas[indexEncontrado] = resultado
+          }
+        } else
+        {
+          this.detallePlantillas = this.detallePlantillas.concat(resultado);
+        }
+        detallePlantillas = [...this.detallePlantillas];
 
         this.setState({
-            detallePlantillas: [...detallePlantillas]
+            detallePlantillas: detallePlantillas
         }, () => {
             this.buscarInsumo(this.buscarRef.current.value);
             this.inputChangedHandler()
@@ -418,9 +438,6 @@ class EditPlantilla extends Component {
 
     deleteInsumo = (rowData) => {
 
-
-
-
         let detallePlantillas = [...this.state.detallePlantillas];
         detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
         this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
@@ -428,6 +445,15 @@ class EditPlantilla extends Component {
         this.setState({
             detallePlantillas: detallePlantillas
         }, () => this.inputChangedHandler());
+
+    }
+
+    editInsumo = (rowData) => {
+
+      this.setState({
+        open:true,
+        rowEditInsumo:rowData
+      })
 
     }
 
@@ -539,7 +565,7 @@ class EditPlantilla extends Component {
 
                                 <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
                                     {this.state.detallePlantillas.map((elem, index) => (
-                                        <SortableItem key={`item-${elem.id}`} index={index} value={elem} deleteInsumo={this.deleteInsumo} />
+                                        <SortableItem key={`item-${index}`} index={index} value={elem} deleteInsumo={this.deleteInsumo} editInsumo={this.editInsumo} />
                                     ))}
 
 
@@ -573,6 +599,7 @@ class EditPlantilla extends Component {
                     <DialogContent>
                         {this.state.open &&
                             <StepAgregarInsumo
+                                rowEditInsumo={this.state.rowEditInsumo}
                                 columnsInsumos={columnsInsumos}
                                 onClickInsumo={(id, cantidad) => this.onClickInsumo(id, cantidad)}
                                 />
