@@ -127,7 +127,7 @@ const styles = {
     }
 };
 
-const SortableItem = sortableElement(({value, deleteInsumo,editInsumo,undoDelete}) => {
+const SortableItem = sortableElement(({value, deleteInsumo,editInsumo,undoDelete,undoInsertado,undoModificado}) => {
     let style = null;
     let iconos = null
     if(value.eliminado) {
@@ -135,29 +135,23 @@ const SortableItem = sortableElement(({value, deleteInsumo,editInsumo,undoDelete
          iconos = <TableCell>
             <IconButton  size="small" onClick={() => undoDelete(value)}>
               < UndoIcon />
-          </IconButton> 
+          </IconButton>
           </TableCell>
 
     } else if (value.modificado) {
          style={backgroundColor: 'lightblue'};
-       iconos =   <TableCell>
-              <IconButton size="small" onClick={() => deleteInsumo(value)}>
-                <DeleteIcon />
-            </IconButton>
-            <IconButton  size="small" onClick={() => editInsumo(value)}>
-                <EditIcon />
-          </IconButton> 
+         iconos = <TableCell>
+            <IconButton  size="small" onClick={() => undoModificado(value)}>
+              < UndoIcon />
+          </IconButton>
           </TableCell>
 
     } else if(value.insertado) {
          style={backgroundColor: 'lightgreen'};
          iconos = <TableCell>
-              <IconButton size="small" onClick={() => deleteInsumo(value)}>
-                <DeleteIcon />
-            </IconButton>
-            <IconButton  size="small" onClick={() => editInsumo(value)}>
-                <EditIcon />
-          </IconButton> 
+            <IconButton  size="small" onClick={() => undoInsertado(value)}>
+              < UndoIcon />
+          </IconButton>
           </TableCell>
     } else {
          iconos = <TableCell>
@@ -166,18 +160,18 @@ const SortableItem = sortableElement(({value, deleteInsumo,editInsumo,undoDelete
             </IconButton>
             <IconButton  size="small" onClick={() => editInsumo(value)}>
                 <EditIcon />
-          </IconButton> 
+          </IconButton>
           </TableCell>
     }
-     
-     
+
+
 
   return  ( <TableRow style={style}>
         <TableCell>
             <DragHandle />
         </TableCell>
         { iconos}
-        
+
         <TableCell>
             {value.codigo + value.numero}
         </TableCell>
@@ -399,12 +393,15 @@ class EditPlantilla extends Component {
         this.closeDialog();
         let detallePlantillas;
         let resultado = { ...rowInsumo };
-       
-        resultado.cantidad = cantidad;
+
+
 
         if(this.state.rowEditInsumo)
         {
+        resultado.cantidadAnterior = resultado.cantidad
+        resultado.cantidad = cantidad;
          resultado.modificado = true;
+
           let indexEncontrado = this.detallePlantillas.indexOf(rowInsumo);
           if(indexEncontrado >= 0)
           {
@@ -412,6 +409,7 @@ class EditPlantilla extends Component {
           }
         } else
         {
+          resultado.cantidad = cantidad;
              resultado.insertado = true;
           this.detallePlantillas = this.detallePlantillas.concat(resultado);
         }
@@ -478,13 +476,13 @@ class EditPlantilla extends Component {
         let indexDelete = this.detallePlantillas.indexOf(rowData);
         resultado.eliminado = true;
         this.detallePlantillas[indexDelete] = resultado;
-       
+
        // detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
        // this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
 
         this.setState({
             detallePlantillas: [ ...this.detallePlantillas ]
-        }, () => 
+        }, () =>
         {
             this.inputChangedHandler()
             this.buscarInsumo();
@@ -508,13 +506,43 @@ class EditPlantilla extends Component {
          this.detallePlantillas[indexEliminado] = resultado;
          this.setState({
             detallePlantillas: [ ...this.detallePlantillas ]
-        }, () => 
+        }, () =>
         {
             this.inputChangedHandler()
             this.buscarInsumo();
         });
-      
+
     }
+
+    undoModificado = (rowData) => {
+        let resultado = {...rowData};
+        resultado.modificado = null;
+        resultado.cantidad = resultado.cantidadAnterior;
+        resultado.cantidadAnterior = null;
+        let indexEliminado = this.detallePlantillas.indexOf(rowData);
+        this.detallePlantillas[indexEliminado] = resultado;
+        this.setState({
+           detallePlantillas: [ ...this.detallePlantillas ]
+       }, () =>
+       {
+           this.inputChangedHandler()
+           this.buscarInsumo();
+       });
+
+   }
+
+   undoInsertado = (rowData) => {
+       let indexEliminado = this.detallePlantillas.indexOf(rowData);
+       this.detallePlantillas.splice(indexEliminado,1);
+       this.setState({
+          detallePlantillas: [ ...this.detallePlantillas ]
+      }, () =>
+      {
+          this.inputChangedHandler()
+          this.buscarInsumo();
+      });
+
+  }
 
     onSortEnd = ({oldIndex, newIndex}) => {
         if (this.detallePlantillas.length == this.state.detallePlantillas.length) {
@@ -624,7 +652,7 @@ class EditPlantilla extends Component {
 
                                 <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
                                     {this.state.detallePlantillas.map((elem, index) => (
-                                        <SortableItem key={`item-${index}`} index={index} value={elem} deleteInsumo={this.deleteInsumo} editInsumo={this.editInsumo} undoDelete={this.undoDelete} />
+                                        <SortableItem key={`item-${index}`} index={index} value={elem} deleteInsumo={this.deleteInsumo} editInsumo={this.editInsumo} undoDelete={this.undoDelete} undoInsertado={this.undoInsertado} undoModificado={this.undoModificado} />
                                     ))}
 
 
