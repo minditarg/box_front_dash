@@ -86,9 +86,9 @@ const columnsCsv = [
 
 
 const headers = [
- { label: "Codigo", key: "codigo" },
+    { label: "Codigo", key: "codigo" },
     { label: "Descripcion", key: "descripcion" },
-    { label: "Cantidad", key: "cantidad"}
+    { label: "Cantidad", key: "cantidad" }
 ];
 
 const styles = {
@@ -127,50 +127,50 @@ const styles = {
     }
 };
 
-const SortableItem = sortableElement(({value, deleteInsumo,editInsumo,undoDelete,undoInsertado,undoModificado}) => {
+const SortableItem = sortableElement(({value, deleteInsumo, editInsumo, undoDelete, undoInsertado, undoModificado}) => {
     let style = null;
     let iconos = null
-    if(value.eliminado) {
-         style={backgroundColor: 'lightsalmon'};
-         iconos = <TableCell>
-            <IconButton  size="small" onClick={() => undoDelete(value)}>
-              < UndoIcon />
-          </IconButton>
-          </TableCell>
+    if (value.eliminado) {
+        style = { backgroundColor: 'lightsalmon' };
+        iconos = <TableCell>
+            <IconButton size="small" onClick={() => undoDelete(value)}>
+                < UndoIcon />
+            </IconButton>
+        </TableCell>
 
     } else if (value.modificado) {
-         style={backgroundColor: 'lightblue'};
-         iconos = <TableCell>
-            <IconButton  size="small" onClick={() => undoModificado(value)}>
-              < UndoIcon />
-          </IconButton>
-          </TableCell>
+        style = { backgroundColor: 'lightblue' };
+        iconos = <TableCell>
+            <IconButton size="small" onClick={() => undoModificado(value)}>
+                < UndoIcon />
+            </IconButton>
+        </TableCell>
 
-    } else if(value.insertado) {
-         style={backgroundColor: 'lightgreen'};
-         iconos = <TableCell>
-            <IconButton  size="small" onClick={() => undoInsertado(value)}>
-              < UndoIcon />
-          </IconButton>
-          </TableCell>
+    } else if (value.insertado) {
+        style = { backgroundColor: 'lightgreen' };
+        iconos = <TableCell>
+            <IconButton size="small" onClick={() => undoInsertado(value)}>
+                < UndoIcon />
+            </IconButton>
+        </TableCell>
     } else {
-         iconos = <TableCell>
-              <IconButton size="small" onClick={() => deleteInsumo(value)}>
+        iconos = <TableCell>
+            <IconButton size="small" onClick={() => deleteInsumo(value)}>
                 <DeleteIcon />
             </IconButton>
-            <IconButton  size="small" onClick={() => editInsumo(value)}>
+            <IconButton size="small" onClick={() => editInsumo(value)}>
                 <EditIcon />
-          </IconButton>
-          </TableCell>
+            </IconButton>
+        </TableCell>
     }
 
 
 
-  return  ( <TableRow style={style}>
+    return (<TableRow style={style}>
         <TableCell>
             <DragHandle />
         </TableCell>
-        { iconos}
+        {iconos}
 
         <TableCell>
             {value.codigo + value.numero}
@@ -181,8 +181,8 @@ const SortableItem = sortableElement(({value, deleteInsumo,editInsumo,undoDelete
         <TableCell>
             {value.cantidad}
         </TableCell>
-    </TableRow> )
-  }
+    </TableRow>)
+}
 );
 
 const DragHandle = sortableHandle(() => <span><ControlCamera /></span>);
@@ -211,7 +211,7 @@ class EditPlantilla extends Component {
     state = {
         plantillas: [],
         open: false,
-        rowEditInsumo:null,
+        rowEditInsumo: null,
         detallePlantillas: [],
         actions: [],
         actionsInsumos: [],
@@ -320,34 +320,31 @@ class EditPlantilla extends Component {
     }
 
     compararArrays = () => {
-      this.detallePlantillas.forEach((elem,index) => {
-        let indexEncontrado =  this.copiaDetallePlantillas.findIndex(elem2 => {
-          if(elem.codigo == elem2.codigo && elem.numero == elem2.numero)
-            return true;
-          return false
+        this.detallePlantillas.forEach((elem, index) => {
+            let indexEncontrado = this.copiaDetallePlantillas.findIndex(elem2 => {
+                if (elem.codigo == elem2.codigo && elem.numero == elem2.numero)
+                    return true;
+                return false
+            })
+
+            if (indexEncontrado < 0) {
+                console.log("insert element");
+                console.log(elem);
+            } else {
+                if (elem.cantidad != this.copiaDetallePlantillas[indexEncontrado].cantidad) {
+                    console.log("update cantidad")
+                    console.log(elem);
+                }
+                if (index != indexEncontrado) {
+                    console.log("cambiar orden");
+                    console.log(elem);
+                }
+
+
+            }
+
+
         })
-
-        if(indexEncontrado < 0)
-        {
-          console.log("insert element");
-          console.log(elem);
-        } else {
-          if(elem.cantidad != this.copiaDetallePlantillas[indexEncontrado].cantidad)
-          {
-            console.log("update cantidad")
-            console.log(elem);
-          }
-          if(index != indexEncontrado)
-          {
-            console.log("cambiar orden");
-            console.log(elem);
-          }
-
-
-        }
-
-
-      })
     }
 
 
@@ -356,14 +353,19 @@ class EditPlantilla extends Component {
 
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
-          this.compararArrays();
+            this.compararArrays();
+            let detalleEdit = this.detallePlantillas.filter(elem => {
+                if (!elem.eliminado)
+                    return true;
 
+                return false
+            })
 
             axios.post('/update-plantilla', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 codigo: this.state.orderForm.codigo.value,
                 descripcion: this.state.orderForm.descripcion.value,
-                detalle: this.detallePlantillas,
+                detalle: detalleEdit,
                 id: this.props.match.params.idPlantilla
             })
                 .then(res => {
@@ -377,12 +379,14 @@ class EditPlantilla extends Component {
                     else {
                         toast.error("Error");
                     }
+                },err => {
+                     toast.error("Error de conexion al server");
                 })
         }
     }
 
     openDialog() {
-        this.setState({ open: true,rowEditInsumo:null });
+        this.setState({ open: true, rowEditInsumo: null });
     }
 
     closeDialog() {
@@ -396,22 +400,30 @@ class EditPlantilla extends Component {
 
 
 
-        if(this.state.rowEditInsumo)
-        {
-        resultado.cantidadAnterior = resultado.cantidad
-        resultado.cantidad = cantidad;
-         resultado.modificado = true;
+        if (this.state.rowEditInsumo) {
+            resultado.cantidadAnterior = resultado.cantidad
+            resultado.cantidad = cantidad;
+            resultado.modificado = true;
 
-          let indexEncontrado = this.detallePlantillas.indexOf(rowInsumo);
-          if(indexEncontrado >= 0)
-          {
-            this.detallePlantillas[indexEncontrado] = resultado
-          }
-        } else
-        {
-          resultado.cantidad = cantidad;
-             resultado.insertado = true;
-          this.detallePlantillas = this.detallePlantillas.concat(resultado);
+            let indexEncontrado = this.detallePlantillas.indexOf(rowInsumo);
+            if (indexEncontrado >= 0) {
+                this.detallePlantillas[indexEncontrado] = resultado
+            }
+        } else {
+            let indexInsumo;
+            indexInsumo = this.detallePlantillas.findIndex(elem => {
+                if (rowInsumo.numero == elem.numero && rowInsumo.codigo == elem.codigo)
+                    return true;
+
+                return false
+            })
+            if (indexInsumo > -1) {
+                toast.error("El Insumo se encuentra en la Plantilla");
+            } else {
+                resultado.cantidad = cantidad;
+                resultado.insertado = true;
+                this.detallePlantillas = this.detallePlantillas.concat(resultado);
+            }
         }
         detallePlantillas = [...this.detallePlantillas];
 
@@ -452,7 +464,7 @@ class EditPlantilla extends Component {
                     }
 
                     this.detallePlantillas = [...res.data.insumos];
-                    this.copiaDetallePlantillas =  JSON.parse( JSON.stringify( res.data.insumos ) );
+                    this.copiaDetallePlantillas = JSON.parse(JSON.stringify(res.data.insumos));
                     console.log(this.copiaDetallePlantillas);
 
                     this.setState({
@@ -472,18 +484,17 @@ class EditPlantilla extends Component {
 
     deleteInsumo = (rowData) => {
         console.log(rowData);
-        let resultado = {...rowData};
+        let resultado = { ...rowData };
         let indexDelete = this.detallePlantillas.indexOf(rowData);
         resultado.eliminado = true;
         this.detallePlantillas[indexDelete] = resultado;
 
-       // detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
-       // this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
+        // detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
+        // this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
 
         this.setState({
-            detallePlantillas: [ ...this.detallePlantillas ]
-        }, () =>
-        {
+            detallePlantillas: [...this.detallePlantillas]
+        }, () => {
             this.inputChangedHandler()
             this.buscarInsumo();
         });
@@ -492,22 +503,21 @@ class EditPlantilla extends Component {
 
     editInsumo = (rowData) => {
 
-      this.setState({
-        open:true,
-        rowEditInsumo:rowData
-      })
+        this.setState({
+            open: true,
+            rowEditInsumo: rowData
+        })
 
     }
 
-     undoDelete = (rowData) => {
-         let resultado = {...rowData};
-         resultado.eliminado = null;
-         let indexEliminado = this.detallePlantillas.indexOf(rowData);
-         this.detallePlantillas[indexEliminado] = resultado;
-         this.setState({
-            detallePlantillas: [ ...this.detallePlantillas ]
-        }, () =>
-        {
+    undoDelete = (rowData) => {
+        let resultado = { ...rowData };
+        resultado.eliminado = null;
+        let indexEliminado = this.detallePlantillas.indexOf(rowData);
+        this.detallePlantillas[indexEliminado] = resultado;
+        this.setState({
+            detallePlantillas: [...this.detallePlantillas]
+        }, () => {
             this.inputChangedHandler()
             this.buscarInsumo();
         });
@@ -515,34 +525,32 @@ class EditPlantilla extends Component {
     }
 
     undoModificado = (rowData) => {
-        let resultado = {...rowData};
+        let resultado = { ...rowData };
         resultado.modificado = null;
         resultado.cantidad = resultado.cantidadAnterior;
         resultado.cantidadAnterior = null;
         let indexEliminado = this.detallePlantillas.indexOf(rowData);
         this.detallePlantillas[indexEliminado] = resultado;
         this.setState({
-           detallePlantillas: [ ...this.detallePlantillas ]
-       }, () =>
-       {
-           this.inputChangedHandler()
-           this.buscarInsumo();
-       });
+            detallePlantillas: [...this.detallePlantillas]
+        }, () => {
+            this.inputChangedHandler()
+            this.buscarInsumo();
+        });
 
-   }
+    }
 
-   undoInsertado = (rowData) => {
-       let indexEliminado = this.detallePlantillas.indexOf(rowData);
-       this.detallePlantillas.splice(indexEliminado,1);
-       this.setState({
-          detallePlantillas: [ ...this.detallePlantillas ]
-      }, () =>
-      {
-          this.inputChangedHandler()
-          this.buscarInsumo();
-      });
+    undoInsertado = (rowData) => {
+        let indexEliminado = this.detallePlantillas.indexOf(rowData);
+        this.detallePlantillas.splice(indexEliminado, 1);
+        this.setState({
+            detallePlantillas: [...this.detallePlantillas]
+        }, () => {
+            this.inputChangedHandler()
+            this.buscarInsumo();
+        });
 
-  }
+    }
 
     onSortEnd = ({oldIndex, newIndex}) => {
         if (this.detallePlantillas.length == this.state.detallePlantillas.length) {
