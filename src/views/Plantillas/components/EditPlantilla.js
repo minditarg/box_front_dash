@@ -385,6 +385,34 @@ class EditPlantilla extends Component {
         }
     }
 
+      handleSubmitNewPlantilla = (event) => {
+        event.preventDefault();
+        // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
+        if (this.state.formIsValid) {
+            this.setState({ disableAllButtons: true });
+            axios.post('/insert-plantilla', {
+                //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
+                codigo: this.state.orderForm.codigo.value,
+                descripcion: this.state.orderForm.descripcion.value,
+                detalle: this.state.detallePlantillas
+            })
+                .then(res => {
+                    if (res.data.success == 1) {
+                        // this.setState({pedidoInsertado: true});
+                        // this.props.getIngresos();
+                        toast.success("Nueva plantilla creada");
+                        this.props.getPlantillas();
+                        this.props.history.push("/admin/plantillas");
+                    }
+                    else {
+                        this.setState({ disableAllButtons: false });
+                        toast.error("Error");
+                    }
+                })
+        }
+    }
+
+
     openDialog() {
         this.setState({ open: true, rowEditInsumo: null });
     }
@@ -599,7 +627,8 @@ class EditPlantilla extends Component {
                 onClick: (event, rowData) => this.insumoSelectHandler(rowData.id)
 
             }];
-        this.getInsumosParcial(this.props.match.params.idPlantilla)
+        if(this.props.match.params.idPlantilla)
+        this.getInsumosParcial(this.props.match.params.idPlantilla);
 
     }
 
@@ -613,20 +642,30 @@ class EditPlantilla extends Component {
         }
         return (
             <form onSubmit={(event) => {
+                if(this.props.match.params.idPlantilla)
                 this.handleSubmitEditPlantilla(event);
-
+                else
+                this.handleSubmitNewPlantilla(event);
             } }>
                 <GridContainer>
 
 
                     <GridItem xs={12} sm={12} md={10} >
                         <Card>
+                        { this.props.match.params.idPlantilla ?
+                            <CardHeader color="primary">
+                                <h4 className={this.props.classes.cardTitleWhite} >Modificar Plantilla</h4>
+                                <p className={this.props.classes.cardCategoryWhite} >
+                                    Modificación de plantilla para la construcción de Módulos
+                                  </p>
+                            </CardHeader> :
                             <CardHeader color="primary">
                                 <h4 className={this.props.classes.cardTitleWhite} >Nueva Plantilla</h4>
                                 <p className={this.props.classes.cardCategoryWhite} >
                                     Creación de plantillas para la construcción de Módulos
                                   </p>
                             </CardHeader>
+                        }
                             <CardBody>
                                 {formElementsArray.map(formElement => (
                                     <Input
@@ -665,7 +704,7 @@ class EditPlantilla extends Component {
 
 
                                 </SortableContainer>
-                                {this.state.isLoading &&
+                                {this.state.isLoading && this.props.match.params.idPlantilla &&
                                     <div style={{ textAlign: 'center' }}>
                                         <CircularProgress />
                                     </div>
