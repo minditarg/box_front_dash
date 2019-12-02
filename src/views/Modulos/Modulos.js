@@ -20,7 +20,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
 import Paper from '@material-ui/core/Paper';
-
+import NewEditModulo from './components/NewEditModulo';
 
 import { withStyles } from '@material-ui/styles';
 
@@ -74,11 +74,17 @@ class Modulos extends Component {
         })
         if (res.data.success == 1) {
           let resultado = [...res.data.result];
+          resultado = resultado.map(elem => {
+            return {
+              ...elem,
+              identificador: 'MO' + elem.id
+            }
+          })
           this.setState({
             insumos: resultado
           })
         } else if (res.data.success == 3 || res.data.success == 4) {
-        
+
         }
 
       }, err => {
@@ -175,15 +181,15 @@ class Modulos extends Component {
 
           </div>,
       <Switch  key={"modulos-switch"}>
-       
+
         <Route path={this.props.match.url + "/editarmodulo/:idModulo"} exact render={() =>
 
-        { /* <EditPlantilla getPlantillas={()=>this.getPlantillas()} */ }  }  />
+          <NewEditModulo getModulos={()=>this.getModulos()}    />
         } />
 
-          <Route path={this.props.match.url + "/nuevaplantilla/"} exact render={() =>
+          <Route path={this.props.match.url + "/nuevomodulo/"} exact render={() =>
 
-          { /* <EditPlantilla  getPlantillas={()=>this.getPlantillas()} */ }  } />
+            <NewEditModulo  getModulos={()=>this.getModulos()}    />
         } />
 
       </Switch>,

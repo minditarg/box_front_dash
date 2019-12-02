@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import axios from "axios";
+//import io from 'socket.io-client';
 import { Route, Switch, Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
 import moment from 'moment';
 
 import DetalleStock from './components/DetalleStock';
+import { Event } from 'react-socket-io';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -139,8 +141,18 @@ class Stock extends Component {
   //   }
 
   componentDidMount() {
-
     this.getInsumos();
+    /*let socket = io('/');
+
+    socket.on('connect', function(){
+      console.log("conectado al socket");
+    });
+    socket.on('disconnect', function(){
+      console.log("desconectado al socket");
+    });
+    socket.on('reconnect_attempt', function(){
+      console.log("intentado reconectar");
+    }); */
 
   }
 
@@ -360,8 +372,8 @@ class Stock extends Component {
             </Card>
           </div>} />
 
-      </Switch>
-
+      </Switch>,
+       <Event event='actualizar_stock' handler={() => console.log("actualizo stock")} />
 
     ]);
   }

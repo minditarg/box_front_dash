@@ -16,7 +16,7 @@ onClose={props.handleClose}
 aria-labelledby="alert-dialog-title"
 aria-describedby="alert-dialog-description"
 >
-<DialogTitle id="alert-dialog-title">{props.deleteRowData && (`Eliminar el Módulo "${props.deleteRowData.codigo}"?` )}</DialogTitle>
+<DialogTitle id="alert-dialog-title">{props.deleteRowData && (`Eliminar el Módulo "${props.deleteRowData.chasis}"?` )}</DialogTitle>
 <DialogContent>
  <DialogContentText id="alert-dialog-description">
  Se eliminará el Módulo seleccionado. Realmente desea eliminarlo?
