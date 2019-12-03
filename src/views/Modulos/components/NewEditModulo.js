@@ -203,7 +203,6 @@ const SortableContainer = sortableContainer(({children}) => {
 class NewEditModulo extends Component {
     state = {
         modulos: [],
-        disableAllButtons:false,
         open: false,
         rowEditInsumo: null,
         detalleModulos: [],
@@ -316,19 +315,19 @@ class NewEditModulo extends Component {
 
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
+            this.setState({
+                disableAllButtons: true
+            });
             let detalleEdit = this.detalleModulos.filter(elem => {
-                if (!elem.eliminado)
+                if (elem.modificado || elem.eliminado || elem.insertado)
                     return true;
 
-                return false
+                    return false;
             })
-        this.setState({
-          disableAllButtons:true
-        });
 
             axios.post('/update-modulo', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
-                codigo: this.state.orderForm.codigo.value,
+                chasis: this.state.orderForm.chasis.value,
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: detalleEdit,
                 id: this.props.match.params.idModulo
@@ -345,18 +344,18 @@ class NewEditModulo extends Component {
                         toast.error("Error");
                     }
                     this.setState({
-                      disableAllButtons:false
+                        disableAllButtons: false
                     });
-                },err => {
-                     toast.error("Error de conexion al server");
-                     this.setState({
-                       disableAllButtons:false
-                     });
+                }, err => {
+                    toast.error("Error de conexion al server");
+                    this.setState({
+                        disableAllButtons: false
+                    });
                 })
         }
     }
 
-      handleSubmitNewModulo = (event) => {
+    handleSubmitNewModulo = (event) => {
         event.preventDefault();
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
@@ -455,7 +454,7 @@ class NewEditModulo extends Component {
                         for (let key in orderForm) {
                             if (objModulo[key]) {
                                 orderForm[key]['value'] = objModulo[key];
-                                orderForm[key]['touched'] = true;
+                                orderForm[key]['touched'] = false;
                                 orderForm[key]['valid'] = true;
                             }
                         }
@@ -583,8 +582,8 @@ class NewEditModulo extends Component {
     componentDidMount() {
 
 
-        if(this.props.match.params.idModulo)
-        this.getInsumosParcial(this.props.match.params.idModulo);
+        if (this.props.match.params.idModulo)
+            this.getInsumosParcial(this.props.match.params.idModulo);
 
     }
 
@@ -598,30 +597,30 @@ class NewEditModulo extends Component {
         }
         return (
             <form onSubmit={(event) => {
-                if(this.props.match.params.idModulo)
-                this.handleSubmitEditModulo(event);
+                if (this.props.match.params.idModulo)
+                    this.handleSubmitEditModulo(event);
                 else
-                this.handleSubmitNewModulo(event);
+                    this.handleSubmitNewModulo(event);
             } }>
                 <GridContainer>
 
 
                     <GridItem xs={12} sm={12} md={12} >
                         <Card>
-                        { this.props.match.params.idModulo ?
-                            <CardHeader color="primary">
-                                <h4 className={this.props.classes.cardTitleWhite} >Modificar Módulo</h4>
-                                <p className={this.props.classes.cardCategoryWhite} >
-                                    Modificación de módulo
+                            {this.props.match.params.idModulo ?
+                                <CardHeader color="primary">
+                                    <h4 className={this.props.classes.cardTitleWhite} >Modificar Módulo</h4>
+                                    <p className={this.props.classes.cardCategoryWhite} >
+                                        Modificación de módulo
                                   </p>
-                            </CardHeader> :
-                            <CardHeader color="primary">
-                                <h4 className={this.props.classes.cardTitleWhite} >Nuevo Módulo</h4>
-                                <p className={this.props.classes.cardCategoryWhite} >
-                                    Creación de módulos
+                                </CardHeader> :
+                                <CardHeader color="primary">
+                                    <h4 className={this.props.classes.cardTitleWhite} >Nuevo Módulo</h4>
+                                    <p className={this.props.classes.cardCategoryWhite} >
+                                        Creación de módulos
                                   </p>
-                            </CardHeader>
-                        }
+                                </CardHeader>
+                            }
                             <CardBody>
                                 {formElementsArray.map(formElement => (
                                     <Input
