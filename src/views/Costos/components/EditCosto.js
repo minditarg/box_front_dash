@@ -12,7 +12,7 @@ import Card from "components/Card/Card.js";
 import Button from "components/CustomButtons/Button.js";
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
-import { StateEditInsumo } from "../VariablesState";
+import { StateEditCosto } from "../VariablesState";
 
 
 const styles = {
@@ -47,8 +47,8 @@ const styles = {
 
 var minimoAnt = null;
 
-class EditInsumo extends Component {
-  state = JSON.parse(JSON.stringify(StateEditInsumo));
+class EditCosto extends Component {
+  state = JSON.parse(JSON.stringify(StateEditCosto));
 
 
   getCategorias = () => {
@@ -64,69 +64,57 @@ class EditInsumo extends Component {
               displayValue: entry.descripcion
             });
           })
-          let formulario = { ...this.state.editInsumoForm }
+          let formulario = { ...this.state.editCostoForm }
           formulario.categoria.elementConfig.options = [...a];
           this.setState({
-            editInsumoForm: formulario
+            editCostoForm: formulario
           })
         }
       })
   }
-  getInsumoEdit = (id) => {
+  getCostoEdit = (id) => {
     axios.get('/list-insumos/' + id)
       .then(resultado => {
         if (resultado.data.success == 1) {
           if (resultado.data.result.length > 0) {
             this.setState({
-              insumoEdit: resultado.data.result[0]
+              costoEdit: resultado.data.result[0]
             })
             minimoAnt = resultado.data.result[0].minimo;
-            let editInsumoFormAlt = { ...this.state.editInsumoForm };
-            editInsumoFormAlt.categoria.value = resultado.data.result[0].id_insumos_categorias;
-            editInsumoFormAlt.codigo.value = resultado.data.result[0].codigo;
-            editInsumoFormAlt.numero.value = resultado.data.result[0].numero;
-            editInsumoFormAlt.descripcion.value = resultado.data.result[0].descripcion;
-            editInsumoFormAlt.unidad.value = resultado.data.result[0].unidad;
-            editInsumoFormAlt.minimo.value = resultado.data.result[0].minimo;
-            editInsumoFormAlt.alertar.value = resultado.data.result[0].alertar;
-            editInsumoFormAlt.autorizar.value = resultado.data.result[0].autorizar;
+            let editCostoFormAlt = { ...this.state.editCostoForm };
+            editCostoFormAlt.codigo.value = resultado.data.result[0].codigo;
+            editCostoFormAlt.numero.value = resultado.data.result[0].numero;
+            editCostoFormAlt.descripcion.value = resultado.data.result[0].descripcion;
+            editCostoFormAlt.unidad.value = resultado.data.result[0].unidad;
+           // editCostoFormAlt.minimo.value = resultado.data.result[0].minimo;
+            editCostoFormAlt.costo.value = resultado.data.result[0].costo;
 
-            for (let key in editInsumoFormAlt) {
-              editInsumoFormAlt[key].touched = true;
-              editInsumoFormAlt[key].valid = true;
+            for (let key in editCostoFormAlt) {
+              editCostoFormAlt[key].touched = true;
+              editCostoFormAlt[key].valid = true;
             }
             this.setState({
-              editInsumoForm: editInsumoFormAlt
+              editCostoForm: editCostoFormAlt
             })
           }
           else {
             this.setState({
-              insumoEdit: null
+              costoEdit: null
             })
           }
         }
       })
   }
 
-  handleSubmitEditInsumo = (event) => {
+  handleSubmitEditCosto = (event) => {
 
     event.preventDefault();
     let objetoUpdate = {
-      id: this.state.insumoEdit.id,
-      descripcion: this.state.editInsumoForm.descripcion.value,
-      unidad: this.state.editInsumoForm.unidad.value,
-      categoria: this.state.editInsumoForm.categoria.value,
-      numero: this.state.editInsumoForm.numero.value,
-      alertar: this.state.editInsumoForm.alertar.value,
-      autorizar: this.state.editInsumoForm.autorizar.value
+      id: this.state.costoEdit.id,
+      costo: this.state.editCostoForm.costo.value
+
     }
-
-   // alert(this.state.editInsumoForm.alertar.value);
-    if (this.state.editInsumoForm.minimo.value != minimoAnt)
-      objetoUpdate.minimo = this.state.editInsumoForm.minimo.value;
-
-
-    axios.post(`/update-insumos`, objetoUpdate)
+    axios.post(`/update-insumos-costos`, objetoUpdate)
       .then(res => {
         let estadoAlt = null
         if (res.data.success == 0) {
@@ -137,8 +125,8 @@ class EditInsumo extends Component {
         }
 
         if (estadoAlt) {
-          toast.success("Los cambios se realizaron correctamente");
-          this.props.getInsumos();
+          toast.success("El costo del insumo se actualizó correctamente");
+          this.props.getCostos();
           this.setState({
             editFormIsValid: false
           })
@@ -173,19 +161,15 @@ class EditInsumo extends Component {
 
 
 
-  inputEditChangedHandler = (event, inputIdentifier, newValue) => {
+  inputEditChangedHandler = (event, inputIdentifier) => {
     let checkValid;
     const updatedOrderForm = {
-      ...this.state.editInsumoForm
+      ...this.state.editCostoForm
     };
     const updatedFormElement = {
       ...updatedOrderForm[inputIdentifier]
     };
-    console.log(newValue);
-    if(newValue)
-      updatedFormElement.value = newValue;
-    else
-      updatedFormElement.value = event.target.value;
+    updatedFormElement.value = event.target.value;
     checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
     updatedFormElement.valid = checkValid.isValid;
     updatedFormElement.textValid = checkValid.textValid;
@@ -197,7 +181,7 @@ class EditInsumo extends Component {
       formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
     }
     if (inputIdentifier == "categoria") {
-      //alert(event.target.value); //el idInsumoCategoria
+      //alert(event.target.value); //el idCostoCategoria
 
 
       axios.get('/list-categorias/' + event.target.value)
@@ -224,7 +208,7 @@ class EditInsumo extends Component {
                   updatedOrderForm["numero"].touched = true;
 
                   this.setState({
-                    editInsumoForm: updatedOrderForm,
+                    editCostoForm: updatedOrderForm,
                     formIsValid: formIsValidAlt
 
                   })
@@ -232,7 +216,7 @@ class EditInsumo extends Component {
               })
 
             this.setState({
-              editInsumoForm: updatedOrderForm,
+              editCostoForm: updatedOrderForm,
               formIsValid: formIsValidAlt
 
             })
@@ -244,25 +228,9 @@ class EditInsumo extends Component {
         })
     }
     else {
-      if(inputIdentifier == "alertar")
-      {
-        console.log("cambiando alerta: " + newValue);
-        if(newValue == true)
-          updatedOrderForm["alertar"].value = 1;
-        else
-          updatedOrderForm["alertar"].value = 0;
-      }
-      if(inputIdentifier == "autorizar")
-      {
-        console.log("cambiando autorizar: " + newValue);
-        if(newValue == true)
-          updatedOrderForm["autorizar"].value = 1;
-        else
-          updatedOrderForm["autorizar"].value = 0;
-      }
       console.log(updatedOrderForm);
       this.setState({
-        editInsumoForm: updatedOrderForm,
+        editCostoForm: updatedOrderForm,
         formIsValid: formIsValidAlt
 
       })
@@ -271,19 +239,19 @@ class EditInsumo extends Component {
   }
 
 
-  editSingleInsumo = value => {
-    this.props.history.push(this.props.match.url + '/editarinsumo/' + value);
+  editSingleCosto = value => {
+    this.props.history.push(this.props.match.url + '/editarcosto/' + value);
   }
 
 
   resetEditForm = () => {
-    let editInsumoFormAlt = { ...this.state.editInsumoForm };
-    for (let key in editInsumoFormAlt) {
-      editInsumoFormAlt[key].value = ''
+    let editCostoFormAlt = { ...this.state.editCostoForm };
+    for (let key in editCostoFormAlt) {
+      editCostoFormAlt[key].value = ''
     }
 
     this.setState({
-      editInsumoForm: editInsumoFormAlt,
+      editCostoForm: editCostoFormAlt,
       editFormIsValid: false
     })
 
@@ -292,33 +260,33 @@ class EditInsumo extends Component {
 
 
   componentDidMount() {
-    this.getInsumoEdit(this.props.match.params.idinsumo);
-    this.getCategorias();
+    this.getCostoEdit(this.props.match.params.idcosto);
+   // this.getCategorias();
   }
 
 
 
   render() {
     const formElementsArray = [];
-    for (let key in this.state.editInsumoForm) {
+    for (let key in this.state.editCostoForm) {
       formElementsArray.push({
         id: key,
-        config: this.state.editInsumoForm[key]
+        config: this.state.editCostoForm[key]
       });
     }
     return (
 
       <form onSubmit={(event) => {
-        this.handleSubmitEditInsumo(event)
+        this.handleSubmitEditCosto(event)
 
       } }>
 
 
         <Card>
           <CardHeader color="primary">
-            <h4 className={this.props.classes.cardTitleWhite}>Insumo</h4>
+            <h4 className={this.props.classes.cardTitleWhite}>Costo</h4>
             <p className={this.props.classes.cardCategoryWhite}>
-              Detalles del Insumo
+              Detalles del Costo
       </p>
           </CardHeader>
           <CardBody>
@@ -334,12 +302,12 @@ class EditInsumo extends Component {
                   invalid={!formElement.config.valid}
                   shouldValidate={formElement.config.validation}
                   touched={formElement.config.touched}
-                  changed={(event,newValue) => this.inputEditChangedHandler(event, formElement.id, newValue)}
+                  changed={(event) => this.inputEditChangedHandler(event, formElement.id)}
                   />
               ))}
             </div>
 
-            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/insumos')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" type="submit" ><Save /> Guardar</Button>
+            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/costos')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" type="submit" ><Save /> Guardar</Button>
 
 
           </CardBody>
@@ -356,4 +324,4 @@ class EditInsumo extends Component {
 
 };
 
-export default withRouter(withStyles(styles)(EditInsumo));
+export default withRouter(withStyles(styles)(EditCosto));

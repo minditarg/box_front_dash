@@ -19,6 +19,7 @@ import Save from '@material-ui/icons/Save';
 import { toast } from 'react-toastify';
 
 import { StateNewInsumo } from "./VariablesState";
+import { truncate } from "fs";
 
 
 const styles = {
@@ -171,8 +172,25 @@ class NewInsumo extends Component {
       }, err => {
         toast.error(err.message);
       })
-    }
+    } 
     else{
+      if(inputIdentifier == "alertar")
+      {
+        console.log("cambiando alerta: " + newValue);
+        if(newValue == true)
+          updatedOrderForm["alertar"].value = 1;
+        else
+          updatedOrderForm["alertar"].value = 0;
+      }
+
+      if(inputIdentifier == "autorizar")
+      {
+        console.log("cambiando autorizacion: " + newValue);
+        if(newValue == true)
+          updatedOrderForm["autorizar"].value = 1;
+        else
+          updatedOrderForm["autorizar"].value = 0;
+      }
         console.log(updatedOrderForm);
         this.setState({
         newInsumoForm: updatedOrderForm,
@@ -194,7 +212,9 @@ class NewInsumo extends Component {
       descripcion: this.state.newInsumoForm.descripcion.value,
       unidad: this.state.newInsumoForm.unidad.value,
       minimo: this.state.newInsumoForm.minimo.value,
-      categoria: this.state.newInsumoForm.categoria.value
+      categoria: this.state.newInsumoForm.categoria.value,
+      alertar: this.state.newInsumoForm.alertar.value,
+      autorizar: this.state.newInsumoForm.autorizar.value
     })
       .then(res => {
         if (res.data.success == 1) {

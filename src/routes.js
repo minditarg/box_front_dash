@@ -25,6 +25,7 @@ import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import PictureInPictureIcon from '@material-ui/icons/PictureInPicture';
 import ViewComfyIcon from '@material-ui/icons/ViewComfy';
 import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
+import SettingsIcon from '@material-ui/icons/Settings';
 //import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
@@ -51,6 +52,8 @@ import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 import Users from "views/Users/Users.js";
 import Insumos from "views/Insumos/Insumos";
+import Costos from "views/Costos/Costos";
+import AlertaCostos from "views/Alertas/AlertaCostos";
 import NewInsumo from "views/Insumos/NewInsumo";
 import Categorias from "views/Insumos/Categorias";
 import NewCategoria from "views/Insumos/NewCategoria";
@@ -58,6 +61,7 @@ import Ingresos from "views/Ingresos/Ingresos";
 import NewIngreso from "views/Ingresos/NewIngreso";
 import Stock from "views/Stock/Stock";
 import AjusteStock from "views/Stock/AjusteStock";
+import Configuracion from "views/Configuracion/Configuracion";
 import Entregas from "views/Paniol/Entregas";
 import Devoluciones from "views/Paniol/Devoluciones";
 import Modulos from "views/Modulos/Modulos";
@@ -133,6 +137,14 @@ const dashboardRoutes = [
   //   layout: "/rtl"
   // },
 
+  {
+    path: "/configuracion",
+    name: "Configuracion",
+    rtlName: "Co",
+    icon: SettingsIcon,
+    component: Configuracion,
+    layout: "/admin"
+  },
 
   {
     path: "/usuarios",
@@ -168,6 +180,25 @@ const dashboardRoutes = [
       }
      ]
   },
+
+  {
+    groupComponent: true,
+    name: 'Alertas',
+    open: 'open6',
+    icon: ViewComfyIcon,
+    dependences: [
+
+      {
+        path: "/alertaCosto",
+        name: "Costos",
+        rtlName: "ALC",
+        icon: ListIcon,
+        component: AlertaCostos,
+        layout: "/admin"
+      }
+     ]
+  },
+
 
   {
     groupComponent: true,
@@ -255,6 +286,14 @@ const dashboardRoutes = [
     rtlName: "Pla",
     icon: AssignmentIcon,
     component: Plantillas,
+    layout: "/admin"
+  },
+  {
+    path: "/costos",
+    name: "Costos",
+    rtlName: "CO",
+    icon: ListIcon,
+    component: Costos,
     layout: "/admin"
   }
 

@@ -3,7 +3,9 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import deburr from 'lodash/deburr';
 import Autosuggest from 'react-autosuggest';
@@ -163,6 +165,16 @@ const Input = (props) => {
                     />;
 
             break;
+            case ('checkbox'):
+
+            inputElement =
+            <FormControlLabel style={{ marginTop: '20px' }} control={<Checkbox
+                value={props.value}
+                {...props.elementConfig}
+                onChange={props.changed}
+                checked={props.value}
+              />} label={props.elementConfig.label}/>
+              break;
         case ('select'):
             inputElement = (
                 <FormControl style={{ minWidth: '180px', marginTop: '15px' }}>

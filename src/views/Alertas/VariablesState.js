@@ -1,5 +1,8 @@
+
+import moment from 'moment';
+
 export const StateListado = {
-  insumos: [],
+  costos: [],
 
 
 
@@ -13,7 +16,8 @@ export const ColumnsListado = [
   { title: "Identificador", field: "identificador", editable: 'never',sort:(a,b) => { if(a.identificador.localeCompare(b.identificador) == 0) { return a.numero - b.numero } else { return a.identificador.localeCompare(b.identificador) } } },
   { title: "Descripcion", field: "descripcion" },
   { title: "Unidad", field: "unidad" },
-  { title: "Stock Minimo", field: "minimo" }
+  { title: "Costo", field: "costo" },
+  { title: "Fecha", field: "fecha_actualizacion_costo", customSort: (a, b) => moment(a.fecha_actualizacion_costo,"DD/MM/YYYY").format("YYYYMMDD") - moment(b.fecha_actualizacion_costo,"DD/MM/YYYY").format("YYYYMMDD") }
 ];
 
 export const ColumnsListadoCategorias = [
@@ -25,7 +29,7 @@ export const ColumnsListadoCategorias = [
 
 export const StateNewCategoria =
 {
-  insumos: [],
+  costos: [],
   newCategoriaForm: {
     codigo: {
       elementType: 'input',
@@ -59,14 +63,14 @@ export const StateNewCategoria =
   formIsValid: false
 }
 
-export const StateNewInsumo =
+export const StateNewCosto =
 {
-  insumos: [],
-  newInsumoForm: {
+  costos: [],
+  newCostoForm: {
     categoria: {
       elementType: 'select',
       elementConfig: {
-        label: 'Categoria de Insumo',
+        label: 'Categoria de Costo',
         options: [
 
         ],
@@ -124,19 +128,6 @@ export const StateNewInsumo =
       valid: false,
       touched: false
     },
-    autorizar: {
-      elementType: 'checkbox',
-      elementConfig: {
-        label: 'Autorizar al exceder límite de diseño',
-        color: 'primary'
-      },
-      value: 0,
-      validation: {
-        required: false
-      },
-      valid: true,
-      touched: false
-    },
     unidad: {
       elementType: 'autosuggest',
       elementConfig: {
@@ -176,47 +167,16 @@ export const StateNewInsumo =
       },
       valid: false,
       touched: false
-    },
-    alertar: {
-      elementType: 'checkbox',
-      elementConfig: {
-        label: 'Alertar actualización de costo',
-        color: 'primary'
-      },
-      value: 0,
-      validation: {
-        required: false
-      },
-      valid: true,
-      touched: false
     }
-
   },
   formIsValid: false
 }
 
-export const StateEditInsumo =
+export const StateEditCosto =
 {
   editFormIsValid: false,
-  insumoEdit: null,
-  editInsumoForm: {
-    categoria: {
-      elementType: 'select',
-      elementConfig: {
-        label: 'Categoria de Insumo',
-        options: [
-
-        ],
-        fullWidth: true
-      },
-      value: '',
-      validation: {
-        required: true
-      },
-
-      valid: false,
-      touched: false
-    },
+  costoEdit: null,
+  editCostoForm: {
     codigo: {
       elementType: 'input',
       elementConfig: {
@@ -237,7 +197,8 @@ export const StateEditInsumo =
       elementConfig: {
         type: 'text',
         label: 'Número',
-        fullWidth: true
+        fullWidth: true,
+        disabled: true
       },
       value: '',
       validation: {
@@ -251,24 +212,12 @@ export const StateEditInsumo =
       elementConfig: {
         type: 'text',
         label: 'Descripcion',
-        fullWidth: true
+        fullWidth: true,
+        disabled: true
       },
       value: '',
       validation: {
         required: true
-      },
-      valid: false,
-      touched: false
-    },
-    autorizar: {
-      elementType: 'checkbox',
-      elementConfig: {
-        label: 'Autorizar al exceder límite de diseño',
-        color: 'primary'
-      },
-      value: 0,
-      validation: {
-        required: false
       },
       valid: false,
       touched: false
@@ -278,7 +227,8 @@ export const StateEditInsumo =
       elementConfig: {
         type: 'text',
         label: 'Unidad',
-        fullWidth: true
+        fullWidth: true,
+        disabled: true
       },
       value: '',
       validation: {
@@ -287,29 +237,16 @@ export const StateEditInsumo =
       valid: false,
       touched: false
     },
-    minimo: {
+    costo: {
       elementType: 'input',
       elementConfig: {
         type: 'text',
-        label: 'Stock Minimo',
+        label: 'Costo actual',
         fullWidth: true
       },
       value: '',
       validation: {
         required: true
-      },
-      valid: false,
-      touched: false
-    },
-    alertar: {
-      elementType: 'checkbox',
-      elementConfig: {
-        label: 'Alertar actualización de costo',
-        color: 'primary'
-      },
-      value: 0,
-      validation: {
-        required: false
       },
       valid: false,
       touched: false
@@ -321,7 +258,7 @@ export const StateEditInsumo =
 export const StateEditCategoria =
 {
   editFormIsValid: false,
-  insumoEdit: null,
+  costoEdit: null,
   editCategoriaForm: {
     codigo: {
       elementType: 'input',
