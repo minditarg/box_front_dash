@@ -6,9 +6,7 @@ import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import CsvDownloader from 'react-csv-downloader';
 import { CSVLink, CSVDownload } from "react-csv";
 
-// import { AddBox, ArrowUpward } from "@material-ui/icons";
-// import ReactDOM from "react-dom";
-import MaterialTable from "material-table";
+
 import { CardActions } from "@material-ui/core";
 import { withStyles } from '@material-ui/styles';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
@@ -53,11 +51,6 @@ import Paper from '@material-ui/core/Paper';
 import { toast } from 'react-toastify';
 
 import DateFnsUtils from '@date-io/date-fns';
-import {
-    MuiPickersUtilsProvider,
-    KeyboardTimePicker,
-    KeyboardDatePicker,
-} from '@material-ui/pickers';
 
 import { localization } from "variables/general";
 
@@ -207,13 +200,12 @@ const SortableContainer = sortableContainer(({children}) => {
 });
 
 
-class EditPlantilla extends Component {
+class NewEditModulo extends Component {
     state = {
-        plantillas: [],
-        disableAllButtons:false,
+        modulos: [],
         open: false,
         rowEditInsumo: null,
-        detallePlantillas: [],
+        detalleModulos: [],
         actions: [],
         actionsInsumos: [],
 
@@ -221,11 +213,11 @@ class EditPlantilla extends Component {
 
         insumoSeleccionado: 0,
         orderForm: {
-            codigo: {
+            chasis: {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    label: 'Codigo',
+                    label: 'Chasis',
                     fullWidth: true
                 },
                 value: '',
@@ -259,8 +251,8 @@ class EditPlantilla extends Component {
         super(props);
         this.buscarRef = React.createRef();
 
-        this.detallePlantillas = [];
-        this.copiaDetallePlantillas = [];
+        this.detalleModulos = [];
+        this.copiaDetalleModulos = [];
 
 
     }
@@ -308,7 +300,7 @@ class EditPlantilla extends Component {
         for (let inputIdentifier in updatedOrderForm) {
             formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
         }
-        formIsValidAlt = this.detallePlantillas.length > 0 && formIsValidAlt;
+        formIsValidAlt = this.detalleModulos.length > 0 && formIsValidAlt;
 
         this.setState({
             orderForm: updatedOrderForm,
@@ -316,98 +308,71 @@ class EditPlantilla extends Component {
         })
     }
 
-    compararArrays = () => {
-        this.detallePlantillas.forEach((elem, index) => {
-            let indexEncontrado = this.copiaDetallePlantillas.findIndex(elem2 => {
-                if (elem.codigo == elem2.codigo && elem.numero == elem2.numero)
-                    return true;
-                return false
-            })
-
-            if (indexEncontrado < 0) {
-                console.log("insert element");
-                console.log(elem);
-            } else {
-                if (elem.cantidad != this.copiaDetallePlantillas[indexEncontrado].cantidad) {
-                    console.log("update cantidad")
-                    console.log(elem);
-                }
-                if (index != indexEncontrado) {
-                    console.log("cambiar orden");
-                    console.log(elem);
-                }
 
 
-            }
-
-
-        })
-    }
-
-
-    handleSubmitEditPlantilla = (event) => {
+    handleSubmitEditModulo = (event) => {
         event.preventDefault();
 
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
-            let detalleEdit = this.detallePlantillas.filter(elem => {
-                if (!elem.eliminado)
+            this.setState({
+                disableAllButtons: true
+            });
+            let detalleEdit = this.detalleModulos.filter(elem => {
+                if (elem.modificado || elem.eliminado || elem.insertado)
                     return true;
 
-                return false
+                    return false;
             })
-        this.setState({
-          disableAllButtons:true
-        });
 
-            axios.post('/update-plantilla', {
+            axios.post('/update-modulo', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
-                codigo: this.state.orderForm.codigo.value,
+                chasis: this.state.orderForm.chasis.value,
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: detalleEdit,
-                id: this.props.match.params.idPlantilla
+                id: this.props.match.params.idModulo
             })
                 .then(res => {
                     if (res.data.success == 1) {
                         // this.setState({pedidoInsertado: true});
                         // this.props.getIngresos();
                         // toast.success("Nueva plantilla creada");
-                        this.props.getPlantillas();
-                        this.props.history.push("/admin/plantillas");
+                        this.props.getModulos();
+                        this.props.history.push("/admin/modulos");
                     }
                     else {
                         toast.error("Error");
                     }
                     this.setState({
-                      disableAllButtons:false
+                        disableAllButtons: false
                     });
-                },err => {
-                     toast.error("Error de conexion al server");
-                     this.setState({
-                       disableAllButtons:false
-                     });
+                }, err => {
+                    toast.error("Error de conexion al server");
+                    this.setState({
+                        disableAllButtons: false
+                    });
                 })
         }
     }
 
-      handleSubmitNewPlantilla = (event) => {
+    handleSubmitNewModulo = (event) => {
         event.preventDefault();
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
             this.setState({ disableAllButtons: true });
-            axios.post('/insert-plantilla', {
+            axios.post('/insert-modulo', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
-                codigo: this.state.orderForm.codigo.value,
+                chasis: this.state.orderForm.chasis.value,
                 descripcion: this.state.orderForm.descripcion.value,
-                detalle: this.state.detallePlantillas
+                detalle: this.state.detalleModulos
             })
                 .then(res => {
                     if (res.data.success == 1) {
                         // this.setState({pedidoInsertado: true});
                         // this.props.getIngresos();
-                        toast.success("Nueva plantilla creada");
-                        this.props.getPlantillas();
-                        this.props.history.push("/admin/plantillas");
+                        toast.success("Nuevo módulo creado");
+                        this.props.getModulos();
+                        this.props.history.push("/admin/modulos");
                     }
                     else {
                         this.setState({ disableAllButtons: false });
@@ -428,7 +393,7 @@ class EditPlantilla extends Component {
 
     onClickInsumo = (rowInsumo, cantidad) => {
         this.closeDialog();
-        let detallePlantillas;
+        let detalleModulos;
         let resultado = { ...rowInsumo };
 
 
@@ -438,30 +403,30 @@ class EditPlantilla extends Component {
             resultado.cantidad = cantidad;
             resultado.modificado = true;
 
-            let indexEncontrado = this.detallePlantillas.indexOf(rowInsumo);
+            let indexEncontrado = this.detalleModulos.indexOf(rowInsumo);
             if (indexEncontrado >= 0) {
-                this.detallePlantillas[indexEncontrado] = resultado
+                this.detalleModulos[indexEncontrado] = resultado
             }
         } else {
             let indexInsumo;
-            indexInsumo = this.detallePlantillas.findIndex(elem => {
+            indexInsumo = this.detalleModulos.findIndex(elem => {
                 if (rowInsumo.numero == elem.numero && rowInsumo.codigo == elem.codigo)
                     return true;
 
                 return false
             })
             if (indexInsumo > -1) {
-                toast.error("El Insumo se encuentra en la Plantilla");
+                toast.error("El Insumo se encuentra en el Módulo");
             } else {
                 resultado.cantidad = cantidad;
                 resultado.insertado = true;
-                this.detallePlantillas = this.detallePlantillas.concat(resultado);
+                this.detalleModulos = this.detalleModulos.concat(resultado);
             }
         }
-        detallePlantillas = [...this.detallePlantillas];
+        detalleModulos = [...this.detalleModulos];
 
         this.setState({
-            detallePlantillas: detallePlantillas
+            detalleModulos: detalleModulos
         }, () => {
             this.buscarInsumo(this.buscarRef.current.value);
             this.inputChangedHandler()
@@ -474,35 +439,34 @@ class EditPlantilla extends Component {
 
 
 
-    getInsumosParcial = (idPlantilla) => {
+    getInsumosParcial = (idModulo) => {
         this.setState({ isLoading: true });
-        axios.get('/list-plantillas-insumos/' + idPlantilla)
+        axios.get('/list-modulos-insumos/' + idModulo)
             .then(res => {
                 this.setState({ isLoading: false });
 
                 if (res.data.success == 1) {
                     let orderForm = { ...this.state.orderForm };
-                    let objPlantilla = null;
-                    if (res.data.plantilla.length == 1) {
-                        objPlantilla = res.data.plantilla[0];
+                    let objModulo = null;
+                    if (res.data.modulo.length == 1) {
+                        objModulo = res.data.modulo[0];
 
                         for (let key in orderForm) {
-                            if (objPlantilla[key]) {
-                                orderForm[key]['value'] = objPlantilla[key];
-                                orderForm[key]['touched'] = true;
+                            if (objModulo[key]) {
+                                orderForm[key]['value'] = objModulo[key];
+                                orderForm[key]['touched'] = false;
                                 orderForm[key]['valid'] = true;
                             }
                         }
 
                     }
 
-                    this.detallePlantillas = [...res.data.insumos];
-                    this.copiaDetallePlantillas = JSON.parse(JSON.stringify(res.data.insumos));
-                    console.log(this.copiaDetallePlantillas);
+                    this.detalleModulos = [...res.data.insumos];
+                    this.copiaDetalleModulos = JSON.parse(JSON.stringify(res.data.insumos));
 
                     this.setState({
                         orderForm: orderForm,
-                        detallePlantillas: res.data.insumos
+                        detalleModulos: res.data.insumos
                     }, () => {
                         this.inputChangedHandler();
                     })
@@ -517,15 +481,15 @@ class EditPlantilla extends Component {
 
     deleteInsumo = (rowData) => {
         let resultado = { ...rowData };
-        let indexDelete = this.detallePlantillas.indexOf(rowData);
+        let indexDelete = this.detalleModulos.indexOf(rowData);
         resultado.eliminado = true;
-        this.detallePlantillas[indexDelete] = resultado;
+        this.detalleModulos[indexDelete] = resultado;
 
         // detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
         // this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
 
         this.setState({
-            detallePlantillas: [...this.detallePlantillas]
+            detalleModulos: [...this.detalleModulos]
         }, () => {
             this.inputChangedHandler()
             this.buscarInsumo();
@@ -545,10 +509,10 @@ class EditPlantilla extends Component {
     undoDelete = (rowData) => {
         let resultado = { ...rowData };
         resultado.eliminado = null;
-        let indexEliminado = this.detallePlantillas.indexOf(rowData);
-        this.detallePlantillas[indexEliminado] = resultado;
+        let indexEliminado = this.detalleModulos.indexOf(rowData);
+        this.detalleModulos[indexEliminado] = resultado;
         this.setState({
-            detallePlantillas: [...this.detallePlantillas]
+            detalleModulos: [...this.detalleModulos]
         }, () => {
             this.inputChangedHandler()
             this.buscarInsumo();
@@ -561,10 +525,10 @@ class EditPlantilla extends Component {
         resultado.modificado = null;
         resultado.cantidad = resultado.cantidadAnterior;
         resultado.cantidadAnterior = null;
-        let indexEliminado = this.detallePlantillas.indexOf(rowData);
-        this.detallePlantillas[indexEliminado] = resultado;
+        let indexEliminado = this.detalleModulos.indexOf(rowData);
+        this.detalleModulos[indexEliminado] = resultado;
         this.setState({
-            detallePlantillas: [...this.detallePlantillas]
+            detalleModulos: [...this.detalleModulos]
         }, () => {
             this.inputChangedHandler()
             this.buscarInsumo();
@@ -573,10 +537,10 @@ class EditPlantilla extends Component {
     }
 
     undoInsertado = (rowData) => {
-        let indexEliminado = this.detallePlantillas.indexOf(rowData);
-        this.detallePlantillas.splice(indexEliminado, 1);
+        let indexEliminado = this.detalleModulos.indexOf(rowData);
+        this.detalleModulos.splice(indexEliminado, 1);
         this.setState({
-            detallePlantillas: [...this.detallePlantillas]
+            detalleModulos: [...this.detalleModulos]
         }, () => {
             this.inputChangedHandler()
             this.buscarInsumo();
@@ -585,10 +549,10 @@ class EditPlantilla extends Component {
     }
 
     onSortEnd = ({oldIndex, newIndex}) => {
-        if (this.detallePlantillas.length == this.state.detallePlantillas.length) {
-            this.detallePlantillas = arrayMove(this.detallePlantillas, oldIndex, newIndex);
-            this.setState(({detallePlantillas}) => ({
-                detallePlantillas: arrayMove(detallePlantillas, oldIndex, newIndex),
+        if (this.detalleModulos.length == this.state.detalleModulos.length) {
+            this.detalleModulos = arrayMove(this.detalleModulos, oldIndex, newIndex);
+            this.setState(({detalleModulos}) => ({
+                detalleModulos: arrayMove(detalleModulos, oldIndex, newIndex),
             }));
         }
     };
@@ -596,7 +560,7 @@ class EditPlantilla extends Component {
     buscarInsumo = (value) => {
         let detalle;
         if (value && value != '') {
-            detalle = this.detallePlantillas.filter(elem => {
+            detalle = this.detalleModulos.filter(elem => {
                 if (elem.descripcion.toLowerCase().indexOf(value.toLowerCase()) >= 0)
                     return true;
 
@@ -604,7 +568,7 @@ class EditPlantilla extends Component {
 
             })
         } else {
-            detalle = this.detallePlantillas
+            detalle = this.detalleModulos
         }
 
         this.setState({
@@ -617,22 +581,9 @@ class EditPlantilla extends Component {
 
     componentDidMount() {
 
-        this.state.actions = [
-            {
-                icon: 'delete',
-                tooltip: 'Eliminar Insumo',
-                onClick: (event, rowData) => this.deleteInsumo(rowData)
-            }
-        ];
-        this.state.actionsInsumos = [
-            {
-                icon: 'save',
-                tooltip: 'Seleccionar Insumo',
-                onClick: (event, rowData) => this.insumoSelectHandler(rowData.id)
 
-            }];
-        if(this.props.match.params.idPlantilla)
-        this.getInsumosParcial(this.props.match.params.idPlantilla);
+        if (this.props.match.params.idModulo)
+            this.getInsumosParcial(this.props.match.params.idModulo);
 
     }
 
@@ -646,30 +597,30 @@ class EditPlantilla extends Component {
         }
         return (
             <form onSubmit={(event) => {
-                if(this.props.match.params.idPlantilla)
-                this.handleSubmitEditPlantilla(event);
+                if (this.props.match.params.idModulo)
+                    this.handleSubmitEditModulo(event);
                 else
-                this.handleSubmitNewPlantilla(event);
+                    this.handleSubmitNewModulo(event);
             } }>
                 <GridContainer>
 
 
                     <GridItem xs={12} sm={12} md={12} >
                         <Card>
-                        { this.props.match.params.idPlantilla ?
-                            <CardHeader color="primary">
-                                <h4 className={this.props.classes.cardTitleWhite} >Modificar Plantilla</h4>
-                                <p className={this.props.classes.cardCategoryWhite} >
-                                    Modificación de plantilla para la construcción de Módulos
+                            {this.props.match.params.idModulo ?
+                                <CardHeader color="primary">
+                                    <h4 className={this.props.classes.cardTitleWhite} >Modificar Módulo</h4>
+                                    <p className={this.props.classes.cardCategoryWhite} >
+                                        Modificación de módulo
                                   </p>
-                            </CardHeader> :
-                            <CardHeader color="primary">
-                                <h4 className={this.props.classes.cardTitleWhite} >Nueva Plantilla</h4>
-                                <p className={this.props.classes.cardCategoryWhite} >
-                                    Creación de plantillas para la construcción de Módulos
+                                </CardHeader> :
+                                <CardHeader color="primary">
+                                    <h4 className={this.props.classes.cardTitleWhite} >Nuevo Módulo</h4>
+                                    <p className={this.props.classes.cardCategoryWhite} >
+                                        Creación de módulos
                                   </p>
-                            </CardHeader>
-                        }
+                                </CardHeader>
+                            }
                             <CardBody>
                                 {formElementsArray.map(formElement => (
                                     <Input
@@ -687,7 +638,7 @@ class EditPlantilla extends Component {
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
 
-                                <CSVLink data={this.detallePlantillas} headers={headers}>
+                                <CSVLink data={this.detalleModulos} headers={headers}>
                                     <Button color="info" >Descargar csv</Button>
                                 </CSVLink>
                                 <div style={{ padding: 20 }} >
@@ -702,19 +653,19 @@ class EditPlantilla extends Component {
                                 </div>
 
                                 <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
-                                    {this.state.detallePlantillas.map((elem, index) => (
+                                    {this.state.detalleModulos.map((elem, index) => (
                                         <SortableItem key={`item-${index}`} index={index} value={elem} deleteInsumo={this.deleteInsumo} editInsumo={this.editInsumo} undoDelete={this.undoDelete} undoInsertado={this.undoInsertado} undoModificado={this.undoModificado} />
                                     ))}
 
 
                                 </SortableContainer>
-                                {this.state.isLoading && this.props.match.params.idPlantilla &&
+                                {this.state.isLoading && this.props.match.params.idModulo &&
                                     <div style={{ textAlign: 'center' }}>
                                         <CircularProgress />
                                     </div>
 
                                 }
-                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/plantillas')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/modulos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
                             </CardBody>
                         </Card>
@@ -750,4 +701,4 @@ class EditPlantilla extends Component {
 }
 
 
-export default withRouter(withStyles(styles)(EditPlantilla));
+export default withRouter(withStyles(styles)(NewEditModulo));

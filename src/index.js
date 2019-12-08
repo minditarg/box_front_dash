@@ -17,6 +17,7 @@
 */
 import React from "react";
 import ReactDOM from "react-dom";
+import { Socket } from 'react-socket-io';
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 import { Provider } from 'react-redux';
@@ -41,6 +42,10 @@ import registerServiceWorker from './registerServiceWorker';
 
 
 import "assets/css/material-dashboard-react.css?v=1.8.0";
+
+const uri = '/';
+const options = { transports: ['websocket'] };
+
 
 const hist = createBrowserHistory();
 
@@ -76,10 +81,12 @@ ReactDOM.render(
   <Provider store={store}>
   <Router history={hist}>
    <ThemeProvider theme={theme}>
+   <Socket uri={uri} options={options}>
     <Switch>
-      <Route path="/admin" component={Admin} />      
+      <Route path="/admin" component={Admin} />
       <Route from="/" component={Root}  />
     </Switch>
+    </Socket>
     </ThemeProvider>
   </Router>
   </Provider>,

@@ -184,7 +184,7 @@ class Plantillas extends Component {
 
           <Route path={this.props.match.url + "/nuevaplantilla/"} exact render={() =>
 
-          <NewPlantilla  getPlantillas={()=>this.getPlantillas()} />
+          <EditPlantilla  getPlantillas={()=>this.getPlantillas()} />
         } />
 
       </Switch>,

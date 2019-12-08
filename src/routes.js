@@ -231,30 +231,30 @@ const dashboardRoutes = [
       layout: "/admin"
     }]
   },
-  // {
-  //   groupComponent: true,
-  //   name: 'Modulos',
-  //   open: 'open4',
-  //   icon: PictureInPictureIcon,
-  //   dependences: [
-  //     {
-  //       path: "/modulos",
-  //       name: "Listado",
-  //       rtlName: "LM",
-  //       icon: ListIcon,
-  //       component: Modulos,
-  //       layout: "/admin"
-  //     },
-  //     {
-  //       path: "/nuevomodulo",
-  //       name: "Nuevo",
-  //       rtlName: "NM",
-  //       icon: AddBoxIcon,
-  //       component: NewModulo,
-  //       layout: "/admin"
+   {
+     groupComponent: true,
+     name: 'Modulos',
+     open: 'open4',
+     icon: PictureInPictureIcon,
+     dependences: [
+       {
+         path: "/modulos",
+         name: "Listado",
+         rtlName: "LM",
+         icon: ListIcon,
+         component: Modulos,
+         layout: "/admin"
+       },
+       {
+         path: "/nuevomodulo",
+         name: "Nuevo",
+         rtlName: "NM",
+         icon: AddBoxIcon,
+         component: NewModulo,
+         layout: "/admin"
 
-  //     }]
-  // },
+       }]
+   },
 
   {
     groupComponent: true,

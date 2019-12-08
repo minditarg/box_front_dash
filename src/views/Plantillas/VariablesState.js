@@ -85,7 +85,7 @@ export const StateNewPlantilla =
         label: 'Codigo Interno',
         disabled: true,
         fullWidth: true
-        
+
       },
       value: '',
       validation: {
@@ -170,6 +170,7 @@ export const StateEditPlantilla =
 {
   editFormIsValid: false,
   insumoEdit: null,
+  disableAllButtons: false,
   editPlantillaForm: {
     categoria: {
       elementType: 'select',

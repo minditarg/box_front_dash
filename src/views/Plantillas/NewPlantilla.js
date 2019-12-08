@@ -3,7 +3,7 @@ import axios from "axios";
 import Input from "components/Input/Input";
 import moment from "moment";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
-
+import InputFiles from 'react-input-files';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -198,7 +198,7 @@ class NewPlantilla extends Component {
     }
 
 
-      constructor(props) {
+    constructor(props) {
         super(props);
         this.buscarRef = React.createRef();
 
@@ -318,14 +318,14 @@ class NewPlantilla extends Component {
     }
 
 
-   deleteInsumo = (rowData) => {
+    deleteInsumo = (rowData) => {
 
 
 
 
         let detallePlantillas = [...this.state.detallePlantillas];
         detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
-       this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
+        this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
 
         this.setState({
             detallePlantillas: detallePlantillas
@@ -334,11 +334,11 @@ class NewPlantilla extends Component {
     }
 
     onSortEnd = ({oldIndex, newIndex}) => {
-        if(this.detallePlantillas.length == this.state.detallePlantillas.length) {       
-           this.detallePlantillas =  arrayMove(this.detallePlantillas, oldIndex, newIndex);
-        this.setState(({detallePlantillas}) => ({
-            detallePlantillas: arrayMove(detallePlantillas, oldIndex, newIndex),
-        }));
+        if (this.detallePlantillas.length == this.state.detallePlantillas.length) {
+            this.detallePlantillas = arrayMove(this.detallePlantillas, oldIndex, newIndex);
+            this.setState(({detallePlantillas}) => ({
+                detallePlantillas: arrayMove(detallePlantillas, oldIndex, newIndex),
+            }));
         }
     };
 
@@ -360,6 +360,12 @@ class NewPlantilla extends Component {
             detallePlantillas: detalle
         })
 
+
+    }
+
+    inputFile = (e) => {
+
+        console.log(e);
 
     }
 
@@ -422,9 +428,12 @@ class NewPlantilla extends Component {
                                 ))}
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
-
+                                <InputFiles accept="text/csv" onChange={files => console.log(files)}>
+                                    <Button color="info">Subir plantilla</Button>
+                                </InputFiles>
                                   <div style={{ padding: 20 }} >
                                     <Grid container alignItems="flex-end" justify="flex-end" spacing={2}>
+
                                         <Grid item>
                                             <Search />
                                         </Grid>
@@ -436,17 +445,17 @@ class NewPlantilla extends Component {
 
 
 
-                                 <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
+                                <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
                                     {this.state.detallePlantillas.map((elem, index) => (
                                         <SortableItem key={`item-${elem.id}`} index={index} value={elem} deleteInsumo={this.deleteInsumo} />
                                     ))}
-                                   
-                                
+
+
                                 </SortableContainer>
-                                { this.state.isLoading &&
-                                        <div style={{ textAlign:'center'}}>
-                                         <CircularProgress />
-                                         </div>
+                                {this.state.isLoading &&
+                                    <div style={{ textAlign: 'center' }}>
+                                        <CircularProgress />
+                                    </div>
 
                                 }
 

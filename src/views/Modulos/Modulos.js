@@ -1,30 +1,28 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { Route, Switch, Link } from 'react-router-dom';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
 import MaterialTable from "material-table";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import { CardActions } from "@material-ui/core";
-import Moment from 'react-moment';
+import { toast } from 'react-toastify';
+import ModalDelete from "./ModalDelete";
+import Button from "components/CustomButtons/Button.js";
+
+import { ColumnsListado, StateListado } from "./VariablesState";
 import { localization } from "variables/general.js";
 import lightGreen from '@material-ui/core/colors/lightGreen';
+import AddIcon from '@material-ui/icons/Add';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
 import Paper from '@material-ui/core/Paper';
+import NewEditModulo from './components/NewEditModulo';
 
 import { withStyles } from '@material-ui/styles';
-
-const columns = [
-  { title: "Descripcion", field: "descripcion" },
-  { title: "Estado", field: "descripcion_estado" },
-  { title: "Codigo", field: "codigo" },
-  { title: "Cliente", field: "cliente" },
-  { title: "Chasis", field: "chasis" }
-];
 
 const styles = {
   cardCategoryWhite: {
@@ -56,89 +54,156 @@ const styles = {
   }
 };
 
-
 class Modulos extends Component {
-  state = {
-    modulos: [],
-    actions: [ {
-              icon: 'edit',
-              tooltip: 'Editar Modulo',
-              onClick: (event, rowData) => alert("Editing " + rowData.descripcion)
-            },
-            {
-              icon: 'delete',
-              tooltip: 'Eliminar Modulo',
-              onClick: (event, rowData) => this.deleteMaterial(rowData.id)
-            }]
-  };
+  state = JSON.parse(JSON.stringify(StateListado));
 
 
-  deleteMaterial = (id) => {
-    //alert("You want to delete " + id);
-    axios.post('/delete-modulos', {
-      id: id
-    })
-      .then(res => {
-        if (res.data.success == 1) {
-          this.getModulos();
-          toast.info("Modulo eliminado");
-        }
-      })
+  deleteMaterial = (rowData) => {
+    this.handleClickOpen(rowData);
+
   }
 
   getModulos = () => {
+    this.setState({
+      isLoading:true
+    })
     axios.get('/list-modulos')
       .then(res => {
+        this.setState({
+          isLoading:false
+        })
         if (res.data.success == 1) {
           let resultado = [...res.data.result];
-          this.setState({
-            modulos: resultado
+          resultado = resultado.map(elem => {
+            return {
+              ...elem,
+              identificador: 'MO' + elem.id
+            }
           })
+          this.setState({
+            insumos: resultado
+          })
+        } else if (res.data.success == 3 || res.data.success == 4) {
+
         }
+
+      }, err => {
+        toast.error(err.message);
       })
+  }
+
+  handleClickOpen(rowData) {
+    this.setState({
+      openDeleteDialog: true,
+      deleteRowData: rowData
+    })
+  }
+
+  handleClose() {
+    this.setState({
+      openDeleteDialog: false,
+      deleteRowData: null
+    })
+  }
+
+  handleDelete(rowData) {
+    if (rowData.id) {
+      axios.post('/delete-modulo', {
+        id: rowData.id
+      })
+        .then(res => {
+          if (res.data.success == 1) {
+            this.handleClose();
+            this.getModulos();
+            toast.success("Modulo eliminado");
+          }
+        }, err => {
+          toast.error(err.message);
+        })
+    }
+
   }
 
   componentDidMount() {
 
-
     this.getModulos();
-
 
   }
 
 
+  reloadModulos = () => {
+    this.getModulos();
+  }
+
+
   render() {
-    return (
-      <div style={{ maxWidth: "100%" }}>
-
-        <Card>
-          <CardHeader color="primary">
-            <h4 className={this.props.classes.cardTitleWhite} >MODULOS</h4>
-            <p className={this.props.classes.cardCategoryWhite} >
-              Listado de Modulos
+   let style={  maxWidth: "100%"}
+    if(this.props.match.url != this.props.location.pathname) {
+      style={ display:'none', maxWidth: "100%"}
+    }
+    return ([
+       <div key={"modulos-list-plantillas"} style={style}>
+            <Card>
+              <CardHeader color="primary">
+                <h4 className={this.props.classes.cardTitleWhite} >MÓDULOS</h4>
+                <p className={this.props.classes.cardCategoryWhite} >
+                  Listado de Módulos
                       </p>
-          </CardHeader>
-          <CardBody>
-            <MaterialTable
-              columns={columns}
-              data={this.state.modulos}
-              title=""
-              actions={this.state.actions}
-              localization={localization}
+              </CardHeader>
+              <CardBody>
+               <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/nuevomodulo')} color="primary"><AddIcon /> Nuevo Módulo</Button>
+                <MaterialTable
+                isLoading={this.state.isLoading}
+                  columns={ColumnsListado}
+                  data={this.state.insumos}
+                  title=""
+                  localization={localization}
+                  actions={[{
+                    icon: 'edit',
+                    tooltip: 'Editar Módulo',
+                    onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarmodulo/' + rowData.id)
+                  },
+                  {
+                    icon: 'delete',
+                    tooltip: 'Borrar Módulo',
+                    onClick: (event, rowData) => this.deleteMaterial(rowData)
+                  }]}
+                  options={{
+                    exportButton: true,
+                    headerStyle: {
+                      backgroundColor: lightGreen[700],
+                      color: '#FFF'
+                    },
+                  }}
+                />
+              </CardBody>
+            </Card>
 
-              options={{
-                exportButton: true,
-                headerStyle: {
-                  backgroundColor: lightGreen[700],
-                  color: '#FFF'
-                },
-              }}
-              />
-          </CardBody>
-        </Card>
-        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} autoClose={2000} />
-      </div >
-    );
+          </div>,
+      <Switch  key={"modulos-switch"}>
+
+        <Route path={this.props.match.url + "/editarmodulo/:idModulo"} exact render={() =>
+
+          <NewEditModulo getModulos={()=>this.getModulos()}    />
+        } />
+
+          <Route path={this.props.match.url + "/nuevomodulo/"} exact render={() =>
+
+            <NewEditModulo  getModulos={()=>this.getModulos()}    />
+        } />
+
+      </Switch>,
+      <ModalDelete
+      key={"modulos-modal"}
+        openDeleteDialog={this.state.openDeleteDialog}
+        deleteRowData={this.state.deleteRowData}
+
+        handleClose={() => this.handleClose()}
+        handleDelete={(rowData) => this.handleDelete(rowData)}
+      />,
+
+
+    ]);
   }
 }
 
