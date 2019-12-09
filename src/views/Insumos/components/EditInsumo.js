@@ -45,7 +45,7 @@ const styles = {
   }
 };
 
-var minimoAnt = null;
+
 
 class EditInsumo extends Component {
   state = JSON.parse(JSON.stringify(StateEditInsumo));
@@ -80,7 +80,7 @@ class EditInsumo extends Component {
             this.setState({
               insumoEdit: resultado.data.result[0]
             })
-            minimoAnt = resultado.data.result[0].minimo;
+
             let editInsumoFormAlt = { ...this.state.editInsumoForm };
             editInsumoFormAlt.categoria.value = resultado.data.result[0].id_insumos_categorias;
             editInsumoFormAlt.codigo.value = resultado.data.result[0].codigo;
@@ -118,12 +118,13 @@ class EditInsumo extends Component {
       categoria: this.state.editInsumoForm.categoria.value,
       numero: this.state.editInsumoForm.numero.value,
       alertar: this.state.editInsumoForm.alertar.value,
-      autorizar: this.state.editInsumoForm.autorizar.value
+      autorizar: this.state.editInsumoForm.autorizar.value,
+      minimo: this.state.editInsumoForm.minimo.value
     }
 
    // alert(this.state.editInsumoForm.alertar.value);
-    if (this.state.editInsumoForm.minimo.value != minimoAnt)
-      objetoUpdate.minimo = this.state.editInsumoForm.minimo.value;
+  //  if (this.state.editInsumoForm.minimo.value != minimoAnt)
+  //    objetoUpdate.minimo = this.state.editInsumoForm.minimo.value;
 
 
     axios.post(`/update-insumos`, objetoUpdate)
@@ -204,7 +205,7 @@ class EditInsumo extends Component {
         .then(res => {
           if (res.data.success == 1) {
             let resultado = [...res.data.result];
-            
+
             updatedOrderForm["codigo"].value = resultado[0].codigo;
             updatedOrderForm["codigo"].valid = true;
             updatedOrderForm["codigo"].touched = true;
