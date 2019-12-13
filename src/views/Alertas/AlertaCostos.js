@@ -75,7 +75,7 @@ class AlertaCostos extends Component {
           isLoading:false
         })
         if (res.data.success == 1) {
-          let resultado = [...res.data.result];
+          let resultado = [...res.data.result[0]];
           resultado = resultado.map(elem=>{
             return {
               ...elem,
@@ -165,7 +165,7 @@ class AlertaCostos extends Component {
                   actions={[{
                     icon: 'edit',
                     tooltip: 'Editar Costo',
-                    onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarcosto/' + rowData.id)
+                    onClick: (event, rowData) => this.props.history.push('/admin/costos/editarcosto/' + rowData.id)
                   }]}
                   options={{
                     exportButton: true,

@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import Input from 'components/Input/Input';
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
-import { withStyles } from '@material-ui/styles';
-import { StateNewConfiguracion } from "./VariablesState";
-
 import axios from "axios";
-
 import { toast } from 'react-toastify';
+
+import { withStyles } from '@material-ui/styles';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -14,7 +12,7 @@ import Card from "components/Card/Card.js";
 import Button from "components/CustomButtons/Button.js";
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
-
+import { StateEditConfiguracion as StateEditConfiguracion } from "./VariablesState";
 
 
 const styles = {
@@ -47,105 +45,68 @@ const styles = {
   }
 };
 
+var minimoAnt = null;
 
 class Configuracion extends Component {
-  state =JSON.parse(JSON.stringify(StateNewConfiguracion));
+  state = JSON.parse(JSON.stringify(StateEditConfiguracion));
+  
+  getConfiguracionEdit = (id) => {
+    axios.get('/list-configuraciones/')
+      .then(resultado => {
+        if (resultado.data.success == 1) {
+          if (resultado.data.result.length > 0) {
+            this.setState({
+              configuracionEdit: resultado.data.result[0]
+            })
+            minimoAnt = resultado.data.result[0].minimo;
+            let editConfiguracionFormAlt = { ...this.state.editConfiguracionForm };
+            //alert(resultado.data.result[0].valor);
+            editConfiguracionFormAlt.alertaCosto.value = resultado.data.result[0].valor;
 
+            for (let key in editConfiguracionFormAlt) {
+              editConfiguracionFormAlt[key].touched = true;
+              editConfiguracionFormAlt[key].valid = true;
+            }
+            this.setState({
+              editConfiguracionForm: editConfiguracionFormAlt
+            })
+          }
+          else {
+            this.setState({
+              configuracionEdit: null
+            })
+          }
+        }
+      })
+  }
 
-  handleSubmitNewConfiguracion = (event) => {
+  handleSubmitEditConfiguracion = (event) => {
+
     event.preventDefault();
-    this.setState({
-      disableAllButtons:true
-    })
-    axios.post("/update-configuracion", {alertaCosto: this.state.newConfiguracionForm.alertaCosto.value})
+    let objetoUpdate = {
+      id: this.state.configuracionEdit.id,
+      alertaCosto: this.state.editConfiguracionForm.alertaCosto.value
+
+    }
+    axios.post(`/update-configuracion`, objetoUpdate)
       .then(res => {
         let estadoAlt = null
-
-        if (res.data.success == 1) {
-          estadoAlt = true
-        } else {
+        if (res.data.success == 0) {
           estadoAlt = false
         }
-        if (estadoAlt) {
-          toast.success("La configuracion se ha actualizado con exito!");
-          this.setState({
-            successSubmit: true,
-            formIsValid: false,
-            disableAllButtons:false
-          },()=>{
-              this.props.getConfiguraciones();
-          })
-          this.resetNewForm();
-
-        } else {
-          toast.error(res.data.error_msj);
-          this.setState({
-            disableAllButtons:false
-          })
-        }
-      },err => {
-        toast.error(err.message);
-        this.setState({
-          disableAllButtons:false
-        })
-
-      })
-  }
-
-
-  getConfiguraciones = () => {
-    axios.get('/list-configuraciones')
-      .then(res => {
         if (res.data.success == 1) {
-          let formulario = { ...this.state.newConfiguracionForm }
+          estadoAlt = true
+        }
+
+        if (estadoAlt) {
+          toast.success("Configuracion actualizada correctamente");
+       //   this.props.getConfiguracionEdit();
           this.setState({
-            newConfiguracionForm: formulario
+            editFormIsValid: false
           })
+
         }
       })
-  }
-
-
-  inputChangedHandler = (event, inputIdentifier) => {
-    let checkValid;
-    const updatedOrderForm = {
-      ...this.state.newConfiguracionForm
-    };
-    const updatedFormElement = {
-      ...updatedOrderForm[inputIdentifier]
-    };
-    updatedFormElement.value = event.target.value;
-    checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
-    updatedFormElement.valid = checkValid.isValid;
-    updatedFormElement.textValid = checkValid.textValid;
-    updatedFormElement.touched = true;
-    updatedOrderForm[inputIdentifier] = updatedFormElement;
-
-    let formIsValidAlt = true;
-    for (let inputIdentifier in updatedOrderForm) {
-      formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
-    }
-    this.setState({
-      newConfiguracionForm: updatedOrderForm,
-      formIsValid: formIsValidAlt
-    })
-
-  }
-
-  resetNewForm = (all) => {
-    let newConfiguracionFormAlt = { ...this.state.newConfiguracionForm };
-    let successSubmit = this.state.successSubmit;
-    for (let key in newConfiguracionFormAlt) {
-      newConfiguracionFormAlt[key].value = ''
-    }
-    if (all)
-      successSubmit = false;
-
-    this.setState({
-      successSubmit: successSubmit,
-      formIsValid: false
-    })
-    this.getConfiguraciones("new", newConfiguracionFormAlt);
 
   }
 
@@ -171,34 +132,85 @@ class Configuracion extends Component {
     return { isValid: isValid, textValid: textValid };
   }
 
-  componentDidMount() {
 
-    this.getConfiguraciones();
+
+
+  inputEditChangedHandler = (event, inputIdentifier) => {
+    let checkValid;
+    const updatedOrderForm = {
+      ...this.state.editConfiguracionForm
+    };
+    const updatedFormElement = {
+      ...updatedOrderForm[inputIdentifier]
+    };
+    updatedFormElement.value = event.target.value;
+    checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+    updatedFormElement.valid = checkValid.isValid;
+    updatedFormElement.textValid = checkValid.textValid;
+    updatedFormElement.touched = true;
+    updatedOrderForm[inputIdentifier] = updatedFormElement;
+
+    let formIsValidAlt = true;
+    for (let inputIdentifier in updatedOrderForm) {
+      formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
+    }
+      console.log(updatedOrderForm);
+      this.setState({
+        editConfiguracionForm: updatedOrderForm,
+        formIsValid: formIsValidAlt
+
+      })
+  }
+
+
+  // editSingleCosto = value => {
+  //   this.props.history.push(this.props.match.url + '/editarcosto/' + value);
+  // }
+
+
+  // resetEditForm = () => {
+  //   let editCostoFormAlt = { ...this.state.editCostoForm };
+  //   for (let key in editCostoFormAlt) {
+  //     editCostoFormAlt[key].value = ''
+  //   }
+
+  //   this.setState({
+  //     editCostoForm: editCostoFormAlt,
+  //     editFormIsValid: false
+  //   })
+
+
+  // }
+
+
+  componentDidMount() {
+    this.getConfiguracionEdit(this.props.match.params.idconfiguracion);
+   // this.getCategorias();
   }
 
 
 
   render() {
-
     const formElementsArray = [];
-    for (let key in this.state.newConfiguracionForm) {
+    for (let key in this.state.editConfiguracionForm) {
       formElementsArray.push({
         id: key,
-        config: this.state.newConfiguracionForm[key]
+        config: this.state.editConfiguracionForm[key]
       });
     }
     return (
 
       <form onSubmit={(event) => {
-        this.handleSubmitNewConfiguracion(event)
+        this.handleSubmitEditConfiguracion(event)
 
       } }>
 
+
         <Card>
           <CardHeader color="primary">
-            <h4 className={this.props.classes.cardTitleWhite}>Configuraciones</h4>
+            <h4 className={this.props.classes.cardTitleWhite}>Configuracion</h4>
             <p className={this.props.classes.cardCategoryWhite}>
-              Configuraciones generales del sistema
+              Configuracion de la Aplicación
       </p>
           </CardHeader>
           <CardBody>
@@ -206,7 +218,7 @@ class Configuracion extends Component {
             <div className="mt-3 mb-3">
               {formElementsArray.map(formElement => (
                 <Input
-                  key={"editConfiguracion-" + formElement.id}
+                  key={formElement.id}
                   elementType={formElement.config.elementType}
                   elementConfig={formElement.config.elementConfig}
                   value={formElement.config.value}
@@ -214,17 +226,17 @@ class Configuracion extends Component {
                   invalid={!formElement.config.valid}
                   shouldValidate={formElement.config.validation}
                   touched={formElement.config.touched}
-                  changed={(event) => this.inputChangedHandler(event, formElement.id)}
+                  changed={(event) => this.inputEditChangedHandler(event, formElement.id)}
                   />
               ))}
             </div>
 
-            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/usuarios')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+            {/* <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/configuracion')} ><ArrowBack />Volver</Button> */}
+            <Button style={{ marginTop: '25px' }} color="primary" type="submit" ><Save /> Guardar</Button>
 
 
           </CardBody>
         </Card>
-
 
 
       </ form>
@@ -232,6 +244,7 @@ class Configuracion extends Component {
 
     )
   }
+
 
 
 };
