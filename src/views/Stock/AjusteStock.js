@@ -199,7 +199,7 @@ class AjusteStock extends Component {
                     toast.success("Insumo Ajustado");
                 }
                 else {
-                    toast.error("Error");
+                    toast.error("error");
                 }
             })
     }
@@ -234,7 +234,7 @@ class AjusteStock extends Component {
                         orderForm: ordenformNuevo,
                         formIsValid: false
                     })
-              
+
 
     }
 
@@ -298,7 +298,7 @@ class AjusteStock extends Component {
 
 
                         <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Ajustar </Button>
-                      
+
 
                     </CardBody>
                 </Card>
