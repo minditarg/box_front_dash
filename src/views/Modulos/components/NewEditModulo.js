@@ -81,7 +81,8 @@ const columnsCsv = [
 const headers = [
     { label: "Codigo", key: "codigo" },
     { label: "Descripcion", key: "descripcion" },
-    { label: "Cantidad", key: "cantidad" }
+    { label: "Cantidad", key: "cantidad" },
+    { label: "Asignada", key: "cantidad_asignada" }
 ];
 
 const styles = {
@@ -174,6 +175,9 @@ const SortableItem = sortableElement(({value, deleteInsumo, editInsumo, undoDele
         <TableCell>
             {value.cantidad}
         </TableCell>
+        <TableCell>
+            {value.cantidad_asignada}
+        </TableCell>
     </TableRow>)
 }
 );
@@ -189,6 +193,7 @@ const SortableContainer = sortableContainer(({children}) => {
                 <TableCell>Identificador</TableCell>
                 <TableCell>Descripcion</TableCell>
                 <TableCell>Cantidad</TableCell>
+                <TableCell>Asignada</TableCell>
 
 
             </TableRow>

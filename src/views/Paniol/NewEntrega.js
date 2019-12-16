@@ -104,7 +104,7 @@ class NewEntrega extends Component {
         detalleEntregas: [],
         actions: [],
         actionsEntregas: [],
-        disableAllButtons:false,
+        disableAllButtons:true,
 
         insumoSeleccionado: 0,
         orderForm: {
@@ -193,6 +193,13 @@ class NewEntrega extends Component {
         const updatedFormElement = {
             ...updatedOrderForm[inputIdentifier]
         };
+        if(inputIdentifier == 'modulo')
+        {
+        this.setState({
+          detalleEntregas: [],
+          disableAllButtons:false,
+        })
+        }
         updatedFormElement.value = event.target.value;
         checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
         updatedFormElement.valid = checkValid.isValid;
@@ -304,7 +311,7 @@ class NewEntrega extends Component {
         let options = [];
         let orderForm = {...this.state.orderForm};
         res.data.result.forEach((elem) => {
-          options.push({displayValue:elem.descripcion, value:elem.id})
+          options.push({displayValue:elem.chasis, value:elem.id})
 
         })
         orderForm.modulo.elementConfig.options = options;
@@ -434,6 +441,8 @@ class NewEntrega extends Component {
                     <DialogContent>
                         {this.state.open &&
                             <StepAgregarInsumo
+                                idModulo = {this.state.orderForm.modulo.value}
+                                entrega = {true}
                                 onClickInsumo={(id, cantidad) => this.onClickInsumo(id, cantidad)}
                                 />
                         }

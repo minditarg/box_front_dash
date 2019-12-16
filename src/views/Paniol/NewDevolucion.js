@@ -101,12 +101,12 @@ const styles = {
 
 class NewDevolucion extends Component {
     state = {
-        devoluciones: [],
+        idModulo:null,
         open: false,
         detalleDevoluciones: [],
         actions: [],
         actionsDevoluciones: [],
-        disableAllButtons:false,
+        disableAllButtons:true,
 
         insumoSeleccionado: 0,
         orderForm: {
@@ -194,6 +194,14 @@ class NewDevolucion extends Component {
         const updatedFormElement = {
             ...updatedOrderForm[inputIdentifier]
         };
+
+        if(inputIdentifier == 'modulo')
+        {
+        this.setState({
+          detalleDevoluciones: [],
+          disableAllButtons:false,
+        })
+        }
         updatedFormElement.value = event.target.value;
         checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
         updatedFormElement.valid = checkValid.isValid;
@@ -305,7 +313,7 @@ class NewDevolucion extends Component {
         let options = [];
         let orderForm = {...this.state.orderForm};
         res.data.result.forEach((elem) => {
-          options.push({displayValue:elem.descripcion, value:elem.id})
+          options.push({displayValue:elem.chasis, value:elem.id,descripcion:elem.descripcion})
 
         })
         orderForm.modulo.elementConfig.options = options;
@@ -379,6 +387,7 @@ class NewDevolucion extends Component {
                                         changed={(event) => this.inputChangedHandler(event, formElement.id)}
                                         />
                                 ))}
+                          
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons}  color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
 
@@ -435,6 +444,8 @@ class NewDevolucion extends Component {
                     <DialogContent>
                         {this.state.open &&
                             <StepAgregarInsumo
+                                idModulo = {this.state.orderForm.modulo.value}
+                                devolucion = {true}
                                 onClickInsumo={(id, cantidad) => this.onClickInsumo(id, cantidad)}
                                 />
                         }
