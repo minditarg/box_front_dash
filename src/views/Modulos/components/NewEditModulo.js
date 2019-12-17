@@ -343,6 +343,9 @@ class NewEditModulo extends Component {
                         // this.props.getIngresos();
                         // toast.success("Nueva plantilla creada");
                         this.props.getModulos();
+                        axios.post('/ordenar-modulos', {
+                          detalle: this.detalleModulos
+                        })
                         this.props.history.push("/admin/modulos");
                     }
                     else {
@@ -375,6 +378,7 @@ class NewEditModulo extends Component {
                     if (res.data.success == 1) {
                         // this.setState({pedidoInsertado: true});
                         // this.props.getIngresos();
+
                         toast.success("Nuevo módulo creado");
                         this.props.getModulos();
                         this.props.history.push("/admin/modulos");
