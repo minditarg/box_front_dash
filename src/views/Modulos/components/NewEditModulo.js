@@ -334,7 +334,7 @@ class NewEditModulo extends Component {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 chasis: this.state.orderForm.chasis.value,
                 descripcion: this.state.orderForm.descripcion.value,
-                detalle: detalleEdit,
+                detalle: this.detalleModulos,
                 id: this.props.match.params.idModulo
             })
                 .then(res => {
@@ -343,9 +343,6 @@ class NewEditModulo extends Component {
                         // this.props.getIngresos();
                         // toast.success("Nueva plantilla creada");
                         this.props.getModulos();
-                        axios.post('/ordenar-modulos', {
-                          detalle: this.detalleModulos
-                        })
                         this.props.history.push("/admin/modulos");
                     }
                     else {

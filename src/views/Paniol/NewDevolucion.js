@@ -56,7 +56,7 @@ const columnsInsumos = [
     { title: "Identificador", field: "identificador", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },
     { title: "Cantidad", field: "cantidad", type: 'numeric' },
-      { title: "Unidad", field: "unidad", editable: 'never' },
+    { title: "Unidad", field: "unidad", editable: 'never' },
 
     //{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
 ];
@@ -101,12 +101,12 @@ const styles = {
 
 class NewDevolucion extends Component {
     state = {
-        idModulo:null,
+        idModulo: null,
         open: false,
         detalleDevoluciones: [],
         actions: [],
         actionsDevoluciones: [],
-        disableAllButtons:true,
+        disableAllButtons: true,
 
         insumoSeleccionado: 0,
         orderForm: {
@@ -115,7 +115,7 @@ class NewDevolucion extends Component {
                 elementConfig: {
                     label: 'Módulo',
                     fullWidth: true,
-                    options:[
+                    options: [
 
                     ]
                 },
@@ -190,25 +190,24 @@ class NewDevolucion extends Component {
         const updatedOrderForm = {
             ...this.state.orderForm
         };
-        if(inputIdentifier) {
-        const updatedFormElement = {
-            ...updatedOrderForm[inputIdentifier]
-        };
+        if (inputIdentifier) {
+            const updatedFormElement = {
+                ...updatedOrderForm[inputIdentifier]
+            };
 
-        if(inputIdentifier == 'modulo')
-        {
-        this.setState({
-          detalleDevoluciones: [],
-          disableAllButtons:false,
-        })
+            if (inputIdentifier == 'modulo') {
+                this.setState({
+                    detalleDevoluciones: [],
+                    disableAllButtons: false,
+                })
+            }
+            updatedFormElement.value = event.target.value;
+            checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+            updatedFormElement.valid = checkValid.isValid;
+            updatedFormElement.textValid = checkValid.textValid;
+            updatedFormElement.touched = true;
+            updatedOrderForm[inputIdentifier] = updatedFormElement;
         }
-        updatedFormElement.value = event.target.value;
-        checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
-        updatedFormElement.valid = checkValid.isValid;
-        updatedFormElement.textValid = checkValid.textValid;
-        updatedFormElement.touched = true;
-        updatedOrderForm[inputIdentifier] = updatedFormElement;
-      }
         let formIsValidAlt = true;
         for (let inputIdentifier in updatedOrderForm) {
             formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
@@ -230,9 +229,9 @@ class NewDevolucion extends Component {
 
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
-          this.setState ({
-            disableAllButtons:true
-          })
+            this.setState({
+                disableAllButtons: true
+            })
             axios.post('/insert-devoluciones', {
                 id_modulo: this.state.orderForm.modulo.value,
                 referencia: this.state.orderForm.referencia.value,
@@ -241,18 +240,18 @@ class NewDevolucion extends Component {
                 detalle: this.state.detalleDevoluciones
             })
                 .then(res => {
-                  this.setState ({
-                    disableAllButtons:false
-                  })
+                    this.setState({
+                        disableAllButtons: false
+                    })
                     if (res.data.success == 1) {
                         toast.success("Nueva devolucion creada");
-                        let orderForm =  {...this.state.orderForm};
-                        for(let key in orderForm) {
-                          orderForm[key].value = ''
+                        let orderForm = { ...this.state.orderForm };
+                        for (let key in orderForm) {
+                            orderForm[key].value = ''
                         };
                         this.setState({
-                          orderForm: orderForm,
-                          detalleDevoluciones: []
+                            orderForm: orderForm,
+                            detalleDevoluciones: []
                         });
                         this.props.getDevoluciones();
                         this.props.history.push('/admin/devoluciones');
@@ -277,18 +276,32 @@ class NewDevolucion extends Component {
     onClickInsumo = (rowInsumo, cantidad) => {
         this.closeDialog();
 
-                    let resultado = {...rowInsumo};
-                    resultado.cantidad = cantidad;
-                    let detalleDevoluciones = [...this.state.detalleDevoluciones];
+        let resultado = { ...rowInsumo };
+        resultado.cantidad = cantidad;
+        let indexInsumo;
+        indexInsumo = this.state.detalleDevoluciones.findIndex(elem => {
+            if (rowInsumo.numero == elem.numero && rowInsumo.codigo == elem.codigo)
+                return true;
 
-                     detalleDevoluciones.push(resultado);
-                    this.setState({
-                        detalleDevoluciones: [...detalleDevoluciones]
-                    },()=>{
-                      this.inputChangedHandler(null,null);
-                    })
+            return false
+        })
+
+        if (indexInsumo > -1) {
+            toast.error('El insumo ya se encuentra en el listado');
+
+        } else {
 
 
+            let detalleDevoluciones = [...this.state.detalleDevoluciones];
+
+            detalleDevoluciones.push(resultado);
+            this.setState({
+                detalleDevoluciones: [...detalleDevoluciones]
+            }, () => {
+                this.inputChangedHandler(null, null);
+            })
+
+        }
 
     }
 
@@ -301,27 +314,27 @@ class NewDevolucion extends Component {
         detalleDevoluciones.splice(detalleDevoluciones.indexOf(rowData), 1);
         this.setState({
             detalleDevoluciones: detalleDevoluciones
-        },()=>{
-          this.inputChangedHandler(null,null);
+        }, () => {
+            this.inputChangedHandler(null, null);
         });
         //this.state.detallepedidos.splice(this.state.detallepedidos.indexOf(rowData), 1);
     }
 
     getModulos = () => {
-      axios.get('/list-modulos') .then((res) => {
+        axios.get('/list-modulos').then((res) => {
 
-        let options = [];
-        let orderForm = {...this.state.orderForm};
-        res.data.result.forEach((elem) => {
-          options.push({displayValue:elem.chasis, value:elem.id,descripcion:elem.descripcion})
+            let options = [];
+            let orderForm = { ...this.state.orderForm };
+            res.data.result.forEach((elem) => {
+                options.push({ displayValue: elem.chasis, value: elem.id, descripcion: elem.descripcion })
+
+            })
+            orderForm.modulo.elementConfig.options = options;
+            this.setState({
+                orderForm: orderForm
+            })
 
         })
-        orderForm.modulo.elementConfig.options = options;
-        this.setState({
-          orderForm: orderForm
-        })
-
-      })
 
     }
 
@@ -342,7 +355,7 @@ class NewDevolucion extends Component {
 
             }];
 
-            this.getModulos();
+        this.getModulos();
 
 
     }
@@ -368,7 +381,7 @@ class NewDevolucion extends Component {
                             <CardHeader color="primary">
                                 <h4 className={this.props.classes.cardTitleWhite} >DEVOLUCIÓN DE INSUMOS</h4>
                                 <p className={this.props.classes.cardCategoryWhite} >
-                                  Se devuelven insumos para los diferentes módulos
+                                    Se devuelven insumos para los diferentes módulos
                                   </p>
                             </CardHeader>
                             <CardBody>
@@ -387,9 +400,9 @@ class NewDevolucion extends Component {
                                         changed={(event) => this.inputChangedHandler(event, formElement.id)}
                                         />
                                 ))}
-                          
 
-                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons}  color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
+
+                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
 
                                 <MaterialTable
                                     columns={columnsInsumos}
@@ -421,7 +434,7 @@ class NewDevolucion extends Component {
                                     />
 
 
-                              <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/devoluciones')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Devolver</Button>
+                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/devoluciones')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Devolver</Button>
 
                             </CardBody>
                         </Card>
@@ -432,7 +445,7 @@ class NewDevolucion extends Component {
                     open={this.state.open}
                     onClose={this.closeDialog.bind(this)}
                     fullWidth={true}
-                    maxWidth={"sm"}
+                    maxWidth={"md"}
                     >
                     <DialogTitle>Seleccionar Insumo
                             <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
@@ -444,8 +457,8 @@ class NewDevolucion extends Component {
                     <DialogContent>
                         {this.state.open &&
                             <StepAgregarInsumo
-                                idModulo = {this.state.orderForm.modulo.value}
-                                devolucion = {true}
+                                idModulo={this.state.orderForm.modulo.value}
+                                devolucion={true}
                                 onClickInsumo={(id, cantidad) => this.onClickInsumo(id, cantidad)}
                                 />
                         }
