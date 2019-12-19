@@ -1,5 +1,5 @@
 export const StateListado = {
-  insumos: [],
+  modulos: [],
 
 
   openDeleteDialog: false,

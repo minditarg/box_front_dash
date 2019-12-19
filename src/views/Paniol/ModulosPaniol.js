@@ -11,7 +11,6 @@ import { toast } from 'react-toastify';
 import ModalDelete from "./ModalDelete";
 import Button from "components/CustomButtons/Button.js";
 
-import { ColumnsListado, StateListado } from "./VariablesState";
 import { localization } from "variables/general.js";
 import lightGreen from '@material-ui/core/colors/lightGreen';
 import AddIcon from '@material-ui/icons/Add';
@@ -19,8 +18,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
-import Paper from '@material-ui/core/Paper';
-import NewEditModulo from './components/NewEditModulo';
+
 
 import { withStyles } from '@material-ui/styles';
 
@@ -55,9 +53,20 @@ const styles = {
 };
 
 
+const ColumnsListado = [
+  { title: "Identificador", field: "identificador",customSort: (a, b) => a.id - b.id},
+  { title: "Chasis", field: "chasis", editable: 'never' },
+  { title: "Descripcion", field: "descripcion" }
+];
 
-class Modulos extends Component {
-  state = JSON.parse(JSON.stringify(StateListado));
+class ModulosPaniol extends Component {
+  state = {
+  modulos: [],
+  openDeleteDialog: false,
+  deleteRowData: null,
+  isLoading: false
+
+  }
 
 
   deleteMaterial = (rowData) => {
@@ -127,7 +136,6 @@ class Modulos extends Component {
   }
 
   componentDidMount() {
-  
     this.getModulos();
 
   }
@@ -157,7 +165,7 @@ class Modulos extends Component {
                 <MaterialTable
                 isLoading={this.state.isLoading}
                   columns={ColumnsListado}
-                  data={this.state.modulos}
+                  data={this.state.insumos}
                   title=""
                   localization={localization}
                   actions={[{
@@ -167,8 +175,8 @@ class Modulos extends Component {
                   },
                   {
                     icon: 'delete',
-                    tooltip: 'Borrar Módulo',
-                    onClick: (event, rowData) => this.deleteMaterial(rowData)
+                    tooltip: 'Borrar Módulo'
+                   
                   }]}
                   options={{
                     exportButton: true,
@@ -181,33 +189,12 @@ class Modulos extends Component {
               </CardBody>
             </Card>
 
-          </div>,
-      <Switch  key={"modulos-switch"}>
-
-        <Route path={this.props.match.url + "/editarmodulo/:idModulo"} exact render={() =>
-
-          <NewEditModulo getModulos={()=>this.getModulos()}    />
-        } />
-
-          <Route path={this.props.match.url + "/nuevomodulo/"} exact render={() =>
-
-            <NewEditModulo  getModulos={()=>this.getModulos()}    />
-        } />
-
-      </Switch>,
-      <ModalDelete
-      key={"modulos-modal"}
-        openDeleteDialog={this.state.openDeleteDialog}
-        deleteRowData={this.state.deleteRowData}
-
-        handleClose={() => this.handleClose()}
-        handleDelete={(rowData) => this.handleDelete(rowData)}
-      />,
-
+          </div>
+     
 
     ]);
   }
 }
 
 
-export default withStyles(styles)(Modulos);
+export default withStyles(styles)(ModulosPaniol);
