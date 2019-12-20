@@ -64,18 +64,25 @@ const styles = {
 };
 
 
-
-
-
 const ColumnsListado = [
   { title: "Identificador", field: "identificador", customSort: (a, b) => a.id - b.id },
-  { title: "Chasis", field: "chasis", editable: 'never' },
   { title: "Descripcion", field: "descripcion" }
+
+];
+
+
+const ColumnsListadoDetalle = [
+  { title: "Identificador", field: "identificador", customSort: (a, b) => a.id - b.id },
+  { title: "Descripcion", field: "descripcion" },
+  { title: "Requerido", field: "cantidad", editable: 'never' },
+  { title: "Asignada", field: "cantidad_asignada", editable: 'never' },
+  { title: "Stock", field: "cantidad_stock", editable: 'never' },
 ];
 
 class ModulosPaniol extends Component {
   state = {
     modulos: [],
+    tituloDetalle:null,
     modulosDetalle: [],
     open:false,
 
@@ -122,23 +129,30 @@ class ModulosPaniol extends Component {
   }
 
   handleClickOpen(rowData) {
-   
-    this.setState({ isLoadingDetalle: true, modulosDetalle:[], open: true });
+
+    this.setState({ isLoadingDetalle: true, modulosDetalle:[],tituloDetalle:rowData.chasis, open: true });
     axios.get('/list-modulos-insumos/' + rowData.id)
       .then(res => {
 
         if (res.data.success == 1) {
-
+          console.log(res.data);
+          res.data.insumos = res.data.insumos.map(elem =>{
+            return {
+              ...elem,
+              identificador: elem.codigo + elem.numero
+            }
+          })
           this.setState({
             isLoadingDetalle:false,
             modulosDetalle:res.data.insumos
           })
 
+        } else {
+          toast.error("error en consulta SQL")
         }
 
-
-
-
+      },err=>{
+          toast.error("error de Red");
 
       })
   }
@@ -217,7 +231,7 @@ class ModulosPaniol extends Component {
         fullWidth={true}
         maxWidth={"xl"}
         >
-        <DialogTitle>Seleccionar Insumo
+        <DialogTitle>Detalle de Módulo ' { this.state.tituloDetalle } '
                             <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
             <CloseIcon />
           </IconButton>
@@ -227,20 +241,10 @@ class ModulosPaniol extends Component {
         <DialogContent>
           <MaterialTable
             isLoading={this.state.isLoadingDetalle}
-            columns={ColumnsListado}
+            columns={ColumnsListadoDetalle}
             data={this.state.modulosDetalle}
             title=""
             localization={localization}
-            actions={[{
-              icon: 'edit',
-              tooltip: 'Editar Módulo',
-              onClick: (event, rowData) => this.handleClickOpen(rowData)
-            },
-            {
-              icon: 'delete',
-              tooltip: 'Borrar Módulo'
-
-            }]}
             options={{
               exportButton: true,
               headerStyle: {
