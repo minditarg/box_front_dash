@@ -249,7 +249,8 @@ class NewEntrega extends Component {
                             orderForm: orderForm,
                             detalleEntregas: []
                         });
-                        this.props.getEntregas();
+                        if (this.props.getEntregas)
+                            this.props.getEntregas();
                         this.props.history.push('/admin/entregas');
 
 
@@ -354,6 +355,15 @@ class NewEntrega extends Component {
 
             }];
 
+        if(this.props.match.params.idModulo)
+        {
+            let orderForm = { ...this.state.orderForm };
+            orderForm.modulo.value = this.props.match.params.idModulo
+            this.setState({
+                orderForm:orderForm
+            })
+        }
+                
         this.getModulos();
 
 

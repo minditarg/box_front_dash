@@ -173,7 +173,7 @@ const SortableItem = sortableElement(({value, deleteInsumo, editInsumo, undoDele
             {value.descripcion}
         </TableCell>
         <TableCell>
-            {value.cantidad}
+            {value.cantidad_requerida}
         </TableCell>
         <TableCell>
             {value.cantidad_asignada}
@@ -192,7 +192,7 @@ const SortableContainer = sortableContainer(({children}) => {
                 <TableCell>Acciones</TableCell>
                 <TableCell>Identificador</TableCell>
                 <TableCell>Descripcion</TableCell>
-                <TableCell>Cantidad</TableCell>
+                <TableCell>Requerida</TableCell>
                 <TableCell>Asignada</TableCell>
 
 
@@ -405,8 +405,8 @@ class NewEditModulo extends Component {
 
 
         if (this.state.rowEditInsumo) {
-            resultado.cantidadAnterior = resultado.cantidad
-            resultado.cantidad = cantidad;
+            resultado.cantidadAnterior = resultado.cantidad_requerida
+            resultado.cantidad_requerida = cantidad;
             resultado.modificado = true;
 
             let indexEncontrado = this.detalleModulos.indexOf(rowInsumo);
@@ -424,7 +424,7 @@ class NewEditModulo extends Component {
             if (indexInsumo > -1) {
                 toast.error("El Insumo se encuentra en el Módulo");
             } else {
-                resultado.cantidad = cantidad;
+                resultado.cantidad_requerida = cantidad;
                 resultado.insertado = true;
                 this.detalleModulos = this.detalleModulos.concat(resultado);
             }
@@ -529,7 +529,7 @@ class NewEditModulo extends Component {
     undoModificado = (rowData) => {
         let resultado = { ...rowData };
         resultado.modificado = null;
-        resultado.cantidad = resultado.cantidadAnterior;
+        resultado.cantidad_requerida = resultado.cantidadAnterior;
         resultado.cantidadAnterior = null;
         let indexEliminado = this.detalleModulos.indexOf(rowData);
         this.detalleModulos[indexEliminado] = resultado;
