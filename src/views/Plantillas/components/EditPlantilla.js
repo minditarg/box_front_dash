@@ -445,7 +445,7 @@ class EditPlantilla extends Component {
         } else {
             let indexInsumo;
             indexInsumo = this.detallePlantillas.findIndex(elem => {
-                if (rowInsumo.numero == elem.numero && rowInsumo.codigo == elem.codigo)
+                if (rowInsumo.id == elem.id)
                     return true;
 
                 return false

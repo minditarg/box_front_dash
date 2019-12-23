@@ -32,9 +32,9 @@ import { withStyles } from '@material-ui/styles';
 
 const styles = {
   rowTable: {
-    
-      backgroundColor: lightGreen[50]
-    
+
+      backgroundColor: lightGreen[200]
+
   },
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -74,7 +74,10 @@ const styles = {
 
 const ColumnsListado = [
   { title: "Identificador", field: "identificador", customSort: (a, b) => a.id - b.id },
-  { title: "Descripcion", field: "descripcion" }
+  { title: "Chasis", field: "chasis" },
+  { title: "Descripcion", field: "descripcion" },
+  { title: "Insumos Entrega", field: "cantidadInsumosDisponibles" }
+
 
 ];
 
@@ -85,13 +88,14 @@ const ColumnsListadoDetalle = [
   { title: "Requerido", field: "cantidad_requerida", editable: 'never' },
   { title: "Asignada", field: "cantidad_asignada", editable: 'never' },
   { title: "Stock", field: "cantidad_stock", editable: 'never' },
-  { title: "Disponible", field: "disponible", editable: 'never' },
+  { title: "Disponible Entrega", field: "disponible", editable: 'never' },
 ];
 
 class ModulosPaniol extends Component {
   state = {
     modulos: [],
-    tituloDetalle: null,
+    chasisDetalle: null,
+    descripcionDetalle:null,
     modulosDetalle: [],
     open: false,
 
@@ -112,17 +116,26 @@ class ModulosPaniol extends Component {
     this.setState({
       isLoading: true
     })
-    axios.get('/list-modulos')
+    axios.get('/list-modulos-paniol')
       .then(res => {
         this.setState({
           isLoading: false
         })
         if (res.data.success == 1) {
-          let resultado = [...res.data.result];
+          let resultado = [...res.data.modulos];
+          let insumosDisponibles = [...res.data.insumosDisponibles];
+
           resultado = resultado.map(elem => {
+            let cantidadInsumosDisponibles = 0;
+            let indexEncontrado = insumosDisponibles.findIndex(elemDisponible => {
+              return (elemDisponible.id_modulo == elem.id )
+            });
+            if(indexEncontrado > -1)
+              cantidadInsumosDisponibles  = insumosDisponibles[indexEncontrado].insumos_disponibles
             return {
               ...elem,
-              identificador: 'MO' + elem.id
+              identificador: 'MO' + elem.id,
+              cantidadInsumosDisponibles:cantidadInsumosDisponibles
             }
           })
           this.setState({
@@ -139,7 +152,7 @@ class ModulosPaniol extends Component {
 
   handleClickOpen(rowData) {
 
-    this.setState({ isLoadingDetalle: true, modulosDetalle: [], tituloDetalle: rowData.chasis, open: true });
+    this.setState({ isLoadingDetalle: true, modulosDetalle: [], chasisDetalle: rowData.chasis,descripcionDetalle:rowData.descripcion, open: true });
     axios.get('/list-modulos-insumos/' + rowData.id)
       .then(res => {
 
@@ -211,13 +224,24 @@ class ModulosPaniol extends Component {
                       </p>
           </CardHeader>
           <CardBody>
-            <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/nuevaentrega')} color="primary"><AddIcon /> Nueva Entrega</Button>
+
             <MaterialTable
               isLoading={this.state.isLoading}
               columns={ColumnsListado}
               data={this.state.modulos}
               title=""
               localization={localization}
+              components={{
+
+                     Row: props => {
+                       let clase=null;
+                       if(props.data.cantidadInsumosDisponibles > 0)
+                         clase = this.props.classes.rowTable;
+                       return (
+                         <MTableBodyRow  className={clase} {...props}   />
+                       )
+                     }
+                   }}
               actions={[{
                 icon: 'description',
                 tooltip: 'Detalle del Módulo',
@@ -246,7 +270,7 @@ class ModulosPaniol extends Component {
         fullWidth={true}
         maxWidth={"xl"}
         >
-        <DialogTitle>Detalle de Módulo ' {this.state.tituloDetalle} '
+        <DialogTitle>Detalle de Módulo ' {this.state.chasisDetalle} '
                             <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
             <CloseIcon />
           </IconButton>
@@ -254,7 +278,8 @@ class ModulosPaniol extends Component {
 
 
         <DialogContent>
-         <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/nuevaentrega')} color="primary"><AddIcon /> Nueva Entrega</Button>
+        <p>Chasis: <b>{this.state.chasisDetalle}</b><br/>
+            Descripcion: <b>{this.state.descripcionDetalle}</b></p>
           <MaterialTable
             isLoading={this.state.isLoadingDetalle}
             columns={ColumnsListadoDetalle}
@@ -262,22 +287,22 @@ class ModulosPaniol extends Component {
             title=""
             localization={localization}
              components={{
-                   
+
                     Row: props => {
-                      
+
                       let clase=null;
 
                       if(props.data.disponible > 0)
                         clase = this.props.classes.rowTable;
-                      
+
                       return (
-                       
-                        <MTableBodyRow  className={clase} {...props}   />  
-                       
+
+                        <MTableBodyRow  className={clase} {...props}   />
+
                       )
 
                     }
-                   
+
                   }}
             options={{
               exportButton: true,
@@ -297,7 +322,9 @@ class ModulosPaniol extends Component {
         <Switch>
 
           <Route path={this.props.match.url + "/nuevaentrega/:idModulo"} exact render={() =>
-            <NewEntrega 
+            <NewEntrega
+            getModulos={()=> this.getModulos()}
+            paniol={true}
 
              />
           } />
@@ -306,7 +333,7 @@ class ModulosPaniol extends Component {
 
         </Switch>
 
-    
+
     ]);
   }
 }

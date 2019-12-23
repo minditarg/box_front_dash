@@ -255,10 +255,10 @@ const dashboardRoutes = [
     icon: CompareArrows,
     dependences: [
        {
-        path: "/modulospaniol",
+        path: "/paniolmodulos",
         name: "Módulos",
         rtlName: "LM",
-        icon: ArrowForward,
+        icon: PictureInPictureIcon,
         component: ModulosPaniol,
         layout: "/admin"
       },
