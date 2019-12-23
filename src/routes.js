@@ -52,6 +52,7 @@ import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 import Users from "views/Users/Users.js";
 import Insumos from "views/Insumos/Insumos";
+import Pedidos from "views/Pedidos/Pedidos";
 import Costos from "views/Costos/Costos";
 import AlertaCostos from "views/Alertas/AlertaCostos";
 import NewInsumo from "views/Insumos/NewInsumo";
@@ -286,6 +287,14 @@ const dashboardRoutes = [
     rtlName: "Pla",
     icon: AssignmentIcon,
     component: Plantillas,
+    layout: "/admin"
+  },
+  {
+    path: "/pedidos",
+    name: "Pedidos",
+    rtlName: "Ped",
+    icon: AssignmentIcon,
+    component: Pedidos,
     layout: "/admin"
   },
   {
