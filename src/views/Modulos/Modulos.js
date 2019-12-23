@@ -54,6 +54,8 @@ const styles = {
   }
 };
 
+
+
 class Modulos extends Component {
   state = JSON.parse(JSON.stringify(StateListado));
 
@@ -81,7 +83,7 @@ class Modulos extends Component {
             }
           })
           this.setState({
-            insumos: resultado
+            modulos: resultado
           })
         } else if (res.data.success == 3 || res.data.success == 4) {
 
@@ -125,7 +127,7 @@ class Modulos extends Component {
   }
 
   componentDidMount() {
-
+  
     this.getModulos();
 
   }
@@ -155,7 +157,7 @@ class Modulos extends Component {
                 <MaterialTable
                 isLoading={this.state.isLoading}
                   columns={ColumnsListado}
-                  data={this.state.insumos}
+                  data={this.state.modulos}
                   title=""
                   localization={localization}
                   actions={[{

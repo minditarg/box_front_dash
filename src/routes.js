@@ -66,9 +66,9 @@ import Configuracion from "views/Configuracion/Configuracion";
 import Entregas from "views/Paniol/Entregas";
 import Devoluciones from "views/Paniol/Devoluciones";
 import Modulos from "views/Modulos/Modulos";
-import NewModulo from "views/Modulos/NewModulo";
 import NewPlantilla from "views/Plantillas/NewPlantilla";
 import Plantillas from "views/Plantillas/Plantillas";
+import ModulosPaniol from "views/Paniol/ModulosPaniol";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 
@@ -245,16 +245,8 @@ const dashboardRoutes = [
          icon: ListIcon,
          component: Modulos,
          layout: "/admin"
-       },
-       {
-         path: "/nuevomodulo",
-         name: "Nuevo",
-         rtlName: "NM",
-         icon: AddBoxIcon,
-         component: NewModulo,
-         layout: "/admin"
-
-       }]
+       }
+       ]
    },
 
   {
@@ -263,6 +255,14 @@ const dashboardRoutes = [
     open: 'open5',
     icon: CompareArrows,
     dependences: [
+       {
+        path: "/modulospaniol",
+        name: "Módulos",
+        rtlName: "LM",
+        icon: ArrowForward,
+        component: ModulosPaniol,
+        layout: "/admin"
+      },
       {
         path: "/entregas",
         name: "Entregas",

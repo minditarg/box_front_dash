@@ -62,7 +62,8 @@ export default function HorizontalLabelPositionBelowStepper(props) {
             value: '',
             validation: {
                 required: true,
-                mayor0: true
+                mayor0: true,
+
             },
             valid: false,
             touched: false
@@ -87,6 +88,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
           let orderFormAlt = {...orderForm};
 
           orderFormAlt.cantidad.value = props.rowEditInsumo.cantidad;
+          orderFormAlt.cantidad.validation.asignada = true;
           setOrderForm(orderFormAlt);
 
         }
@@ -148,6 +150,12 @@ export default function HorizontalLabelPositionBelowStepper(props) {
             isValid = value >= 0;
             textValid = 'La cantidad debe ser mayor a 0'
         }
+
+        if (rules.asignada && isValid) {
+            isValid = value >= rowInsumo.cantidad_asignada;
+            textValid = 'La cantidad debe ser mayor a la asignada'
+        }
+
 
         if (rules.minLength && isValid) {
             isValid = value.length >= rules.minLength;

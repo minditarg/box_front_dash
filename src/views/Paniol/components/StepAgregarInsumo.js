@@ -23,8 +23,10 @@ import Typography from '@material-ui/core/Typography';
 const columnsInsumosDetalle = [
     { title: "Identificador", field: "identificador", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },
+    { title: "Disponible", field: "disponible", editable: 'never' },
 
 ];
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -61,7 +63,8 @@ export default function HorizontalLabelPositionBelowStepper(props) {
             value: '',
             validation: {
                 required: true,
-                mayor0: true
+                mayor0: true,
+                disponible:true
             },
             valid: false,
             touched: false
@@ -77,22 +80,40 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
 
      React.useEffect(() => {
+       var url;
+       if(props.devolucion)
+          url = '/list-devoluciones-insumos-modulo/' + props.idModulo;
+       if(props.entrega)
+          url = '/list-entregas-insumos-modulo/' + props.idModulo;
 
-        getInsumos();
+      getInsumos(url);
 
     }, []);
 
-     const getInsumos = () => {
+     const getInsumos = (url) => {
         setIsLoading(true);
-        axios.get('/list-insumos')
+        axios.get(url)
             .then(res => {
                 setIsLoading(false);
                 if (res.data.success == 1) {
                     let resultado = [...res.data.result];
                     resultado = resultado.map(elem=>{
+                      let disponible;
+                      if(props.devolucion)
+                        disponible = elem.cantidad_asignada;
+                      if(props.entrega)
+                        {
+                          if(elem.cantidad_modulo_insumo - elem.cantidad_asignada <= elem.cantidad)
+                              disponible = elem.cantidad_modulo_insumo - elem.cantidad_asignada
+                            else
+                              disponible = elem.cantidad;
+                        }
+
                         return {
                             ...elem,
-                            identificador:elem.codigo + elem.numero
+                            identificador:elem.codigo + elem.numero,
+                            disponible: disponible
+
                         }
                     })
                     setInsumos(resultado);
@@ -136,6 +157,11 @@ export default function HorizontalLabelPositionBelowStepper(props) {
         if (rules.mayor0 && isValid) {
             isValid = value >= 0;
             textValid = 'La cantidad debe ser mayor a 0'
+        }
+
+        if (rules.disponible && isValid) {
+            isValid = value <= rowInsumo.disponible;
+            textValid = 'La cantidad no debe superar la disponible'
         }
 
         if (rules.minLength && isValid) {
@@ -204,8 +230,13 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                       {rowInsumo.codigo}</p>
                      <p><span style={{ fontWeight:'300'}}>Descripción: </span>
                       {rowInsumo.descripcion}</p>
-                       <p><span style={{ fontWeight:'300'}}>Cantidad actual: </span>
-                      {rowInsumo.cantidad + " " +  rowInsumo.unidad}</p>
+                       <p><span style={{ fontWeight:'300'}}>Stock: 
+                      </span>{rowInsumo.cantidad + " " +  rowInsumo.unidad}<br/>
+                      <span style={{ fontWeight:'300'}}>Total Módulo: </span>{rowInsumo.cantidad_modulo_insumo + " " +  rowInsumo.unidad} <br/>
+                      <span style={{ fontWeight:'300'}}>Asignada: </span>{rowInsumo.cantidad_asignada + " " +  rowInsumo.unidad}<br/>
+                      <span style={{ backgroundColor: 'lightgreen'}}>Disponible: {rowInsumo.disponible + " " +  rowInsumo.unidad} </span>
+                       
+                       </p>
 
                     {
                         formElementsArray.map(formElement => (

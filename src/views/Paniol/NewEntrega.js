@@ -104,7 +104,7 @@ class NewEntrega extends Component {
         detalleEntregas: [],
         actions: [],
         actionsEntregas: [],
-        disableAllButtons:false,
+        disableAllButtons: true,
 
         insumoSeleccionado: 0,
         orderForm: {
@@ -113,7 +113,7 @@ class NewEntrega extends Component {
                 elementConfig: {
                     label: 'Módulo',
                     fullWidth: true,
-                    options:[
+                    options: [
 
                     ]
                 },
@@ -189,16 +189,22 @@ class NewEntrega extends Component {
             ...this.state.orderForm
         };
 
-        if(inputIdentifier) {
-        const updatedFormElement = {
-            ...updatedOrderForm[inputIdentifier]
-        };
-        updatedFormElement.value = event.target.value;
-        checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
-        updatedFormElement.valid = checkValid.isValid;
-        updatedFormElement.textValid = checkValid.textValid;
-        updatedFormElement.touched = true;
-        updatedOrderForm[inputIdentifier] = updatedFormElement;
+        if (inputIdentifier) {
+            const updatedFormElement = {
+                ...updatedOrderForm[inputIdentifier]
+            };
+            if (inputIdentifier == 'modulo') {
+                this.setState({
+                    detalleEntregas: [],
+                    disableAllButtons: false,
+                })
+            }
+            updatedFormElement.value = event.target.value;
+            checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+            updatedFormElement.valid = checkValid.isValid;
+            updatedFormElement.textValid = checkValid.textValid;
+            updatedFormElement.touched = true;
+            updatedOrderForm[inputIdentifier] = updatedFormElement;
         }
         let formIsValidAlt = true;
         for (let inputIdentifier in updatedOrderForm) {
@@ -220,30 +226,31 @@ class NewEntrega extends Component {
 
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
-          this.setState ({
-            disableAllButtons:true
-          })
+            this.setState({
+                disableAllButtons: true
+            })
             axios.post('/insert-entregas', {
                 id_modulo: this.state.orderForm.modulo.value,
                 referencia: this.state.orderForm.referencia.value,
-                comentario:this.state.orderForm.comentario.value,
+                comentario: this.state.orderForm.comentario.value,
                 detalle: this.state.detalleEntregas
             })
                 .then(res => {
-                  this.setState ({
-                    disableAllButtons:false
-                  })
+                    this.setState({
+                        disableAllButtons: false
+                    })
                     if (res.data.success == 1) {
                         toast.success("Nueva entrega creada");
-                        let orderForm =  {...this.state.orderForm};
-                        for(let key in orderForm) {
-                          orderForm[key].value = ''
+                        let orderForm = { ...this.state.orderForm };
+                        for (let key in orderForm) {
+                            orderForm[key].value = ''
                         };
                         this.setState({
-                          orderForm: orderForm,
-                          detalleEntregas: []
+                            orderForm: orderForm,
+                            detalleEntregas: []
                         });
-                        this.props.getEntregas();
+                        if (this.props.getEntregas)
+                            this.props.getEntregas();
                         this.props.history.push('/admin/entregas');
 
 
@@ -266,17 +273,32 @@ class NewEntrega extends Component {
     onClickInsumo = (rowInsumo, cantidad) => {
         this.closeDialog();
 
-                    let resultado = {...rowInsumo};
-                    resultado.cantidad = cantidad;
-                    let detalleEntregas = [...this.state.detalleEntregas];
+        let resultado = { ...rowInsumo };
+        resultado.cantidad = cantidad;
 
-                    detalleEntregas.push(resultado);
+        let indexInsumo;
+        indexInsumo = this.state.detalleEntregas.findIndex(elem => {
+            if (rowInsumo.numero == elem.numero && rowInsumo.codigo == elem.codigo)
+                return true;
 
-                    this.setState({
-                        detalleEntregas: [...detalleEntregas]
-                    },()=>{
-                      this.inputChangedHandler(null,null);
-                    })
+            return false
+        })
+
+        if (indexInsumo > -1) {
+            toast.error('El insumo ya se encuentra en el listado');
+
+        } else {
+            let detalleEntregas = [...this.state.detalleEntregas];
+
+            detalleEntregas.push(resultado);
+
+            this.setState({
+                detalleEntregas: [...detalleEntregas]
+            }, () => {
+                this.inputChangedHandler(null, null);
+            })
+
+        }
 
 
 
@@ -292,27 +314,27 @@ class NewEntrega extends Component {
         detalleentregasant.splice(detalleentregasant.indexOf(rowData), 1);
         this.setState({
             detalleEntregas: detalleentregasant
-        },()=>{
-          this.inputChangedHandler(null,null);
+        }, () => {
+            this.inputChangedHandler(null, null);
         });
         //this.state.detallepedidos.splice(this.state.detallepedidos.indexOf(rowData), 1);
     }
 
     getModulos = () => {
-      axios.get('/list-modulos') .then((res) => {
+        axios.get('/list-modulos').then((res) => {
 
-        let options = [];
-        let orderForm = {...this.state.orderForm};
-        res.data.result.forEach((elem) => {
-          options.push({displayValue:elem.descripcion, value:elem.id})
+            let options = [];
+            let orderForm = { ...this.state.orderForm };
+            res.data.result.forEach((elem) => {
+                options.push({ displayValue: elem.chasis, value: elem.id })
+
+            })
+            orderForm.modulo.elementConfig.options = options;
+            this.setState({
+                orderForm: orderForm
+            })
 
         })
-        orderForm.modulo.elementConfig.options = options;
-        this.setState({
-          orderForm: orderForm
-        })
-
-      })
 
     }
 
@@ -333,7 +355,16 @@ class NewEntrega extends Component {
 
             }];
 
-            this.getModulos();
+        if(this.props.match.params.idModulo)
+        {
+            let orderForm = { ...this.state.orderForm };
+            orderForm.modulo.value = this.props.match.params.idModulo
+            this.setState({
+                orderForm:orderForm
+            })
+        }
+                
+        this.getModulos();
 
 
     }
@@ -359,7 +390,7 @@ class NewEntrega extends Component {
                             <CardHeader color="primary">
                                 <h4 className={this.props.classes.cardTitleWhite} >ENTREGA DE INSUMOS</h4>
                                 <p className={this.props.classes.cardCategoryWhite} >
-                                  Se entregan insumos para los diferentes módulos
+                                    Se entregan insumos para los diferentes módulos
                                   </p>
                             </CardHeader>
                             <CardBody>
@@ -379,7 +410,7 @@ class NewEntrega extends Component {
                                         />
                                 ))}
 
-                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons}  color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
+                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
 
                                 <MaterialTable
                                     columns={columnsInsumos}
@@ -411,7 +442,7 @@ class NewEntrega extends Component {
                                     />
 
 
-                              <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/entregas')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Entregar</Button>
+                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/entregas')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Entregar</Button>
 
                             </CardBody>
                         </Card>
@@ -434,6 +465,8 @@ class NewEntrega extends Component {
                     <DialogContent>
                         {this.state.open &&
                             <StepAgregarInsumo
+                                idModulo={this.state.orderForm.modulo.value}
+                                entrega={true}
                                 onClickInsumo={(id, cantidad) => this.onClickInsumo(id, cantidad)}
                                 />
                         }
