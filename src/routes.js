@@ -71,16 +71,17 @@ import Plantillas from "views/Plantillas/Plantillas";
 import ModulosPaniol from "views/Paniol/ModulosPaniol";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
+import ModulosEstados from "views/Modulos/ModulosEstados";
 
 const dashboardRoutes = [
-  // {
-  //   path: "/dashboard",
-  //   name: "Dashboard",
-  //   rtlName: "DS",
-  //   icon: Dashboard,
-  //   component: DashboardPage,
-  //   layout: "/admin"
-  // },
+   {
+     path: "/dashboard",
+     name: "Dashboard",
+     rtlName: "DS",
+     icon: Dashboard,
+     component: DashboardPage,
+     layout: "/admin"
+   },
   // {
   //   path: "/user",
   //   name: "User Profile",
@@ -245,7 +246,15 @@ const dashboardRoutes = [
          icon: ListIcon,
          component: Modulos,
          layout: "/admin"
-       }
+       },
+       {
+        path: "/modulosestados",
+        name: "Estados",
+        rtlName: "LM",
+        icon: ListIcon,
+        component: ModulosEstados,
+        layout: "/admin"
+      }
        ]
    },
 
