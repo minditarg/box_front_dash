@@ -27,6 +27,8 @@ import { StateListUsers, ColumnsListado } from "./VariablesState";
 
 import lightGreen from '@material-ui/core/colors/lightGreen';
 
+import Database from "variables/Database";
+
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -136,35 +138,41 @@ class Users extends Component {
     this.setState({
       isLoading: true
     })
-    axios.get('/list-users')
+
+    Database.get('/list-users',this)
       .then(res => {
+        let resultado = [...res.result];
         this.setState({
-          isLoading: false
-        })
-        if (res.data.success == 1) {
-          let resultado = [...res.data.result];
-          this.setState({
-            users: resultado,
-            checked: [],
-            menuContext: null,
-            botonesAcciones: {
-              nuevo: {
-                enabled: true,
-                texto: 'Nuevo'
-              },
-              editar: {
-                enabled: false,
-                texto: 'Editar'
-              },
-              delete: {
-                enabled: false,
-                texto: 'Eliminar'
-              }
+          isLoading:false,
+          users: resultado,
+          checked: [],
+          menuContext: null,
+          botonesAcciones: {
+            nuevo: {
+              enabled: true,
+              texto: 'Nuevo'
+            },
+            editar: {
+              enabled: false,
+              texto: 'Editar'
+            },
+            delete: {
+              enabled: false,
+              texto: 'Eliminar'
             }
-          })
-        }
+          }
+        })
+
+
+      },err =>{
+        toast.error(err);
+
       })
+
+
+    
   }
+
 
 
   editSingleUser = value => {
@@ -179,7 +187,7 @@ class Users extends Component {
   }
 
   handleDeleteUser = rowData => {
-  
+
     axios.post('/delete-user', { id: rowData.id }).then(res => {
       if (res.data.success == 1) {
         let users = [...this.state.users]
@@ -190,7 +198,7 @@ class Users extends Component {
           return true
 
         })
-        
+
         this.setState({
           users: users,
           openDeleteDialog:false
@@ -198,7 +206,7 @@ class Users extends Component {
           toast.success("El usuario se ha eliminado con exito!");
         })
       } else {
-        
+
         toast.error(res.data.error_msj);
 
       }

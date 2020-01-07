@@ -139,9 +139,8 @@ class NewEntrega extends Component {
                 touched: false
             },
             comentario: {
-                elementType: 'input',
+                elementType: 'textarea',
                 elementConfig: {
-                    type: 'text',
                     label: 'Comentario',
                     fullWidth: true
                 },
@@ -251,6 +250,14 @@ class NewEntrega extends Component {
                         });
                         if (this.props.getEntregas)
                             this.props.getEntregas();
+
+                            if (this.props.getModulos)
+                                this.props.getModulos();
+
+
+                          if(this.props.paniol)
+                          this.props.history.push('/admin/paniolmodulos');
+                          else
                         this.props.history.push('/admin/entregas');
 
 
@@ -358,12 +365,14 @@ class NewEntrega extends Component {
         if(this.props.match.params.idModulo)
         {
             let orderForm = { ...this.state.orderForm };
-            orderForm.modulo.value = this.props.match.params.idModulo
+            orderForm.modulo.value = this.props.match.params.idModulo;
+            orderForm.modulo.valid = true;
             this.setState({
-                orderForm:orderForm
+                orderForm:orderForm,
+                disableAllButtons:false
             })
         }
-                
+
         this.getModulos();
 
 
@@ -442,7 +451,16 @@ class NewEntrega extends Component {
                                     />
 
 
-                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/entregas')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Entregar</Button>
+                                <Button style={{ marginTop: '25px' }} color="info"
+                                onClick={() =>{
+                                  if(this.props.paniol)
+                                   this.props.history.push('/admin/paniolmodulos')
+                                   else
+                                  this.props.history.push('/admin/entregas');
+
+                                }} ><ArrowBack />Volver</Button>
+
+                                <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Entregar</Button>
 
                             </CardBody>
                         </Card>

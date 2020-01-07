@@ -127,7 +127,7 @@ class Modulos extends Component {
   }
 
   componentDidMount() {
-  
+
     this.getModulos();
 
   }
