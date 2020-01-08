@@ -80,10 +80,12 @@ class Categorias extends Component {
             categorias: resultado
           })
         } else if (res.data.success == 3 || res.data.success == 4) {
-          
+
         }
 
       }, err => {
+        debugger;
+        console.log(err.response.data);
         toast.error(err.message);
       })
   }
