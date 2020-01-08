@@ -10,6 +10,9 @@ import { CardActions } from "@material-ui/core";
 import { toast } from 'react-toastify';
 import ModalDelete from "./ModalDelete";
 import ModalProducir from "./ModalProducir";
+import ModalFinalizarProduccion from "./ModalFinalizarProduccion";
+import ModalCancelarProduccion from "./ModalCancelarProduccion";
+import ModalPausarProduccion from "./ModalPausarProduccion";
 import Button from "components/CustomButtons/Button.js";
 
 import { ColumnsListado, StateListado } from "./VariablesState";
@@ -17,7 +20,11 @@ import { localization } from "variables/general.js";
 import lightGreen from '@material-ui/core/colors/lightGreen';
 import AddIcon from '@material-ui/icons/Add';
 import Category from '@material-ui/icons/Category';
+import Done from '@material-ui/icons/Done';
+import Close from '@material-ui/icons/Close';
+import Pause from '@material-ui/icons/Pause';
 import Description from '@material-ui/icons/Description';
+
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -70,6 +77,18 @@ class ModulosEstados extends Component {
 
   producirModulo = (rowData) => {
     this.handleClickOpenProducir(rowData);
+  }
+
+  pausarProduccion = (rowData) => {
+    this.handleClickPausarProduccion(rowData);
+  }
+
+  finalizarProduccion = (rowData) => {
+    this.handleClickFinalizarProduccion(rowData);
+  }
+
+  cancelarProduccion = (rowData) => {
+    this.handleClickCancelarProduccion(rowData);
   }
 
   deleteMaterial = (rowData) => {
@@ -136,11 +155,142 @@ class ModulosEstados extends Component {
       })
   }
 
+  getModulosFinalizarProduccion = () => {
+    this.setState({
+      isLoading:true
+    })
+    axios.get('/list-modulos-finalizados')
+      .then(res => {
+        this.setState({
+          isLoading:false
+        })
+        if (res.data.success == 1) {
+          let resultado = [...res.data.result];
+          resultado = resultado.map(elem => {
+            return {
+              ...elem,
+              identificador: 'MO' + elem.id
+            }
+          })
+          this.setState({
+            modulosFinalizados: resultado
+          })
+        } else if (res.data.success == 3 || res.data.success == 4) {
+
+        }
+
+      }, err => {
+        toast.error(err.message);
+      })
+  }
+
+
+  getModulosPausados = () => {
+    this.setState({
+      isLoading:true
+    })
+    axios.get('/list-modulos-pausados')
+      .then(res => {
+        this.setState({
+          isLoading:false
+        })
+        if (res.data.success == 1) {
+          let resultado = [...res.data.result];
+          resultado = resultado.map(elem => {
+            return {
+              ...elem,
+              identificador: 'MO' + elem.id
+            }
+          })
+          this.setState({
+            modulosPausados: resultado
+          })
+        } else if (res.data.success == 3 || res.data.success == 4) {
+
+        }
+
+      }, err => {
+        toast.error(err.message);
+      })
+  }
+
+
+  getModulosCancelados = () => {
+    this.setState({
+      isLoading:true
+    })
+    axios.get('/list-modulos-cancelados')
+      .then(res => {
+        this.setState({
+          isLoading:false
+        })
+        if (res.data.success == 1) {
+          let resultado = [...res.data.result];
+          resultado = resultado.map(elem => {
+            return {
+              ...elem,
+              identificador: 'MO' + elem.id
+            }
+          })
+          this.setState({
+            modulosCancelados: resultado
+          })
+        } else if (res.data.success == 3 || res.data.success == 4) {
+
+        }
+
+      }, err => {
+        toast.error(err.message);
+      })
+  }
+
+  handleClickCancelarProduccion(rowData) {
+    this.setState({
+      openCancelarProduccionDialog: true,
+      cancelarProduccionRowData: rowData
+    })
+  }
+
+  handleClickPausarProduccion(rowData) {
+    this.setState({
+      openPausarProduccionDialog: true,
+      pausarProduccionRowData: rowData
+    })
+  }
+
+  handleClickFinalizarProduccion(rowData) {
+    this.setState({
+      openFinalizarProduccionDialog: true,
+      finalizarProduccionRowData: rowData
+    })
+  }
 
   handleClickOpenProducir(rowData) {
     this.setState({
       openProducirDialog: true,
       producirRowData: rowData
+    })
+  }
+
+  handleCloseFinalizarProduccion() {
+    this.setState({
+      openFinalizarProduccionDialog: false,
+      finalizarProduccionRowData: null
+    })
+  }
+
+  
+  handleClosePausarProduccion() {
+    this.setState({
+      openPausarProduccionDialog: false,
+      pausarProduccionRowData: null
+    })
+  }
+
+  handleCloseCancelarProduccion() {
+    this.setState({
+      openCancelarProduccionDialog: false,
+      cancelarProduccionRowData: null
     })
   }
 
@@ -165,6 +315,65 @@ class ModulosEstados extends Component {
     })
   }
 
+  handlePausarProduccion(rowData) {
+    if (rowData.id) {
+      axios.post('/pausar-modulo', {
+        id: rowData.id
+      })
+        .then(res => {
+          if (res.data.success == 1) {
+            this.handleClosePausarProduccion();
+           // this.getModulosCancelados();
+            this.getModulos();
+            this.getModulosPausados();
+            toast.success("Modulo pausado");
+          }
+        }, err => {
+          toast.error(err.message);
+        })
+    }
+
+  }
+
+  handleCancelarProduccion(rowData) {
+    if (rowData.id) {
+      axios.post('/cancelar-modulo', {
+        id: rowData.id
+      })
+        .then(res => {
+          if (res.data.success == 1) {
+            this.handleCloseCancelarProduccion();
+            this.getModulosCancelados();
+            this.getModulos();
+            this.getModulosPausados();
+            toast.success("Modulo cancelado");
+          }
+        }, err => {
+          toast.error(err.message);
+        })
+    }
+
+  }
+
+  handleFinalizarProduccion(rowData) {
+    if (rowData.id) {
+      axios.post('/finalizar-modulo', {
+        id: rowData.id
+      })
+        .then(res => {
+          if (res.data.success == 1) {
+            this.handleCloseFinalizarProduccion();
+            this.getModulosFinalizarProduccion();
+            this.getModulos();
+            toast.success("Modulo finalizado");
+          }
+        }, err => {
+          toast.error(err.message);
+        })
+    }
+
+  }
+
   handleProducir(rowData) {
     if (rowData.id) {
       axios.post('/producir-modulo', {
@@ -174,6 +383,7 @@ class ModulosEstados extends Component {
           if (res.data.success == 1) {
             this.handleCloseProducir();
             this.getModulosDiseno();
+            this.getModulosPausados();
             this.getModulos();
             toast.success("Modulo enviado a Producción");
           }
@@ -207,6 +417,12 @@ class ModulosEstados extends Component {
     this.getModulos();
 
     this.getModulosDiseno();
+
+    this.getModulosFinalizarProduccion();
+
+    this.getModulosCancelados();
+
+    this.getModulosPausados();
 
   }
 
@@ -278,9 +494,98 @@ class ModulosEstados extends Component {
                   },
                   {
                     icon: 'done',
-                    tooltip: 'Borrar Módulo',
-                    onClick: (event, rowData) => this.deleteMaterial(rowData)
-                  }]}
+                    tooltip: 'Finalizar Produccion',
+                    onClick: (event, rowData) => this.finalizarProduccion(rowData)
+                  },
+                  {
+                    icon: 'pause',
+                    tooltip: 'Pausar Produccion',
+                    onClick: (event, rowData) => this.pausarProduccion(rowData)
+                  },
+                  {
+                    icon: 'close',
+                    tooltip: 'Cancelar Produccion',
+                    onClick: (event, rowData) => this.cancelarProduccion(rowData)
+                  }
+                ]}
+                  options={{
+                    exportButton: true,
+                    headerStyle: {
+                      backgroundColor: lightGreen[700],
+                      color: '#FFF'
+                    },
+                  }}
+                />
+                )
+              },
+              {
+                tabName: "Pausados",
+                tabIcon: Pause,
+                tabContent: (
+                  <MaterialTable
+                isLoading={this.state.isLoading}
+                  columns={ColumnsListado}
+                  data={this.state.modulosPausados}
+                  title=""
+                  localization={localization}
+                  actions={[
+                    {
+                      icon: 'category',
+                      tooltip: 'Producir',
+                      onClick: (event, rowData) => this.producirModulo(rowData)
+                    },
+                    {
+                      icon: 'close',
+                      tooltip: 'Cancelar Produccion',
+                      onClick: (event, rowData) => this.cancelarProduccion(rowData)
+                    }
+                  ]}
+                  options={{
+                    exportButton: true,
+                    headerStyle: {
+                      backgroundColor: lightGreen[700],
+                      color: '#FFF'
+                    },
+                  }}
+                />
+                )
+              },
+              {
+                tabName: "Finalizados",
+                tabIcon: Done,
+                tabContent: (
+                  <MaterialTable
+                isLoading={this.state.isLoading}
+                  columns={ColumnsListado}
+                  data={this.state.modulosFinalizados}
+                  title=""
+                  localization={localization}
+                  actions={[
+
+                  ]}
+                  options={{
+                    exportButton: true,
+                    headerStyle: {
+                      backgroundColor: lightGreen[700],
+                      color: '#FFF'
+                    },
+                  }}
+                />
+                )
+              },
+              {
+                tabName: "Cancelados",
+                tabIcon: Close,
+                tabContent: (
+                  <MaterialTable
+                isLoading={this.state.isLoading}
+                  columns={ColumnsListado}
+                  data={this.state.modulosCancelados}
+                  title=""
+                  localization={localization}
+                  actions={[
+                    
+                  ]}
                   options={{
                     exportButton: true,
                     headerStyle: {
@@ -316,15 +621,37 @@ class ModulosEstados extends Component {
         handleDelete={(rowData) => this.handleDelete(rowData)}
       />,
       <ModalProducir
-      key={"modulos-modal"}
+      key={"modulos-modalProducir"}
         openProducirDialog={this.state.openProducirDialog}
         producirRowData={this.state.producirRowData}
 
         handleCloseProducir={() => this.handleCloseProducir()}
         handleProducir={(rowData) => this.handleProducir(rowData)}
-      />
-      ,
+      />,
+      <ModalFinalizarProduccion
+      key={"modulos-modalFinalizarProduccion"}
+        openFinalizarProduccionDialog={this.state.openFinalizarProduccionDialog}
+        finalizarProduccionRowData={this.state.finalizarProduccionRowData}
 
+        handleCloseFinalizarProduccion={() => this.handleCloseFinalizarProduccion()}
+        handleFinalizarProduccion={(rowData) => this.handleFinalizarProduccion(rowData)}
+      />,
+      <ModalCancelarProduccion
+      key={"modulos-modalCancelarProduccion"}
+        openCancelarProduccionDialog={this.state.openCancelarProduccionDialog}
+        cancelarProduccionRowData={this.state.cancelarProduccionRowData}
+
+        handleCloseCancelarProduccion={() => this.handleCloseCancelarProduccion()}
+        handleCancelarProduccion={(rowData) => this.handleCancelarProduccion(rowData)}
+      />,
+      <ModalPausarProduccion
+      key={"modulos-modalPausarProduccion"}
+        openPausarProduccionDialog={this.state.openPausarProduccionDialog}
+        pausarProduccionRowData={this.state.pausarProduccionRowData}
+
+        handleClosePausarProduccion={() => this.handleClosePausarProduccion()}
+        handlePausarProduccion={(rowData) => this.handlePausarProduccion(rowData)}
+      />
 
     ]);
   }
