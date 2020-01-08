@@ -169,10 +169,12 @@ class EditPedido extends Component {
 
 
     handleSubmitEditPedido = (event) => {
+
+        //console.log("HHHH");
         event.preventDefault();
 
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
-        if (this.state.formIsValid) {
+        if (1) {
           this.setState({
             disableAllButtons:true
           })
@@ -368,7 +370,7 @@ class EditPedido extends Component {
 
 
                                 <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/pedidos')} ><ArrowBack />Volver</Button> 
-                                <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+                                <Button style={{ marginTop: '25px' }} color="primary" type="submit"><Save /> Guardar</Button>
 
                             </CardBody>
                         </Card>

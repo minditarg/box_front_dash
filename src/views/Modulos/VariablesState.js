@@ -1,6 +1,6 @@
 export const StateListado = {
   modulos: [],
-
+  modulosdiseno: [],
 
   openDeleteDialog: false,
   deleteRowData: null,
