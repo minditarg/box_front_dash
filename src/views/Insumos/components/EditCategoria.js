@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Input from 'components/Input/Input';
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
-import axios from "axios";
+import Database from "variables/Database.js";
 import { toast } from 'react-toastify';
 
 import { withStyles } from '@material-ui/styles';
@@ -50,18 +50,17 @@ class EditCategoria extends Component {
   state = JSON.parse(JSON.stringify(StateEditCategoria));
 
   getCategoriaEdit = (id) => {
-    axios.get('/list-categorias/' + id)
+    Database.get('/list-categorias/' + id,this)
       .then(resultado => {
-        //alert(resultado);
-        if (resultado.data.success == 1) {
-          if (resultado.data.result.length > 0) {
+
+          if (resultado.result.length > 0) {
             this.setState({
-              categoriaEdit: resultado.data.result[0]
+              categoriaEdit: resultado.result[0]
             })
 
             let editCategoriaFormAlt = { ...this.state.editCategoriaForm };
-            editCategoriaFormAlt.codigo.value = resultado.data.result[0].codigo;
-            editCategoriaFormAlt.descripcion.value = resultado.data.result[0].descripcion;
+            editCategoriaFormAlt.codigo.value = resultado.result[0].codigo;
+            editCategoriaFormAlt.descripcion.value = resultado.result[0].descripcion;
 
             for (let key in editCategoriaFormAlt) {
               editCategoriaFormAlt[key].touched = true;
@@ -76,24 +75,17 @@ class EditCategoria extends Component {
               categoriaEdit: null
             })
           }
-        }
+
+      },err => {
+        toast.error(err.message);
       })
   }
 
   handleSubmitEditCategoria = (event) => {
 
     event.preventDefault();
-    axios.post(`/update-categorias`, { id: this.state.categoriaEdit.id, codigo: this.state.editCategoriaForm.codigo.value, descripcion: this.state.editCategoriaForm.descripcion.value })
+    Database.post(`/update-categorias`, { id: this.state.categoriaEdit.id, codigo: this.state.editCategoriaForm.codigo.value, descripcion: this.state.editCategoriaForm.descripcion.value },this)
       .then(res => {
-        let estadoAlt = null
-        if (res.data.success == 0) {
-          estadoAlt = false
-        }
-        if (res.data.success == 1) {
-          estadoAlt = true
-        }
-
-        if (estadoAlt) {
 
           this.props.getCategorias();
 
@@ -103,7 +95,9 @@ class EditCategoria extends Component {
             toast.success("Los cambios se realizaron correctamente");
           })
 
-        }
+
+      },err => {
+        toast.error(err.message);
       })
 
   }

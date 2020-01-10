@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import Input from "components/Input/Input";
 import moment from "moment";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
@@ -177,12 +177,10 @@ class NewPedido extends Component {
             disableAllButtons:true
           })
 
-          console.log(this.state.detallepedidos);
-            axios.post('/insert-pedidos', {
+            Database.post('/insert-pedidos', {
                 detalle: this.state.detallepedidos
             })
                 .then(res => {
-                    if (res.data.success == 1) {
                         // this.setState({pedidoInsertado: true});
                         this.props.getPedidos();
                         toast.success("Nuevo pedido creado");
@@ -190,13 +188,12 @@ class NewPedido extends Component {
                         setTimeout(()=>{
                           this.props.history.push("/admin/pedidos");
                         },1000)
-                    }
-                    else {
-                      this.setState({
-                        disableAllButtons:false
-                      })
-                        toast.error("Error");
-                    }
+
+                },err => {
+                  this.setState({
+                    disableAllButtons:false
+                  })
+                    toast.error(err.message);
                 })
         }
     }
@@ -206,7 +203,7 @@ class NewPedido extends Component {
     }
 
     closeDialog() {
-        this.setState({ open: false });   
+        this.setState({ open: false });
     }
 
     onClickInsumo = (rowInsumo, cantidad) => {

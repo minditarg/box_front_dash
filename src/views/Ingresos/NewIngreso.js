@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import Input from "components/Input/Input";
 import moment from "moment";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
@@ -145,7 +145,7 @@ class NewIngreso extends Component {
     }
 
     handleDateChange = (date,value) => {
-        
+
       let dateState = null;
       let dateFormIsValid = false;
       if(date == "Invalid date") {
@@ -230,15 +230,15 @@ class NewIngreso extends Component {
           this.setState({
             disableAllButtons:true
           })
-            axios.post('/insert-ingresos', {
+            Database.post('/insert-ingresos', {
                 fechaReferencia: moment(event.target[0].value, "DD/MM/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 referencia: event.target[2].value,
                 proveedor: event.target[3].value,
                 detalle: this.state.detalleingresos
-            })
+            },this)
                 .then(res => {
 
-                    if (res.data.success == 1) {
+
                         // this.setState({pedidoInsertado: true});
                         this.props.getIngresos();
                         toast.success("Nuevo ingreso creado");
@@ -246,13 +246,13 @@ class NewIngreso extends Component {
                         setTimeout(()=>{
                           this.props.history.push("/admin/ingresos");
                         },1000)
-                    }
-                    else {
-                      this.setState({
-                        disableAllButtons:false
-                      })
-                        toast.error("Error");
-                    }
+
+
+                },err => {
+                  this.setState({
+                    disableAllButtons:false
+                  })
+                  toast.error(err.message);
                 })
         }
     }

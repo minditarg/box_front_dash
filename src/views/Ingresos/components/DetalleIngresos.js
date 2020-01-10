@@ -1,7 +1,8 @@
 //MODULOS GENERALES
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import moment from "moment";
+import {toast } from 'react-toastify';
 
 //ESTILOS Y COLORES
 import { withStyles } from '@material-ui/styles';
@@ -26,18 +27,19 @@ class DetalleIngresos extends Component {
     state = {
         detalle: []
     }
-    
-    
+
+
     componentDidMount() {
-        axios.get('/list-ingresos-detalles/' + this.props.idIngreso + '/' + this.props.cantidadRegistros).then(res => {
-            console.log(res);
-            //console.log(moment(res.data.result[0].fecha).format('DD/MM/YYYY'));
+        Database.get('/list-ingresos-detalles/' + this.props.idIngreso + '/' + this.props.cantidadRegistros,this).then(res => {
+
             this.setState({
-                detalle: res.data.result
+                detalle: res.result
             })
+        },err => {
+          toast.error(err.message);
         })
     }
-    
+
     render() {
 
 
@@ -49,22 +51,22 @@ class DetalleIngresos extends Component {
                         <TableCell>Identificador</TableCell>
                         <TableCell>Descripción</TableCell>
                         <TableCell >Cantidad</TableCell>
-                    
+
                     </TableRow>
                 </TableHead>
                 <TableBody>
 
 
                     {this.state.detalle.map(elem => {
-                      
-                            
+
+
                         return <TableRow key={elem.id}>
                             <TableCell >
                                 {elem.codigo + elem.numero}
                             </TableCell>
                             <TableCell >{elem.descripcion}</TableCell>
                             <TableCell >{elem.cantidad + ' ' + elem.unidad}</TableCell>
-                            
+
 
                         </TableRow>
 
@@ -80,6 +82,3 @@ class DetalleIngresos extends Component {
 }
 
 export default withStyles(styles)(DetalleIngresos);
-
-
-

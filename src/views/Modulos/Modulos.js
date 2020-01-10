@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
@@ -69,13 +69,13 @@ class Modulos extends Component {
     this.setState({
       isLoading:true
     })
-    axios.get('/list-modulos')
+    Database.get('/list-modulos')
       .then(res => {
         this.setState({
           isLoading:false
         })
-        if (res.data.success == 1) {
-          let resultado = [...res.data.result];
+
+          let resultado = [...res.result];
           resultado = resultado.map(elem => {
             return {
               ...elem,
@@ -85,11 +85,11 @@ class Modulos extends Component {
           this.setState({
             modulos: resultado
           })
-        } else if (res.data.success == 3 || res.data.success == 4) {
-
-        }
 
       }, err => {
+        this.setState({
+          isLoading:false
+        })
         toast.error(err.message);
       })
   }
@@ -110,15 +110,15 @@ class Modulos extends Component {
 
   handleDelete(rowData) {
     if (rowData.id) {
-      axios.post('/delete-modulo', {
+      Database.post('/delete-modulo', {
         id: rowData.id
       })
         .then(res => {
-          if (res.data.success == 1) {
+          
             this.handleClose();
             this.getModulos();
             toast.success("Modulo eliminado");
-          }
+
         }, err => {
           toast.error(err.message);
         })

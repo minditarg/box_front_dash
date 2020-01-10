@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import Input from "components/Input/Input";
+import { Route, Switch, Link, withRouter } from 'react-router-dom';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -108,20 +109,19 @@ class NewCategoria extends Component {
 
   handleSubmitNewCategoria = (event) => {
     event.preventDefault();
-    axios.post('/insert-categorias', {
+    Database.post('/insert-categorias', {
       codigo: event.target[0].value,
       descripcion: event.target[1].value
-    })
+    },this)
       .then(res => {
-        if (res.data.success == 1) {
+
           this.props.getCategorias();
 
           toast.success("Nueva categoria creada");
           this.resetForm();
-        }
-        else {
-          toast.error("Error");
-        }
+
+      },err => {
+        toast.error(err.message);
       })
   }
 
@@ -175,7 +175,7 @@ resetForm = () => {
             ))}
             <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/categorias')} ><ArrowBack />Volver</Button>
             <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
-            
+
           </CardBody>
         </Card>
       </ form>
@@ -184,4 +184,4 @@ resetForm = () => {
 }
 
 
-export default withStyles(styles)(NewCategoria);
+export default withRouter(withStyles(styles)(NewCategoria));

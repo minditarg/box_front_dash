@@ -1,7 +1,8 @@
 //MODULOS GENERALES
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import moment from "moment";
+import {toast } from 'react-toastify';
 
 //ESTILOS Y COLORES
 import { withStyles } from '@material-ui/styles';
@@ -29,12 +30,14 @@ class DetalleEntregas extends Component {
 
 
     componentDidMount() {
-        axios.get('/list-entregas-detalles/' + this.props.idEntrega + '/' + this.props.cantidadRegistros).then(res => {
-            console.log(res);
+        Database.get('/list-entregas-detalles/' + this.props.idEntrega + '/' + this.props.cantidadRegistros).then(res => {
+
             //console.log(moment(res.data.result[0].fecha).format('DD/MM/YYYY'));
             this.setState({
-                detalle: res.data.result
+                detalle: res.result
             })
+        },err => {
+          toast.error(err.message);
         })
     }
 

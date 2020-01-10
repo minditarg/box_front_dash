@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 
 import { Route, Switch, Link } from 'react-router-dom';
 // core components
@@ -27,7 +27,7 @@ import { StateListUsers, ColumnsListado } from "./VariablesState";
 
 import lightGreen from '@material-ui/core/colors/lightGreen';
 
-import Database from "variables/Database";
+
 
 const styles = {
   cardCategoryWhite: {
@@ -170,7 +170,7 @@ class Users extends Component {
       })
 
 
-    
+
   }
 
 
@@ -188,8 +188,7 @@ class Users extends Component {
 
   handleDeleteUser = rowData => {
 
-    axios.post('/delete-user', { id: rowData.id }).then(res => {
-      if (res.data.success == 1) {
+    Database.post('/delete-user', { id: rowData.id }).then(res => {
         let users = [...this.state.users]
         users = users.filter(elem => {
           if (elem.id == rowData.id)
@@ -205,12 +204,10 @@ class Users extends Component {
         },()=>{
           toast.success("El usuario se ha eliminado con exito!");
         })
-      } else {
 
-        toast.error(res.data.error_msj);
 
-      }
-
+    },err => {
+      toast.error(err.message);
     })
 
   }

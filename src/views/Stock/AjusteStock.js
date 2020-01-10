@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import Input from "components/Input/Input";
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
@@ -123,14 +123,16 @@ class AjusteStock extends Component {
     }
 
     getInsumos = () => {
-        axios.get('/list-insumos')
+        Database.get('/list-insumos')
             .then(res => {
-                if (res.data.success == 1) {
-                    let resultado = [...res.data.result];
+
+                    let resultado = [...res.result];
                     this.setState({
                         insumos: resultado
                     })
-                }
+
+            },err => {
+              toast.error(err.message);
             })
     }
 
@@ -187,20 +189,17 @@ class AjusteStock extends Component {
 
     handleSubmitNewPedido = (event) => {
         event.preventDefault();
-        axios.post('/ajuste-stock', {
+        Database.post('/ajuste-stock', {
             codigo: event.target[0].value,
             descripcion: event.target[1].value,
             cantidad: event.target[2].value
 
         })
             .then(res => {
-                if (res.data.success == 1) {
 
                     toast.success("Insumo Ajustado");
-                }
-                else {
-                    toast.error("error");
-                }
+            },err => {
+              toast.error(err.message);
             })
     }
 

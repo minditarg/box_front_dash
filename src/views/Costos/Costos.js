@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
 import moment from 'moment';
 
@@ -69,13 +69,13 @@ class Costos extends Component {
     this.setState({
       isLoading:true
     })
-    axios.get('/list-insumos')
+    Database.get('/list-insumos',this)
       .then(res => {
         this.setState({
           isLoading:false
         })
-        if (res.data.success == 1) {
-          let resultado = [...res.data.result];
+
+          let resultado = [...res.result];
           resultado = resultado.map(elem=>{
             return {
               ...elem,
@@ -86,11 +86,12 @@ class Costos extends Component {
           this.setState({
             costos: resultado
           })
-        } else if (res.data.success == 3 || res.data.success == 4) {
 
-        }
 
       }, err => {
+        this.setState({
+          isLoading:false
+        })
         toast.error(err.message);
       })
   }
@@ -109,24 +110,7 @@ class Costos extends Component {
     })
   }
 
-  /*
-  handleDelete(rowData) {
-    if (rowData.id) {
-      axios.post('/delete-costos', {
-        id: rowData.id
-      })
-        .then(res => {
-          if (res.data.success == 1) {
-            this.handleClose();
-            this.getInsumos();
-            toast.success("Costo eliminado");
-          }
-        }, err => {
-          toast.error(err.message);
-        })
-    }
 
-  }*/
 
   componentDidMount() {
 
@@ -195,7 +179,7 @@ class Costos extends Component {
         } />
 
       </Switch>,
-      
+
 
 
     ]);

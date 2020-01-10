@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
@@ -68,21 +68,19 @@ class Plantillas extends Component {
     this.setState({
       isLoading:true
     })
-    axios.get('/list-plantillas')
+    Database.get('/list-plantillas')
       .then(res => {
+
+          let resultado = [...res.result];
+          this.setState({
+            insumos: resultado,
+            isLoading:false
+          })
+
+      }, err => {
         this.setState({
           isLoading:false
         })
-        if (res.data.success == 1) {
-          let resultado = [...res.data.result];
-          this.setState({
-            insumos: resultado
-          })
-        } else if (res.data.success == 3 || res.data.success == 4) {
-        
-        }
-
-      }, err => {
         toast.error(err.message);
       })
   }
@@ -103,15 +101,15 @@ class Plantillas extends Component {
 
   handleDelete(rowData) {
     if (rowData.id) {
-      axios.post('/delete-plantilla', {
+      Database.post('/delete-plantilla', {
         id: rowData.id
       })
         .then(res => {
-          if (res.data.success == 1) {
+
             this.handleClose();
             this.getPlantillas();
             toast.success("Plantilla eliminada");
-          }
+
         }, err => {
           toast.error(err.message);
         })
@@ -176,7 +174,7 @@ class Plantillas extends Component {
 
           </div>,
       <Switch  key={"plantillas-switch"}>
-       
+
         <Route path={this.props.match.url + "/editarplantilla/:idPlantilla"} exact render={() =>
 
           <EditPlantilla getPlantillas={()=>this.getPlantillas()} />

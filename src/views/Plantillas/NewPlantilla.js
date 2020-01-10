@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import Input from "components/Input/Input";
 import moment from "moment";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
@@ -265,24 +265,21 @@ class NewPlantilla extends Component {
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
             this.setState({ disableAllButtons: true });
-            axios.post('/insert-plantilla', {
+            Database.post('/insert-plantilla', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 codigo: this.state.orderForm.codigo.value,
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: this.state.detallePlantillas
             })
                 .then(res => {
-                    if (res.data.success == 1) {
-                        // this.setState({pedidoInsertado: true});
-                        // this.props.getIngresos();
+                    
                         toast.success("Nueva plantilla creada");
                         this.props.getPlantillas();
                         this.props.history.push("/admin/plantillas");
-                    }
-                    else {
-                        this.setState({ disableAllButtons: false });
-                        toast.error("Error");
-                    }
+
+                },err => {
+                  this.setState({ disableAllButtons: false });
+                  toast.error(err.message);
                 })
         }
     }

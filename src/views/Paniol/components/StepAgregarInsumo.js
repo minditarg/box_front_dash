@@ -1,6 +1,7 @@
 //COMPONENTES GENERALES
 import React from 'react';
-import axios from "axios";
+import Database from "variables/Database.js";
+import {toast } from 'react-toastify';
 
 //COMPONENTES LOCALES
 import Input from "components/Input/Input";
@@ -92,11 +93,10 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
      const getInsumos = (url) => {
         setIsLoading(true);
-        axios.get(url)
+        Database.get(url)
             .then(res => {
                 setIsLoading(false);
-                if (res.data.success == 1) {
-                    let resultado = [...res.data.result];
+                    let resultado = [...res.result];
                     resultado = resultado.map(elem=>{
                       let disponible;
                       if(props.devolucion)
@@ -117,7 +117,10 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                         }
                     })
                     setInsumos(resultado);
-                }
+
+            },err => {
+              setIsLoading(false);
+              toast.error(err.message);
             })
     }
 
@@ -230,12 +233,12 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                       {rowInsumo.codigo}</p>
                      <p><span style={{ fontWeight:'300'}}>Descripción: </span>
                       {rowInsumo.descripcion}</p>
-                       <p><span style={{ fontWeight:'300'}}>Stock: 
+                       <p><span style={{ fontWeight:'300'}}>Stock:
                       </span>{rowInsumo.cantidad + " " +  rowInsumo.unidad}<br/>
                       <span style={{ fontWeight:'300'}}>Total Módulo: </span>{rowInsumo.cantidad_modulo_insumo + " " +  rowInsumo.unidad} <br/>
                       <span style={{ fontWeight:'300'}}>Asignada: </span>{rowInsumo.cantidad_asignada + " " +  rowInsumo.unidad}<br/>
                       <span style={{ backgroundColor: 'lightgreen'}}>Disponible: {rowInsumo.disponible + " " +  rowInsumo.unidad} </span>
-                       
+
                        </p>
 
                     {

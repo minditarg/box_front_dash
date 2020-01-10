@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js"
 import Input from "components/Input/Input";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
 
@@ -78,10 +78,10 @@ class NewInsumo extends Component {
   }
 
   getCategorias = () => {
-    axios.get('/list-categorias')
+    Database.get('/list-categorias',this)
       .then(res => {
-        if (res.data.success == 1) {
-          let resultadoCategorias = [...res.data.result];
+
+          let resultadoCategorias = [...res.result];
           let a = [];
           resultadoCategorias.forEach(function (entry) {
           //  alert(entry.codigo);
@@ -95,7 +95,9 @@ class NewInsumo extends Component {
           this.setState({
             newInsumoForm: formulario
           })
-        }
+
+      },err => {
+        toast.error(err.message);
       })
   }
 
@@ -129,10 +131,10 @@ class NewInsumo extends Component {
   //   alert(event.target.value); //el idInsumoCategoria
 
 
-          axios.get('/list-categorias/' + event.target.value)
+          Database.get('/list-categorias/' + event.target.value,this)
       .then(res => {
-        if (res.data.success == 1) {
-          let resultado = [...res.data.result];
+
+          let resultado = [...res.result];
           console.log(updatedOrderForm);
           console.log(resultado[0].codigo);
           console.log(resultado[0].siguiente);
@@ -140,16 +142,15 @@ class NewInsumo extends Component {
           updatedOrderForm["codigo"].valid = true;
           updatedOrderForm["codigo"].touched = true;
 
-          axios.get('/get-siguiente/' + resultado[0].id)
+          Database.get('/get-siguiente/' + resultado[0].id,this)
           .then(res => {
-            if (res.data.success == 1) {
-              console.log(res.data.result[0].siguiente);
+              console.log(res.result[0].siguiente);
              // alert('/list-categorias');
-             if(res.data.result[0].siguiente == null)
+             if(res.result[0].siguiente == null)
                 updatedOrderForm["numero"].value = 1;
-             else 
-                updatedOrderForm["numero"].value = res.data.result[0].siguiente;
-                
+             else
+                updatedOrderForm["numero"].value = res.result[0].siguiente;
+
              updatedOrderForm["numero"].valid = true;
              updatedOrderForm["numero"].touched = true;
 
@@ -158,7 +159,7 @@ class NewInsumo extends Component {
               formIsValid: formIsValidAlt
 
             })
-            }
+
           })
 
           this.setState({
@@ -167,12 +168,11 @@ class NewInsumo extends Component {
 
           })
 
-        } else if (res.data.success == 3 || res.data.success == 4) {
-        }
+
       }, err => {
         toast.error(err.message);
       })
-    } 
+    }
     else{
       if(inputIdentifier == "alertar")
       {
@@ -205,9 +205,9 @@ class NewInsumo extends Component {
   handleSubmitNewInsumo = (event) => {
     event.preventDefault();
     if(this.state.formIsValid) {
-    axios.post('/insert-insumos', {
+    Database.post('/insert-insumos', {
 
-      
+
       numero: this.state.newInsumoForm.numero.value,
       descripcion: this.state.newInsumoForm.descripcion.value,
       unidad: this.state.newInsumoForm.unidad.value,
@@ -215,17 +215,15 @@ class NewInsumo extends Component {
       categoria: this.state.newInsumoForm.categoria.value,
       alertar: this.state.newInsumoForm.alertar.value,
       autorizar: this.state.newInsumoForm.autorizar.value
-    })
+    },this)
       .then(res => {
-        if (res.data.success == 1) {
+
           this.props.getInsumos();
           toast.success("Nuevo insumo creado");
           this.resetForm();
-        }
-        else {
-          console.log(res);
-          toast.error(res.data.error_msj);
-        }
+
+      },err => {
+        toast.error(err.message);
       })
     }
   }

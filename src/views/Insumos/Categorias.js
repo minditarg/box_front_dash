@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
@@ -69,23 +69,17 @@ class Categorias extends Component {
     this.setState({
       isLoading:true
     })
-    axios.get('/list-categorias')
+    Database.get('/list-categorias',this)
       .then(res => {
         this.setState({
           isLoading:false
         })
-        if (res.data.success == 1) {
-          let resultado = [...res.data.result];
+          let resultado = [...res.result];
           this.setState({
             categorias: resultado
           })
-        } else if (res.data.success == 3 || res.data.success == 4) {
-
-        }
 
       }, err => {
-        debugger;
-        console.log(err.response.data);
         toast.error(err.message);
       })
   }
@@ -106,15 +100,15 @@ class Categorias extends Component {
 
   handleDelete(rowData) {
     if (rowData.id) {
-      axios.post('/delete-categorias', {
+      Database.post('/delete-categorias', {
         id: rowData.id
-      })
+      },this)
         .then(res => {
-          if (res.data.success == 1) {
+
             this.handleClose();
             this.getCategorias();
             toast.success("Categoria eliminada");
-          }
+
         }, err => {
           toast.error(err.message);
         })

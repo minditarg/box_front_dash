@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
@@ -100,13 +100,13 @@ class ModulosEstados extends Component {
     this.setState({
       isLoading:true
     })
-    axios.get('/list-modulos-produccion')
+    Database.get('/list-modulos-produccion')
       .then(res => {
         this.setState({
           isLoading:false
         })
-        if (res.data.success == 1) {
-          let resultado = [...res.data.result];
+
+          let resultado = [...res.result];
           resultado = resultado.map(elem => {
             return {
               ...elem,
@@ -116,11 +116,12 @@ class ModulosEstados extends Component {
           this.setState({
             modulos: resultado
           })
-        } else if (res.data.success == 3 || res.data.success == 4) {
 
-        }
 
       }, err => {
+        this.setState({
+          isLoading:false
+        })
         toast.error(err.message);
       })
   }
@@ -130,13 +131,13 @@ class ModulosEstados extends Component {
     this.setState({
       isLoading:true
     })
-    axios.get('/list-modulos-diseno')
+    Database.get('/list-modulos-diseno')
       .then(res => {
         this.setState({
           isLoading:false
         })
-        if (res.data.success == 1) {
-          let resultado = [...res.data.result];
+
+          let resultado = [...res.result];
           resultado = resultado.map(elem => {
             return {
               ...elem,
@@ -146,11 +147,11 @@ class ModulosEstados extends Component {
           this.setState({
             modulosdiseno: resultado
           })
-        } else if (res.data.success == 3 || res.data.success == 4) {
-
-        }
 
       }, err => {
+        this.setState({
+          isLoading:false
+        })
         toast.error(err.message);
       })
   }
@@ -159,13 +160,13 @@ class ModulosEstados extends Component {
     this.setState({
       isLoading:true
     })
-    axios.get('/list-modulos-finalizados')
+    Database.get('/list-modulos-finalizados')
       .then(res => {
         this.setState({
           isLoading:false
         })
-        if (res.data.success == 1) {
-          let resultado = [...res.data.result];
+
+          let resultado = [...res.result];
           resultado = resultado.map(elem => {
             return {
               ...elem,
@@ -175,11 +176,12 @@ class ModulosEstados extends Component {
           this.setState({
             modulosFinalizados: resultado
           })
-        } else if (res.data.success == 3 || res.data.success == 4) {
 
-        }
 
       }, err => {
+        this.setState({
+          isLoading:false
+        })
         toast.error(err.message);
       })
   }
@@ -189,13 +191,13 @@ class ModulosEstados extends Component {
     this.setState({
       isLoading:true
     })
-    axios.get('/list-modulos-pausados')
+    Database.get('/list-modulos-pausados')
       .then(res => {
         this.setState({
           isLoading:false
         })
-        if (res.data.success == 1) {
-          let resultado = [...res.data.result];
+
+          let resultado = [...res.result];
           resultado = resultado.map(elem => {
             return {
               ...elem,
@@ -205,11 +207,11 @@ class ModulosEstados extends Component {
           this.setState({
             modulosPausados: resultado
           })
-        } else if (res.data.success == 3 || res.data.success == 4) {
-
-        }
 
       }, err => {
+        this.setState({
+          isLoading:false
+        })
         toast.error(err.message);
       })
   }
@@ -219,13 +221,12 @@ class ModulosEstados extends Component {
     this.setState({
       isLoading:true
     })
-    axios.get('/list-modulos-cancelados')
+    Database.get('/list-modulos-cancelados')
       .then(res => {
         this.setState({
           isLoading:false
         })
-        if (res.data.success == 1) {
-          let resultado = [...res.data.result];
+          let resultado = [...res.result];
           resultado = resultado.map(elem => {
             return {
               ...elem,
@@ -235,11 +236,11 @@ class ModulosEstados extends Component {
           this.setState({
             modulosCancelados: resultado
           })
-        } else if (res.data.success == 3 || res.data.success == 4) {
-
-        }
 
       }, err => {
+        this.setState({
+          isLoading:false
+        })
         toast.error(err.message);
       })
   }
@@ -279,7 +280,7 @@ class ModulosEstados extends Component {
     })
   }
 
-  
+
   handleClosePausarProduccion() {
     this.setState({
       openPausarProduccionDialog: false,
@@ -317,17 +318,16 @@ class ModulosEstados extends Component {
 
   handlePausarProduccion(rowData) {
     if (rowData.id) {
-      axios.post('/pausar-modulo', {
+      Database.post('/pausar-modulo', {
         id: rowData.id
       })
         .then(res => {
-          if (res.data.success == 1) {
             this.handleClosePausarProduccion();
            // this.getModulosCancelados();
             this.getModulos();
             this.getModulosPausados();
             toast.success("Modulo pausado");
-          }
+
         }, err => {
           toast.error(err.message);
         })
@@ -337,17 +337,17 @@ class ModulosEstados extends Component {
 
   handleCancelarProduccion(rowData) {
     if (rowData.id) {
-      axios.post('/cancelar-modulo', {
+      Database.post('/cancelar-modulo', {
         id: rowData.id
       })
         .then(res => {
-          if (res.data.success == 1) {
+
             this.handleCloseCancelarProduccion();
             this.getModulosCancelados();
             this.getModulos();
             this.getModulosPausados();
             toast.success("Modulo cancelado");
-          }
+
         }, err => {
           toast.error(err.message);
         })
@@ -357,16 +357,16 @@ class ModulosEstados extends Component {
 
   handleFinalizarProduccion(rowData) {
     if (rowData.id) {
-      axios.post('/finalizar-modulo', {
+      Database.post('/finalizar-modulo', {
         id: rowData.id
       })
         .then(res => {
-          if (res.data.success == 1) {
+        
             this.handleCloseFinalizarProduccion();
             this.getModulosFinalizarProduccion();
             this.getModulos();
             toast.success("Modulo finalizado");
-          }
+
         }, err => {
           toast.error(err.message);
         })
@@ -376,17 +376,17 @@ class ModulosEstados extends Component {
 
   handleProducir(rowData) {
     if (rowData.id) {
-      axios.post('/producir-modulo', {
+      Database.post('/producir-modulo', {
         id: rowData.id
       })
         .then(res => {
-          if (res.data.success == 1) {
+
             this.handleCloseProducir();
             this.getModulosDiseno();
             this.getModulosPausados();
             this.getModulos();
             toast.success("Modulo enviado a Producción");
-          }
+
         }, err => {
           toast.error(err.message);
         })
@@ -396,15 +396,15 @@ class ModulosEstados extends Component {
 
   handleDelete(rowData) {
     if (rowData.id) {
-      axios.post('/delete-modulo', {
+      Database.post('/delete-modulo', {
         id: rowData.id
       })
         .then(res => {
-          if (res.data.success == 1) {
+
             this.handleClose();
             this.getModulos();
             toast.success("Modulo eliminado");
-          }
+
         }, err => {
           toast.error(err.message);
         })
@@ -413,7 +413,7 @@ class ModulosEstados extends Component {
   }
 
   componentDidMount() {
-  
+
     this.getModulos();
 
     this.getModulosDiseno();
@@ -449,7 +449,7 @@ class ModulosEstados extends Component {
                 tabName: "Diseño",
                 tabIcon: Description,
                 tabContent: (
-                  
+
                 <MaterialTable
                 isLoading={this.state.isLoading}
                   columns={ColumnsListado}
@@ -474,7 +474,7 @@ class ModulosEstados extends Component {
                     },
                   }}
                 />
-              
+
                 )
               },
               {
@@ -584,7 +584,7 @@ class ModulosEstados extends Component {
                   title=""
                   localization={localization}
                   actions={[
-                    
+
                   ]}
                   options={{
                     exportButton: true,

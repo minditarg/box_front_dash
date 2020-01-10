@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import Input from "components/Input/Input";
 import moment from "moment";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
@@ -232,7 +232,7 @@ class NewDevolucion extends Component {
             this.setState({
                 disableAllButtons: true
             })
-            axios.post('/insert-devoluciones', {
+            Database.post('/insert-devoluciones', {
                 id_modulo: this.state.orderForm.modulo.value,
                 referencia: this.state.orderForm.referencia.value,
                 comentario: this.state.orderForm.referencia.value,
@@ -243,7 +243,7 @@ class NewDevolucion extends Component {
                     this.setState({
                         disableAllButtons: false
                     })
-                    if (res.data.success == 1) {
+
                         toast.success("Nueva devolucion creada");
                         let orderForm = { ...this.state.orderForm };
                         for (let key in orderForm) {
@@ -257,10 +257,12 @@ class NewDevolucion extends Component {
                         this.props.history.push('/admin/devoluciones');
 
 
-                    }
-                    else {
-                        toast.error("Error");
-                    }
+
+                },err => {
+                  this.setState({
+                      disableAllButtons: false
+                  })
+                  toast.error(err.message)
                 })
         }
     }
@@ -321,11 +323,11 @@ class NewDevolucion extends Component {
     }
 
     getModulos = () => {
-        axios.get('/list-modulos').then((res) => {
+        Database.get('/list-modulos').then((res) => {
 
             let options = [];
             let orderForm = { ...this.state.orderForm };
-            res.data.result.forEach((elem) => {
+            res.result.forEach((elem) => {
                 options.push({ displayValue: elem.chasis, value: elem.id, descripcion: elem.descripcion })
 
             })
@@ -334,6 +336,8 @@ class NewDevolucion extends Component {
                 orderForm: orderForm
             })
 
+        },err => {
+          toast.error(err.message);
         })
 
     }

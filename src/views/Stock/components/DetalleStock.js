@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
+import { toast } from 'react-toastify';
 import { withStyles } from '@material-ui/styles';
 import moment from "moment";
 
@@ -20,12 +21,13 @@ class DetalleStock extends Component {
         detalle: []
     }
     componentDidMount() {
-        axios.get('/detalle-stock/' + this.props.idInsumo + '/' + this.props.cantidadRegistros).then(res => {
-            console.log(res);
+        Database.get('/detalle-stock/' + this.props.idInsumo + '/' + this.props.cantidadRegistros).then(res => {
             //console.log(moment(res.data.result[0].fecha).format('DD/MM/YYYY'));
             this.setState({
-                detalle: res.data.result
+                detalle: res.result
             })
+        },err => {
+          toast.error(err.message);
         })
     }
     render() {
@@ -39,7 +41,7 @@ class DetalleStock extends Component {
                         <TableCell>Movimiento</TableCell>
                         <TableCell>Cantidad</TableCell>
                         <TableCell align="right">Identificador</TableCell>
-                        <TableCell align="right">Usuario</TableCell>      
+                        <TableCell align="right">Usuario</TableCell>
                         <TableCell align="right">Minimo</TableCell>
                         <TableCell align="right">Parcial</TableCell>
                         <TableCell align="right">Fecha</TableCell>
