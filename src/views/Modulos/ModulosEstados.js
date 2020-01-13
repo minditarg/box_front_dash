@@ -13,6 +13,8 @@ import ModalProducir from "./ModalProducir";
 import ModalFinalizarProduccion from "./ModalFinalizarProduccion";
 import ModalCancelarProduccion from "./ModalCancelarProduccion";
 import ModalPausarProduccion from "./ModalPausarProduccion";
+import ModalDisenoaProducir from "./ModalDisenoaProducir";
+
 import Button from "components/CustomButtons/Button.js";
 
 import { ColumnsListado, StateListado } from "./VariablesState";
@@ -77,6 +79,10 @@ class ModulosEstados extends Component {
 
   producirModulo = (rowData) => {
     this.handleClickOpenProducir(rowData);
+  }
+
+  disenoaProducirModulo = (rowData) => {
+    this.handleDisenoaProducir(rowData);
   }
 
   pausarProduccion = (rowData) => {
@@ -374,6 +380,26 @@ class ModulosEstados extends Component {
 
   }
 
+  handleDisenoaProducir(rowData) {
+    if (rowData.id) {
+      axios.post('/disenoaproducir-modulo', {
+        id: rowData.id
+      })
+        .then(res => {
+          if (res.data.success == 1) {
+            this.handleCloseProducir();
+            this.getModulosDiseno();
+            this.getModulosPausados();
+            this.getModulos();
+            toast.success("Modulo enviado a Producción");
+          }
+        }, err => {
+          toast.error(err.message);
+        })
+    }
+
+  }
+
   handleProducir(rowData) {
     if (rowData.id) {
       axios.post('/producir-modulo', {
@@ -464,7 +490,7 @@ class ModulosEstados extends Component {
                   {
                     icon: 'category',
                     tooltip: 'Producir',
-                    onClick: (event, rowData) => this.producirModulo(rowData)
+                    onClick: (event, rowData) => this.disenoaProducirModulo(rowData)
                   }]}
                   options={{
                     exportButton: true,
@@ -619,6 +645,14 @@ class ModulosEstados extends Component {
 
         handleClose={() => this.handleClose()}
         handleDelete={(rowData) => this.handleDelete(rowData)}
+      />,
+      <ModalDisenoaProducir
+      key={"modulos-modalDisenoaProducir"}
+        openProducirDialog={this.state.openProducirDialog}
+        producirRowData={this.state.producirRowData}
+
+        handleCloseProducir={() => this.handleCloseProducir()}
+        handleDisenoaProducir={(rowData) => this.handleDisenoaProducir(rowData)}
       />,
       <ModalProducir
       key={"modulos-modalProducir"}
