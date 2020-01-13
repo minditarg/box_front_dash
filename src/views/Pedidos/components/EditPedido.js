@@ -183,7 +183,7 @@ class EditPedido extends Component {
             Database.post('/update-pedidos', {
                 detalle: this.state.detallepedidos,
                 idPedido: this.props.match.params.idpedido
-            })
+            },this)
                 .then(res => {
 
                         // this.setState({pedidoInsertado: true});
@@ -235,7 +235,7 @@ class EditPedido extends Component {
       this.setState({
         isLoading:true
       })
-      Database.get('/detalle-pedido/' + idPedido)
+      Database.get('/detalle-pedido/' + idPedido,this)
         .then(res => {
 
             let resultado = [...res.result];

@@ -179,7 +179,7 @@ class NewPedido extends Component {
 
             Database.post('/insert-pedidos', {
                 detalle: this.state.detallepedidos
-            })
+            },this)
                 .then(res => {
                         // this.setState({pedidoInsertado: true});
                         this.props.getPedidos();

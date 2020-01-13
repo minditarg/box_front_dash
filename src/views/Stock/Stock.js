@@ -79,7 +79,7 @@ class Stock extends Component {
     this.setState({
       isLoading: true
     })
-    Database.get('/list-insumos')
+    Database.get('/list-insumos',this)
       .then(res => {
 
           let resultado = [...res.result];
@@ -156,7 +156,7 @@ class Stock extends Component {
 
 
   getInsumoEdit = (id) => {
-    Database.get('/list-insumos/' + id)
+    Database.get('/list-insumos/' + id,this)
       .then(resultado => {
 
           if (resultado.result.length > 0) {
@@ -193,7 +193,7 @@ class Stock extends Component {
   handleSubmitEditInsumo = (event) => {
 
     event.preventDefault();
-    Database.post(`/update-insumos`, { id: this.state.insumoEdit.id, codigo: this.state.editInsumoForm.codigo.value, descripcion: this.state.editInsumoForm.descripcion.value, unidad: this.state.editInsumoForm.unidad.value, minimo: this.state.editInsumoForm.minimo.value })
+    Database.post(`/update-insumos`, { id: this.state.insumoEdit.id, codigo: this.state.editInsumoForm.codigo.value, descripcion: this.state.editInsumoForm.descripcion.value, unidad: this.state.editInsumoForm.unidad.value, minimo: this.state.editInsumoForm.minimo.value },this)
       .then(res => {
 
           this.setState({

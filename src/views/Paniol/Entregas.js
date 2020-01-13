@@ -86,7 +86,7 @@ class Entregas extends Component {
     //alert("You want to delete " + id);
     Database.post('/delete-pedidos', {
       id: id
-    })
+    },this)
       .then(res => {
           this.getPedidos();
           toast.info("Ingreso eliminado");
@@ -100,7 +100,7 @@ class Entregas extends Component {
     this.setState({
       isLoading: true
     })
-    Database.get('/list-entregas')
+    Database.get('/list-entregas',this)
       .then(res => {
 
 

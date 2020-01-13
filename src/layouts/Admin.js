@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Route, Redirect, Link } from "react-router-dom";
-import axios from 'axios';
+import Database from "variables/Database.js";
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
@@ -16,7 +16,7 @@ import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
-import routes from "routes.js";
+import routesTotal from "routes.js";
 import { breadcrumRoutes } from "routes.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
@@ -29,34 +29,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 let ps;
 
-const switchRoutes = (
-  <Switch>
-    {routes.map((prop, key) => {
-      if (prop.layout === "/admin" && !prop.groupComponent) {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-            />
-        );
-      } else if (prop.groupComponent) {
-        return prop.dependences.map((prop, key) => {
-          return (
-            <Route
-              path={prop.layout + prop.path}
-              component={prop.component}
-              key={key}
-              />
-          )
-        })
 
-      }
-      return null;
-    })}
-    <Redirect from="/admin" to="/admin/stock" />
-  </Switch>
-);
 
 const useStyles = makeStyles(styles);
 
@@ -74,6 +47,7 @@ export default function Admin({ ...rest }) {
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
   // states and functions
+  const [routes, setRoutes] = React.useState([]);
   const [image, setImage] = React.useState(bgImage);
   const [user, setUser] = React.useState(null);
   const [color, setColor] = React.useState("green");
@@ -88,6 +62,35 @@ export default function Admin({ ...rest }) {
       return false;
     })
   }
+
+  const switchRoutes = (
+    <Switch>
+      {routes.map((prop, key) => {
+        if (prop.layout === "/admin" && !prop.groupComponent) {
+          return (
+            <Route
+              path={prop.layout + prop.path}
+              component={prop.component}
+              key={key}
+              />
+          );
+        } else if (prop.groupComponent) {
+          return prop.dependences.map((prop, key) => {
+            return (
+              <Route
+                path={prop.layout + prop.path}
+                component={prop.component}
+                key={key}
+                />
+            )
+          })
+
+        }
+        return null;
+      })}
+      { /* <Redirect from="/admin" to="/admin/stock" /> */ }
+    </Switch>
+  );
 
   let arrayBread = []
   let arrayCopia = [...breadcrumRoutes]
@@ -107,11 +110,12 @@ export default function Admin({ ...rest }) {
   makeBrand(arrayCopia);
 
   const handleCloseSession = ()=> {
-    axios.get('/logout').then(res =>{
-          if(res.data.success==1){
+    Database.get('/logout').then(res =>{
             setUser(null);
             rest.history.replace('/');
-          }
+
+    }, err => {
+      toast.error(err.message);
     })
   }
 
@@ -160,15 +164,51 @@ export default function Admin({ ...rest }) {
 
   React.useEffect(() => {
 
-         axios.get('/me')
+         Database.get('/me')
             .then(res => {
-              if (res.data.success == 1) {
-                  setUser(res.data.user);
-              } else {
-                toast.error("No esta autenticado en el sistema");
-               // rest.history.replace('/');
-              }
+              let accesosUser = res.result[1].map( elem => {
+                return parseInt(elem.id_acceso);
+              });
+              let routesFilter = routesTotal.filter(elem=> {
+                let indexAccesos = elem.accesos.findIndex(elem2 => {
+                  return (accesosUser.indexOf(elem2) > -1);
+                })
 
+                if(indexAccesos > -1 || elem.accesos.length == 0) {
+                  if(elem.groupComponent) {
+                  let dependences = elem.dependences.filter(elem3 => {
+                    let indexAccesosDependences = elem3.accesos.findIndex(elem4 => {
+                      return (accesosUser.indexOf(elem4) > -1);
+                    })
+                    if(indexAccesosDependences > -1 || elem3.accesos.length == 0) {
+                      return true
+                    }
+                    return false
+                  })
+
+                  elem.dependences = dependences;
+                  return true
+
+                  } else {
+                    return true;
+                  }
+
+                }
+                return false;
+              })
+
+              console.log(accesosUser);
+              console.log(routesFilter);
+
+
+
+                  setUser(res.result[0][0]);
+
+                  setRoutes(routesFilter);
+
+
+            }, err => {
+              toast.error(err.message);
             })
 
 

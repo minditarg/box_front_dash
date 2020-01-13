@@ -57,7 +57,7 @@ class NewUser extends Component {
     this.setState({
       disableAllButtons:true
     })
-    Database.post(`/signup-json`, { username: this.state.newUserForm.username.value, password: this.state.newUserForm.password.value, nombre: this.state.newUserForm.nombre.value, id_users_type: this.state.newUserForm.tipoUser.value })
+    Database.post(`/signup-json`, { username: this.state.newUserForm.username.value, password: this.state.newUserForm.password.value, nombre: this.state.newUserForm.nombre.value, id_users_type: this.state.newUserForm.tipoUser.value },this)
       .then(res => {
 
           toast.success("El usuario se ha creado con exito!");
@@ -125,7 +125,7 @@ class NewUser extends Component {
   }
 
   getUsersType = () => {
-    Database.get('/list-users_type')
+    Database.get('/list-users_type',this)
       .then(res => {
 
           let resultadoUserType = [...res.result];

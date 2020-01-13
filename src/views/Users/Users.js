@@ -188,7 +188,7 @@ class Users extends Component {
 
   handleDeleteUser = rowData => {
 
-    Database.post('/delete-user', { id: rowData.id }).then(res => {
+    Database.post('/delete-user', { id: rowData.id },this).then(res => {
         let users = [...this.state.users]
         users = users.filter(elem => {
           if (elem.id == rowData.id)

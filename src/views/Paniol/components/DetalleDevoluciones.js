@@ -30,7 +30,7 @@ class DetalleDevoluciones extends Component {
 
 
     componentDidMount() {
-        Database.get('/list-devoluciones-detalles/' + this.props.idDevolucion + '/' + this.props.cantidadRegistros).then(res => {
+        Database.get('/list-devoluciones-detalles/' + this.props.idDevolucion + '/' + this.props.cantidadRegistros,this).then(res => {
             console.log(res);
             //console.log(moment(res.data.result[0].fecha).format('DD/MM/YYYY'));
             this.setState({

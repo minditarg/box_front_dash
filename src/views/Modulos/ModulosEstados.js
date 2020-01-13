@@ -100,7 +100,7 @@ class ModulosEstados extends Component {
     this.setState({
       isLoading:true
     })
-    Database.get('/list-modulos-produccion')
+    Database.get('/list-modulos-produccion',this)
       .then(res => {
         this.setState({
           isLoading:false
@@ -131,7 +131,7 @@ class ModulosEstados extends Component {
     this.setState({
       isLoading:true
     })
-    Database.get('/list-modulos-diseno')
+    Database.get('/list-modulos-diseno',this)
       .then(res => {
         this.setState({
           isLoading:false
@@ -160,7 +160,7 @@ class ModulosEstados extends Component {
     this.setState({
       isLoading:true
     })
-    Database.get('/list-modulos-finalizados')
+    Database.get('/list-modulos-finalizados',this)
       .then(res => {
         this.setState({
           isLoading:false
@@ -191,7 +191,7 @@ class ModulosEstados extends Component {
     this.setState({
       isLoading:true
     })
-    Database.get('/list-modulos-pausados')
+    Database.get('/list-modulos-pausados',this)
       .then(res => {
         this.setState({
           isLoading:false
@@ -221,7 +221,7 @@ class ModulosEstados extends Component {
     this.setState({
       isLoading:true
     })
-    Database.get('/list-modulos-cancelados')
+    Database.get('/list-modulos-cancelados',this)
       .then(res => {
         this.setState({
           isLoading:false
@@ -320,7 +320,7 @@ class ModulosEstados extends Component {
     if (rowData.id) {
       Database.post('/pausar-modulo', {
         id: rowData.id
-      })
+      },this)
         .then(res => {
             this.handleClosePausarProduccion();
            // this.getModulosCancelados();
@@ -339,7 +339,7 @@ class ModulosEstados extends Component {
     if (rowData.id) {
       Database.post('/cancelar-modulo', {
         id: rowData.id
-      })
+      },this)
         .then(res => {
 
             this.handleCloseCancelarProduccion();
@@ -359,9 +359,9 @@ class ModulosEstados extends Component {
     if (rowData.id) {
       Database.post('/finalizar-modulo', {
         id: rowData.id
-      })
+      },this)
         .then(res => {
-        
+
             this.handleCloseFinalizarProduccion();
             this.getModulosFinalizarProduccion();
             this.getModulos();
@@ -378,7 +378,7 @@ class ModulosEstados extends Component {
     if (rowData.id) {
       Database.post('/producir-modulo', {
         id: rowData.id
-      })
+      },this)
         .then(res => {
 
             this.handleCloseProducir();
@@ -398,7 +398,7 @@ class ModulosEstados extends Component {
     if (rowData.id) {
       Database.post('/delete-modulo', {
         id: rowData.id
-      })
+      },this)
         .then(res => {
 
             this.handleClose();

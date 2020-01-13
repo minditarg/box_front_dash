@@ -21,7 +21,7 @@ class DetalleStock extends Component {
         detalle: []
     }
     componentDidMount() {
-        Database.get('/detalle-stock/' + this.props.idInsumo + '/' + this.props.cantidadRegistros).then(res => {
+        Database.get('/detalle-stock/' + this.props.idInsumo + '/' + this.props.cantidadRegistros,this).then(res => {
             //console.log(moment(res.data.result[0].fecha).format('DD/MM/YYYY'));
             this.setState({
                 detalle: res.result

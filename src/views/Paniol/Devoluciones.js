@@ -87,7 +87,7 @@ class Devoluciones extends Component {
     this.setState({
       isLoading: true
     })
-    Database.get('/list-devoluciones')
+    Database.get('/list-devoluciones',this)
       .then(res => {
 
           let resultado = [...res.result];

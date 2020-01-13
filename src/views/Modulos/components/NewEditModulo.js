@@ -366,7 +366,7 @@ class NewEditModulo extends Component {
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: this.detalleModulos,
                 id: this.props.match.params.idModulo
-            })
+            },this)
                 .then(res => {
 
                         // this.setState({pedidoInsertado: true});
@@ -397,7 +397,7 @@ class NewEditModulo extends Component {
                 chasis: this.state.orderForm.chasis.value,
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: this.state.detalleModulos
-            })
+            },this)
                 .then(res => {
                         // this.setState({pedidoInsertado: true});
                         // this.props.getIngresos();
@@ -426,7 +426,7 @@ class NewEditModulo extends Component {
           rowSelectPlantilla: this.state.plantillas[indexSeleccionado],
           detalleSelectPlantilla: [],
         })
-        Database.get('/list-plantillas-insumos/' + idPlantilla )
+        Database.get('/list-plantillas-insumos/' + idPlantilla,this )
           .then(res => {
 
               this.setState({
@@ -507,7 +507,7 @@ class NewEditModulo extends Component {
 
     getInsumosParcial = (idModulo) => {
         this.setState({ isLoading: true });
-        Database.get('/list-modulos-insumos/' + idModulo)
+        Database.get('/list-modulos-insumos/' + idModulo,this)
             .then(res => {
                 this.setState({ isLoading: false });
 
@@ -544,7 +544,7 @@ class NewEditModulo extends Component {
 
     getPlantillas = () => {
 
-        Database.get('/list-plantillas' )
+        Database.get('/list-plantillas',this )
             .then(res => {
 
                     let plantillas = [ ...res.result ];

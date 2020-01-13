@@ -366,7 +366,7 @@ class EditPlantilla extends Component {
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: detalleEdit,
                 id: this.props.match.params.idPlantilla
-            })
+            },this)
                 .then(res => {
 
                         this.props.getPlantillas();
@@ -393,7 +393,7 @@ class EditPlantilla extends Component {
                 codigo: this.state.orderForm.codigo.value,
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: this.state.detallePlantillas
-            })
+            },this)
                 .then(res => {
 
                         // this.setState({pedidoInsertado: true});
@@ -468,7 +468,7 @@ class EditPlantilla extends Component {
 
     getInsumosParcial = (idPlantilla) => {
         this.setState({ isLoading: true });
-        Database.get('/list-plantillas-insumos/' + idPlantilla)
+        Database.get('/list-plantillas-insumos/' + idPlantilla,this)
             .then(res => {
 
 

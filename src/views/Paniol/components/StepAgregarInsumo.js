@@ -93,7 +93,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
      const getInsumos = (url) => {
         setIsLoading(true);
-        Database.get(url)
+        Database.get(url,this)
             .then(res => {
                 setIsLoading(false);
                     let resultado = [...res.result];

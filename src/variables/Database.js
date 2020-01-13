@@ -22,12 +22,17 @@ class Database {
             }
           },err => {
             if(err.response){
-              if(err.response.status == 401)
+              if(err.response.status == 401) {
+              _this.props.history.replace("/");
               reject({message:"No inició sesión en la aplicación"})
-              else if(err.response.status == 406)
+              }
+              else if(err.response.status == 406) {
+
               reject({message:"No tiene permisos en esta sección"})
-              else
+              }
+              else {
               reject({message:"error desconocido"});
+              }
             } else if(err.message) {
               reject({message:err.message});
             } else {

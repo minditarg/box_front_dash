@@ -69,7 +69,7 @@ class Modulos extends Component {
     this.setState({
       isLoading:true
     })
-    Database.get('/list-modulos')
+    Database.get('/list-modulos',this)
       .then(res => {
         this.setState({
           isLoading:false
@@ -112,9 +112,9 @@ class Modulos extends Component {
     if (rowData.id) {
       Database.post('/delete-modulo', {
         id: rowData.id
-      })
+      },this)
         .then(res => {
-          
+
             this.handleClose();
             this.getModulos();
             toast.success("Modulo eliminado");

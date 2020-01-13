@@ -270,9 +270,9 @@ class NewPlantilla extends Component {
                 codigo: this.state.orderForm.codigo.value,
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: this.state.detallePlantillas
-            })
+            },this)
                 .then(res => {
-                    
+
                         toast.success("Nueva plantilla creada");
                         this.props.getPlantillas();
                         this.props.history.push("/admin/plantillas");

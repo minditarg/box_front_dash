@@ -54,7 +54,7 @@ class EditUser extends Component {
 
 
   getUsersType = () => {
-    Database.get('/list-users_type')
+    Database.get('/list-users_type',this)
       .then(res => {
 
           let resultadoUserType = [...res.result];

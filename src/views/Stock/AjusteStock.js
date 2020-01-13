@@ -123,7 +123,7 @@ class AjusteStock extends Component {
     }
 
     getInsumos = () => {
-        Database.get('/list-insumos')
+        Database.get('/list-insumos',this)
             .then(res => {
 
                     let resultado = [...res.result];
@@ -194,7 +194,7 @@ class AjusteStock extends Component {
             descripcion: event.target[1].value,
             cantidad: event.target[2].value
 
-        })
+        },this)
             .then(res => {
 
                     toast.success("Insumo Ajustado");

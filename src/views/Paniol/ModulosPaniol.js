@@ -116,7 +116,7 @@ class ModulosPaniol extends Component {
     this.setState({
       isLoading: true
     })
-    Database.get('/list-modulos-paniol')
+    Database.get('/list-modulos-paniol',this)
       .then(res => {
 
           let resultado = [...res.modulos];
@@ -151,7 +151,7 @@ class ModulosPaniol extends Component {
   handleClickOpen(rowData) {
 
     this.setState({ isLoadingDetalle: true, modulosDetalle: [], chasisDetalle: rowData.chasis,descripcionDetalle:rowData.descripcion, open: true });
-    Database.get('/list-modulos-insumos/' + rowData.id)
+    Database.get('/list-modulos-insumos/' + rowData.id,this)
       .then(res => {
 
           let disponible;
@@ -240,6 +240,7 @@ class ModulosPaniol extends Component {
                    }}
               actions={[{
                 icon: 'description',
+
                 tooltip: 'Detalle del Módulo',
                 onClick: (event, rowData) => this.handleClickOpen(rowData)
               },

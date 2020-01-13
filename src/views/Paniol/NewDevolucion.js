@@ -238,7 +238,7 @@ class NewDevolucion extends Component {
                 comentario: this.state.orderForm.referencia.value,
 
                 detalle: this.state.detalleDevoluciones
-            })
+            },this)
                 .then(res => {
                     this.setState({
                         disableAllButtons: false
@@ -323,7 +323,7 @@ class NewDevolucion extends Component {
     }
 
     getModulos = () => {
-        Database.get('/list-modulos').then((res) => {
+        Database.get('/list-modulos',this).then((res) => {
 
             let options = [];
             let orderForm = { ...this.state.orderForm };

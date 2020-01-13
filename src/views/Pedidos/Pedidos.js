@@ -69,7 +69,7 @@ class Pedidos extends Component {
     this.setState({
       isLoading:true
     })
-    Database.get('/list-pedidos')
+    Database.get('/list-pedidos',this)
       .then(res => {
 
           let resultado = [...res.result];
@@ -107,7 +107,7 @@ class Pedidos extends Component {
     if (rowData.id) {
       Database.post('/delete-pedidos', {
         id: rowData.id
-      })
+      },this)
         .then(res => {
             this.handleClose();
             this.getPedidos();

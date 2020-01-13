@@ -68,7 +68,7 @@ class Plantillas extends Component {
     this.setState({
       isLoading:true
     })
-    Database.get('/list-plantillas')
+    Database.get('/list-plantillas',this)
       .then(res => {
 
           let resultado = [...res.result];
@@ -103,7 +103,7 @@ class Plantillas extends Component {
     if (rowData.id) {
       Database.post('/delete-plantilla', {
         id: rowData.id
-      })
+      },this)
         .then(res => {
 
             this.handleClose();

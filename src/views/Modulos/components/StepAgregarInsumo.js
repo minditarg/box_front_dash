@@ -98,7 +98,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
      const getInsumos = () => {
         setIsLoading(true);
-        Database.get('/list-insumos')
+        Database.get('/list-insumos',this)
             .then(res => {
                 setIsLoading(false);
 

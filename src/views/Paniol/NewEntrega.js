@@ -233,7 +233,7 @@ class NewEntrega extends Component {
                 referencia: this.state.orderForm.referencia.value,
                 comentario: this.state.orderForm.comentario.value,
                 detalle: this.state.detalleEntregas
-            })
+            },this)
                 .then(res => {
                     this.setState({
                         disableAllButtons: false
@@ -330,7 +330,7 @@ class NewEntrega extends Component {
     }
 
     getModulos = () => {
-        Database.get('/list-modulos').then((res) => {
+        Database.get('/list-modulos',this).then((res) => {
 
             let options = [];
             let orderForm = { ...this.state.orderForm };
