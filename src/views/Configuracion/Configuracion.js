@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Input from 'components/Input/Input';
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
-import axios from "axios";
+import Database from "variables/Database.js";
 import { toast } from 'react-toastify';
 
 import { withStyles } from '@material-ui/styles';
@@ -49,19 +49,18 @@ var minimoAnt = null;
 
 class Configuracion extends Component {
   state = JSON.parse(JSON.stringify(StateEditConfiguracion));
-  
+
   getConfiguracionEdit = (id) => {
-    axios.get('/list-configuraciones/')
+    Database.get('/list-configuraciones/',this)
       .then(resultado => {
-        if (resultado.data.success == 1) {
-          if (resultado.data.result.length > 0) {
+          if (resultado.result.length > 0) {
             this.setState({
-              configuracionEdit: resultado.data.result[0]
+              configuracionEdit: resultado.result[0]
             })
-            minimoAnt = resultado.data.result[0].minimo;
+            minimoAnt = resultado.result[0].minimo;
             let editConfiguracionFormAlt = { ...this.state.editConfiguracionForm };
             //alert(resultado.data.result[0].valor);
-            editConfiguracionFormAlt.alertaCosto.value = resultado.data.result[0].valor;
+            editConfiguracionFormAlt.alertaCosto.value = resultado.result[0].valor;
 
             for (let key in editConfiguracionFormAlt) {
               editConfiguracionFormAlt[key].touched = true;
@@ -76,7 +75,9 @@ class Configuracion extends Component {
               configuracionEdit: null
             })
           }
-        }
+
+      },err => {
+        toast.error(err.message);
       })
   }
 
@@ -88,24 +89,18 @@ class Configuracion extends Component {
       alertaCosto: this.state.editConfiguracionForm.alertaCosto.value
 
     }
-    axios.post(`/update-configuracion`, objetoUpdate)
+    Database.post(`/update-configuracion`, objetoUpdate,this)
       .then(res => {
-        let estadoAlt = null
-        if (res.data.success == 0) {
-          estadoAlt = false
-        }
-        if (res.data.success == 1) {
-          estadoAlt = true
-        }
 
-        if (estadoAlt) {
           toast.success("Configuracion actualizada correctamente");
        //   this.props.getConfiguracionEdit();
           this.setState({
             editFormIsValid: false
           })
 
-        }
+
+      },err => {
+        toast.error(err.message);
       })
 
   }

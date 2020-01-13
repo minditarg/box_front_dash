@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
 import moment from 'moment';
 
@@ -87,13 +87,10 @@ class Devoluciones extends Component {
     this.setState({
       isLoading: true
     })
-    axios.get('/list-devoluciones')
+    Database.get('/list-devoluciones',this)
       .then(res => {
-        this.setState({
-          isLoading: false
-        })
-        if (res.data.success == 1) {
-          let resultado = [...res.data.result];
+
+          let resultado = [...res.result];
           resultado = resultado.map(elem=>{
             return {
               ...elem,
@@ -102,9 +99,15 @@ class Devoluciones extends Component {
             }
           })
           this.setState({
-            devoluciones: resultado
+            devoluciones: resultado,
+            isLoading: false
           })
-        }
+
+      },err => {
+        this.setState({
+          isLoading: false
+        })
+        toast.error(err.message);
       })
   }
 

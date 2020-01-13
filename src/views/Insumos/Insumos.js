@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js"
 import { Route, Switch, Link } from 'react-router-dom';
 import moment from 'moment';
 
@@ -69,13 +69,13 @@ class Insumos extends Component {
     this.setState({
       isLoading:true
     })
-    axios.get('/list-insumos')
+    Database.get('/list-insumos',this)
       .then(res => {
         this.setState({
           isLoading:false
         })
-        if (res.data.success == 1) {
-          let resultado = [...res.data.result];
+
+          let resultado = [...res.result];
           resultado = resultado.map(elem=>{
             return {
               ...elem,
@@ -86,9 +86,7 @@ class Insumos extends Component {
           this.setState({
             insumos: resultado
           })
-        } else if (res.data.success == 3 || res.data.success == 4) {
 
-        }
 
       }, err => {
         toast.error(err.message);
@@ -111,15 +109,15 @@ class Insumos extends Component {
 
   handleDelete(rowData) {
     if (rowData.id) {
-      axios.post('/delete-insumos', {
+      Database.post('/delete-insumos', {
         id: rowData.id
-      })
+      },this)
         .then(res => {
-          if (res.data.success == 1) {
+
             this.handleClose();
             this.getInsumos();
             toast.success("Insumo eliminado");
-          }
+
         }, err => {
           toast.error(err.message);
         })

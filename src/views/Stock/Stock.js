@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 //import io from 'socket.io-client';
 import { Route, Switch, Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
@@ -79,13 +79,10 @@ class Stock extends Component {
     this.setState({
       isLoading: true
     })
-    axios.get('/list-insumos')
+    Database.get('/list-insumos',this)
       .then(res => {
-        this.setState({
-          isLoading: false
-        })
-        if (res.data.success == 1) {
-          let resultado = [...res.data.result];
+
+          let resultado = [...res.result];
           resultado = resultado.map(elem=>{
             return {
               ...elem,
@@ -94,16 +91,14 @@ class Stock extends Component {
 
           })
           this.setState({
-            insumos: resultado
+            insumos: resultado,
+            isLoading: false
           })
-        } else if (res.data.success == 3 || res.data.success == 4) {
-          toast.error(res.data.error_msj);
-          setTimeout(() => {
-            this.props.history.replace('/');
-          }, 3500)
-        }
 
-      }, err => {
+        }, err => {
+        this.setState({
+          isLoading: false
+        })
         toast.error(err.message);
       })
   }
@@ -161,20 +156,20 @@ class Stock extends Component {
 
 
   getInsumoEdit = (id) => {
-    axios.get('/list-insumos/' + id)
+    Database.get('/list-insumos/' + id,this)
       .then(resultado => {
-        if (resultado.data.success == 1) {
-          if (resultado.data.result.length > 0) {
+
+          if (resultado.result.length > 0) {
             this.setState({
-              insumoEdit: resultado.data.result[0]
+              insumoEdit: resultado.result[0]
             })
 
             let editInsumoFormAlt = { ...this.state.editInsumoForm };
-            editInsumoFormAlt.codigo.value = resultado.data.result[0].codigo;
-            editInsumoFormAlt.descripcion.value = resultado.data.result[0].descripcion;
-            editInsumoFormAlt.unidad.value = resultado.data.result[0].unidad;
-            editInsumoFormAlt.minimo.value = resultado.data.result[0].minimo;
-            editInsumoFormAlt.stock.value = resultado.data.result[0].stock;
+            editInsumoFormAlt.codigo.value = resultado.result[0].codigo;
+            editInsumoFormAlt.descripcion.value = resultado.result[0].descripcion;
+            editInsumoFormAlt.unidad.value = resultado.result[0].unidad;
+            editInsumoFormAlt.minimo.value = resultado.result[0].minimo;
+            editInsumoFormAlt.stock.value = resultado.result[0].stock;
 
             for (let key in editInsumoFormAlt) {
               editInsumoFormAlt[key].touched = true;
@@ -189,30 +184,25 @@ class Stock extends Component {
               insumoEdit: null
             })
           }
-        }
+
+      },err => {
+        toast.error(err.message);
       })
   }
 
   handleSubmitEditInsumo = (event) => {
 
     event.preventDefault();
-    axios.post(`/update-insumos`, { id: this.state.insumoEdit.id, codigo: this.state.editInsumoForm.codigo.value, descripcion: this.state.editInsumoForm.descripcion.value, unidad: this.state.editInsumoForm.unidad.value, minimo: this.state.editInsumoForm.minimo.value })
+    Database.post(`/update-insumos`, { id: this.state.insumoEdit.id, codigo: this.state.editInsumoForm.codigo.value, descripcion: this.state.editInsumoForm.descripcion.value, unidad: this.state.editInsumoForm.unidad.value, minimo: this.state.editInsumoForm.minimo.value },this)
       .then(res => {
-        let estadoAlt = null
-        if (res.data.success == 0) {
-          estadoAlt = false
-        }
-        if (res.data.success == 1) {
-          estadoAlt = true
-        }
-
-        if (estadoAlt) {
 
           this.setState({
             editFormIsValid: false
           })
           toast.success("Los cambios se realizaron correctamente");
-        }
+
+      },err => {
+        toast.error(err.message);
       })
 
   }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
 import moment from 'moment';
 
@@ -69,26 +69,22 @@ class Pedidos extends Component {
     this.setState({
       isLoading:true
     })
-    axios.get('/list-pedidos')
+    Database.get('/list-pedidos',this)
       .then(res => {
-        this.setState({
-          isLoading:false
-        })
-        if (res.data.success == 1) {
-          //alert(res.data.result[0].descripcion);
-          console.log(res.data)
-          let resultado = [...res.data.result];
+
+          let resultado = [...res.result];
           resultado = resultado.map(elem=>{
             return {...elem}
           })
           this.setState({
-            pedidos: resultado
+            pedidos: resultado,
+            isLoading:false
           })
-        } else if (res.data.success == 3 || res.data.success == 4) {
-
-        }
 
       }, err => {
+        this.setState({
+          isLoading:false
+        })
         toast.error(err.message);
       })
   }
@@ -109,15 +105,14 @@ class Pedidos extends Component {
 
   handleDelete(rowData) {
     if (rowData.id) {
-      axios.post('/delete-pedidos', {
+      Database.post('/delete-pedidos', {
         id: rowData.id
-      })
+      },this)
         .then(res => {
-          if (res.data.success == 1) {
             this.handleClose();
             this.getPedidos();
             toast.success("Pedido eliminado");
-          }
+
         }, err => {
           toast.error(err.message);
         })

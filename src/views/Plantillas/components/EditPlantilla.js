@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import Input from "components/Input/Input";
 import moment from "moment";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
@@ -360,32 +360,25 @@ class EditPlantilla extends Component {
           disableAllButtons:true
         });
 
-            axios.post('/update-plantilla', {
+            Database.post('/update-plantilla', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 codigo: this.state.orderForm.codigo.value,
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: detalleEdit,
                 id: this.props.match.params.idPlantilla
-            })
+            },this)
                 .then(res => {
-                    if (res.data.success == 1) {
-                        // this.setState({pedidoInsertado: true});
-                        // this.props.getIngresos();
-                        // toast.success("Nueva plantilla creada");
+
                         this.props.getPlantillas();
                         this.props.history.push("/admin/plantillas");
-                    }
-                    else {
-                        toast.error("Error");
-                    }
-                    this.setState({
-                      disableAllButtons:false
-                    });
+
+
                 },err => {
-                     toast.error("Error de conexion al server");
+
                      this.setState({
                        disableAllButtons:false
                      });
+                     toast.error(err.message);
                 })
         }
     }
@@ -395,24 +388,23 @@ class EditPlantilla extends Component {
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
             this.setState({ disableAllButtons: true });
-            axios.post('/insert-plantilla', {
+            Database.post('/insert-plantilla', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 codigo: this.state.orderForm.codigo.value,
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: this.state.detallePlantillas
-            })
+            },this)
                 .then(res => {
-                    if (res.data.success == 1) {
+
                         // this.setState({pedidoInsertado: true});
                         // this.props.getIngresos();
                         toast.success("Nueva plantilla creada");
                         this.props.getPlantillas();
                         this.props.history.push("/admin/plantillas");
-                    }
-                    else {
-                        this.setState({ disableAllButtons: false });
-                        toast.error("Error");
-                    }
+
+                },err => {
+                  this.setState({ disableAllButtons: false });
+                  toast.error(err.message);
                 })
         }
     }
@@ -476,15 +468,14 @@ class EditPlantilla extends Component {
 
     getInsumosParcial = (idPlantilla) => {
         this.setState({ isLoading: true });
-        axios.get('/list-plantillas-insumos/' + idPlantilla)
+        Database.get('/list-plantillas-insumos/' + idPlantilla,this)
             .then(res => {
-                this.setState({ isLoading: false });
 
-                if (res.data.success == 1) {
+
                     let orderForm = { ...this.state.orderForm };
                     let objPlantilla = null;
-                    if (res.data.plantilla.length == 1) {
-                        objPlantilla = res.data.plantilla[0];
+                    if (res.plantilla.length == 1) {
+                        objPlantilla = res.plantilla[0];
 
                         for (let key in orderForm) {
                             if (objPlantilla[key]) {
@@ -496,20 +487,23 @@ class EditPlantilla extends Component {
 
                     }
 
-                    this.detallePlantillas = [...res.data.insumos];
-                    this.copiaDetallePlantillas = JSON.parse(JSON.stringify(res.data.insumos));
-                    console.log(this.copiaDetallePlantillas);
+                    this.detallePlantillas = [...res.insumos];
+                    this.copiaDetallePlantillas = JSON.parse(JSON.stringify(res.insumos));
 
                     this.setState({
                         orderForm: orderForm,
-                        detallePlantillas: res.data.insumos
+                        detallePlantillas: res.insumos,
+                        isLoading: false
                     }, () => {
                         this.inputChangedHandler();
                     })
 
-                }
 
 
+
+            },err => {
+              this.setState({ isLoading: false });
+              toast.error(err.message);
             })
 
     }

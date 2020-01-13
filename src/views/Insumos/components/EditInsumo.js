@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Input from 'components/Input/Input';
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
-import axios from "axios";
+import Database from "variables/Database.js";
 import { toast } from 'react-toastify';
 
 import { withStyles } from '@material-ui/styles';
@@ -52,10 +52,10 @@ class EditInsumo extends Component {
 
 
   getCategorias = () => {
-    axios.get('/list-categorias')
+    Database.get('/list-categorias',this)
       .then(res => {
-        if (res.data.success == 1) {
-          let resultadoCategorias = [...res.data.result];
+
+          let resultadoCategorias = [...res.result];
           let a = [];
           resultadoCategorias.forEach(function (entry) {
             //  alert(entry.codigo);
@@ -69,27 +69,28 @@ class EditInsumo extends Component {
           this.setState({
             editInsumoForm: formulario
           })
-        }
+
+      },err => {
+        toast.error(err.message);
       })
   }
   getInsumoEdit = (id) => {
-    axios.get('/list-insumos/' + id)
+    Database.get('/list-insumos/' + id,this)
       .then(resultado => {
-        if (resultado.data.success == 1) {
-          if (resultado.data.result.length > 0) {
+          if (resultado.result.length > 0) {
             this.setState({
-              insumoEdit: resultado.data.result[0]
+              insumoEdit: resultado.result[0]
             })
 
             let editInsumoFormAlt = { ...this.state.editInsumoForm };
-            editInsumoFormAlt.categoria.value = resultado.data.result[0].id_insumos_categorias;
-            editInsumoFormAlt.codigo.value = resultado.data.result[0].codigo;
-            editInsumoFormAlt.numero.value = resultado.data.result[0].numero;
-            editInsumoFormAlt.descripcion.value = resultado.data.result[0].descripcion;
-            editInsumoFormAlt.unidad.value = resultado.data.result[0].unidad;
-            editInsumoFormAlt.minimo.value = resultado.data.result[0].minimo;
-            editInsumoFormAlt.alertar.value = resultado.data.result[0].alertar;
-            editInsumoFormAlt.autorizar.value = resultado.data.result[0].autorizar;
+            editInsumoFormAlt.categoria.value = resultado.result[0].id_insumos_categorias;
+            editInsumoFormAlt.codigo.value = resultado.result[0].codigo;
+            editInsumoFormAlt.numero.value = resultado.result[0].numero;
+            editInsumoFormAlt.descripcion.value = resultado.result[0].descripcion;
+            editInsumoFormAlt.unidad.value = resultado.result[0].unidad;
+            editInsumoFormAlt.minimo.value = resultado.result[0].minimo;
+            editInsumoFormAlt.alertar.value = resultado.result[0].alertar;
+            editInsumoFormAlt.autorizar.value = resultado.result[0].autorizar;
 
             for (let key in editInsumoFormAlt) {
               editInsumoFormAlt[key].touched = true;
@@ -104,7 +105,9 @@ class EditInsumo extends Component {
               insumoEdit: null
             })
           }
-        }
+
+      },err => {
+        toast.error(err.message);
       })
   }
 
@@ -127,24 +130,18 @@ class EditInsumo extends Component {
   //    objetoUpdate.minimo = this.state.editInsumoForm.minimo.value;
 
 
-    axios.post(`/update-insumos`, objetoUpdate)
+    Database.post(`/update-insumos`, objetoUpdate,this)
       .then(res => {
-        let estadoAlt = null
-        if (res.data.success == 0) {
-          estadoAlt = false
-        }
-        if (res.data.success == 1) {
-          estadoAlt = true
-        }
 
-        if (estadoAlt) {
           toast.success("Los cambios se realizaron correctamente");
           this.props.getInsumos();
           this.setState({
             editFormIsValid: false
           })
 
-        }
+
+      },err => {
+        toast.error(err.message);
       })
 
   }
@@ -201,21 +198,21 @@ class EditInsumo extends Component {
       //alert(event.target.value); //el idInsumoCategoria
 
 
-      axios.get('/list-categorias/' + event.target.value)
+      Database.get('/list-categorias/' + event.target.value,this)
         .then(res => {
-          if (res.data.success == 1) {
-            let resultado = [...res.data.result];
+
+            let resultado = [...res.result];
 
             updatedOrderForm["codigo"].value = resultado[0].codigo;
             updatedOrderForm["codigo"].valid = true;
             updatedOrderForm["codigo"].touched = true;
 
-            axios.get('/get-siguiente/' + resultado[0].id)
+            Database.get('/get-siguiente/' + resultado[0].id,this)
               .then(res => {
-                if (res.data.success == 1) {
+
                   let siguiente = null;
-                  if (res.data.result[0].siguiente)
-                    siguiente = res.data.result[0].siguiente;
+                  if (res.result[0].siguiente)
+                    siguiente = res.result[0].siguiente;
                   else
                     siguiente = 1;
 
@@ -229,7 +226,9 @@ class EditInsumo extends Component {
                     formIsValid: formIsValidAlt
 
                   })
-                }
+
+              },err => {
+                toast.error(err.message);
               })
 
             this.setState({
@@ -238,8 +237,7 @@ class EditInsumo extends Component {
 
             })
 
-          } else if (res.data.success == 3 || res.data.success == 4) {
-          }
+
         }, err => {
           toast.error(err.message);
         })

@@ -4,7 +4,7 @@ import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
 import { StateNewUser } from "../VariablesState";
 
-import axios from "axios";
+import Database from "variables/Database.js";
 
 import { toast } from 'react-toastify';
 
@@ -57,16 +57,9 @@ class NewUser extends Component {
     this.setState({
       disableAllButtons:true
     })
-    axios.post(`/signup-json`, { username: this.state.newUserForm.username.value, password: this.state.newUserForm.password.value, nombre: this.state.newUserForm.nombre.value, id_users_type: this.state.newUserForm.tipoUser.value })
+    Database.post(`/signup-json`, { username: this.state.newUserForm.username.value, password: this.state.newUserForm.password.value, nombre: this.state.newUserForm.nombre.value, id_users_type: this.state.newUserForm.tipoUser.value },this)
       .then(res => {
-        let estadoAlt = null
 
-        if (res.data.success == 1) {
-          estadoAlt = true
-        } else {
-          estadoAlt = false
-        }
-        if (estadoAlt) {
           toast.success("El usuario se ha creado con exito!");
           this.setState({
             successSubmit: true,
@@ -77,12 +70,7 @@ class NewUser extends Component {
           })
           this.resetNewForm();
 
-        } else {
-          toast.error(res.data.error_msj);
-          this.setState({
-            disableAllButtons:false
-          })
-        }
+
       },err => {
         toast.error(err.message);
         this.setState({
@@ -137,10 +125,10 @@ class NewUser extends Component {
   }
 
   getUsersType = () => {
-    axios.get('/list-users_type')
+    Database.get('/list-users_type',this)
       .then(res => {
-        if (res.data.success == 1) {
-          let resultadoUserType = [...res.data.result];
+
+          let resultadoUserType = [...res.result];
           let a = [];
           resultadoUserType.forEach(function (entry) {
             a.push({
@@ -156,7 +144,9 @@ class NewUser extends Component {
 
 
 
-        }
+
+      },err => {
+        toast.error(err.message);
       })
   }
 

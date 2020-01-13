@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import Input from "components/Input/Input";
 import moment from "moment";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
@@ -180,12 +180,12 @@ class EditPedido extends Component {
           })
 
           console.log(this.state.detallepedidos);
-            axios.post('/update-pedidos', {
+            Database.post('/update-pedidos', {
                 detalle: this.state.detallepedidos,
                 idPedido: this.props.match.params.idpedido
-            })
+            },this)
                 .then(res => {
-                    if (res.data.success == 1) {
+
                         // this.setState({pedidoInsertado: true});
                         this.props.getPedidos();
                         toast.success("Pedido actualizado");
@@ -193,13 +193,12 @@ class EditPedido extends Component {
                          setTimeout(()=>{
                            this.props.history.push("/admin/pedidos");
                          },1000)
-                    }
-                    else {
-                      this.setState({
-                        disableAllButtons:false
-                      })
-                        toast.error("Error");
-                    }
+
+                },err => {
+                  this.setState({
+                    disableAllButtons:false
+                  })
+                    toast.error(err.message);
                 })
         }
     }
@@ -209,7 +208,7 @@ class EditPedido extends Component {
     }
 
     closeDialog() {
-        this.setState({ open: false });   
+        this.setState({ open: false });
     }
 
     onClickInsumo = (rowInsumo, cantidad) => {
@@ -236,26 +235,23 @@ class EditPedido extends Component {
       this.setState({
         isLoading:true
       })
-      axios.get('/detalle-pedido/' + idPedido)
+      Database.get('/detalle-pedido/' + idPedido,this)
         .then(res => {
-           // alert("OK");
-          this.setState({
-            isLoading:false
-          })
-          if (res.data.success == 1) {
-            
-            let resultado = [...res.data.result];
+
+            let resultado = [...res.result];
             resultado = resultado.map(elem=>{
               return {...elem}
             })
             this.setState({
-                detallepedidos: resultado
+                detallepedidos: resultado,
+                isLoading:false
             })
-          } else if (res.data.success == 3 || res.data.success == 4) {
-  
-          }
-  
+
         }, err => {
+          this.setState({
+            isLoading:false
+          })
+
           toast.error(err.message);
         })
 
@@ -294,7 +290,7 @@ class EditPedido extends Component {
 
             }];
 
-        
+
         this.CargarDatosPedido(this.props.match.params.idpedido);
     }
 
@@ -369,7 +365,7 @@ class EditPedido extends Component {
                                     />
 
 
-                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/pedidos')} ><ArrowBack />Volver</Button> 
+                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/pedidos')} ><ArrowBack />Volver</Button>
                                 <Button style={{ marginTop: '25px' }} color="primary" type="submit"><Save /> Guardar</Button>
 
                             </CardBody>

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import Input from "components/Input/Input";
 import moment from "moment";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
@@ -360,29 +360,26 @@ class NewEditModulo extends Component {
                     return false;
             })
 
-            axios.post('/update-modulo', {
+            Database.post('/update-modulo', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 chasis: this.state.orderForm.chasis.value,
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: this.detalleModulos,
                 id: this.props.match.params.idModulo
-            })
+            },this)
                 .then(res => {
-                    if (res.data.success == 1) {
+
                         // this.setState({pedidoInsertado: true});
                         // this.props.getIngresos();
                         // toast.success("Nueva plantilla creada");
                         this.props.getModulos();
                         this.props.history.push("/admin/modulos");
-                    }
-                    else {
-                        toast.error("Error");
-                    }
+
                     this.setState({
                         disableAllButtons: false
                     });
                 }, err => {
-                    toast.error("Error de conexion al server");
+                    toast.error(err.message);
                     this.setState({
                         disableAllButtons: false
                     });
@@ -395,25 +392,23 @@ class NewEditModulo extends Component {
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
             this.setState({ disableAllButtons: true });
-            axios.post('/insert-modulo', {
+            Database.post('/insert-modulo', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 chasis: this.state.orderForm.chasis.value,
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: this.state.detalleModulos
-            })
+            },this)
                 .then(res => {
-                    if (res.data.success == 1) {
                         // this.setState({pedidoInsertado: true});
                         // this.props.getIngresos();
 
                         toast.success("Nuevo módulo creado");
                         this.props.getModulos();
                         this.props.history.push("/admin/modulos");
-                    }
-                    else {
-                        this.setState({ disableAllButtons: false });
-                        toast.error("Error");
-                    }
+
+                },err => {
+                  this.setState({ disableAllButtons: false });
+                  toast.error(err.message);
                 })
         }
     }
@@ -431,16 +426,17 @@ class NewEditModulo extends Component {
           rowSelectPlantilla: this.state.plantillas[indexSeleccionado],
           detalleSelectPlantilla: [],
         })
-        axios.get('/list-plantillas-insumos/' + idPlantilla )
+        Database.get('/list-plantillas-insumos/' + idPlantilla,this )
           .then(res => {
-            if (res.data.success == 1) {
 
               this.setState({
-                detalleSelectPlantilla: res.data.insumos
+                detalleSelectPlantilla: res.insumos
               })
-            }
 
 
+
+          },err => {
+            toast.error(err.message);
           })
 
 
@@ -511,15 +507,14 @@ class NewEditModulo extends Component {
 
     getInsumosParcial = (idModulo) => {
         this.setState({ isLoading: true });
-        axios.get('/list-modulos-insumos/' + idModulo)
+        Database.get('/list-modulos-insumos/' + idModulo,this)
             .then(res => {
                 this.setState({ isLoading: false });
 
-                if (res.data.success == 1) {
                     let orderForm = { ...this.state.orderForm };
                     let objModulo = null;
-                    if (res.data.modulo.length == 1) {
-                        objModulo = res.data.modulo[0];
+                    if (res.modulo.length == 1) {
+                        objModulo = res.modulo[0];
 
                         for (let key in orderForm) {
                             if (objModulo[key]) {
@@ -531,32 +526,35 @@ class NewEditModulo extends Component {
 
                     }
 
-                    this.detalleModulos = [...res.data.insumos];
-                    this.copiaDetalleModulos = JSON.parse(JSON.stringify(res.data.insumos));
+                    this.detalleModulos = [...res.insumos];
+                    this.copiaDetalleModulos = JSON.parse(JSON.stringify(res.insumos));
 
                     this.setState({
                         orderForm: orderForm,
-                        detalleModulos: res.data.insumos
+                        detalleModulos: res.insumos
                     }, () => {
                         this.inputChangedHandler();
                     })
-                }
+
+            },err => {
+              toast.error(err.message);
             })
     }
 
 
     getPlantillas = () => {
 
-        axios.get('/list-plantillas' )
+        Database.get('/list-plantillas',this )
             .then(res => {
 
-                if (res.data.success == 1) {
-                    let plantillas = [ ...res.data.result ];
+                    let plantillas = [ ...res.result ];
                     this.setState({
                         plantillas: plantillas,
 
                     })
-                }
+
+            },err => {
+              toast.error(err.message);
             })
     }
 

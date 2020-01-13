@@ -1,10 +1,11 @@
 //COMPONENTES GENERALES
 import React from 'react';
-import axios from "axios";
+import Database from "variables/Database.js";
 
 //COMPONENTES LOCALES
 import Input from "components/Input/Input";
 import {localization} from "variables/general.js";
+import { toast } from 'react-toastify';
 
 //ESTILOS Y COLORES
 import { makeStyles } from '@material-ui/core/styles';
@@ -97,11 +98,11 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
      const getInsumos = () => {
         setIsLoading(true);
-        axios.get('/list-insumos')
+        Database.get('/list-insumos',this)
             .then(res => {
                 setIsLoading(false);
-                if (res.data.success == 1) {
-                    let resultado = [...res.data.result];
+
+                    let resultado = [...res.result];
                     resultado = resultado.map(elem=>{
                         return {
                             ...elem,
@@ -109,7 +110,10 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                         }
                     })
                     setInsumos(resultado);
-                }
+
+            },err => {
+              setIsLoading(false);
+              toast.error(err.message);
             })
     }
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
@@ -116,14 +116,11 @@ class ModulosPaniol extends Component {
     this.setState({
       isLoading: true
     })
-    axios.get('/list-modulos-paniol')
+    Database.get('/list-modulos-paniol',this)
       .then(res => {
-        this.setState({
-          isLoading: false
-        })
-        if (res.data.success == 1) {
-          let resultado = [...res.data.modulos];
-          let insumosDisponibles = [...res.data.insumosDisponibles];
+
+          let resultado = [...res.modulos];
+          let insumosDisponibles = [...res.insumosDisponibles];
 
           resultado = resultado.map(elem => {
             let cantidadInsumosDisponibles = 0;
@@ -139,13 +136,14 @@ class ModulosPaniol extends Component {
             }
           })
           this.setState({
-            modulos: resultado
+            modulos: resultado,
+            isLoading: false
           })
-        } else if (res.data.success == 3 || res.data.success == 4) {
-
-        }
 
       }, err => {
+        this.setState({
+          isLoading: false
+        })
         toast.error(err.message);
       })
   }
@@ -153,13 +151,11 @@ class ModulosPaniol extends Component {
   handleClickOpen(rowData) {
 
     this.setState({ isLoadingDetalle: true, modulosDetalle: [], chasisDetalle: rowData.chasis,descripcionDetalle:rowData.descripcion, open: true });
-    axios.get('/list-modulos-insumos/' + rowData.id)
+    Database.get('/list-modulos-insumos/' + rowData.id,this)
       .then(res => {
 
-        if (res.data.success == 1) {
           let disponible;
-          console.log(res.data);
-          res.data.insumos = res.data.insumos.map(elem => {
+          res.insumos = res.insumos.map(elem => {
             if (elem.cantidad_requerida - elem.cantidad_asignada <= elem.cantidad_stock)
               disponible = elem.cantidad_requerida - elem.cantidad_asignada
             else
@@ -172,14 +168,14 @@ class ModulosPaniol extends Component {
           })
           this.setState({
             isLoadingDetalle: false,
-            modulosDetalle: res.data.insumos
+            modulosDetalle: res.insumos
           })
 
-        } else {
-          toast.error("error en consulta SQL")
-        }
 
       }, err => {
+        this.setState({
+          isLoadingDetalle: false
+        })
         toast.error("error de Red");
 
       })
@@ -244,6 +240,7 @@ class ModulosPaniol extends Component {
                    }}
               actions={[{
                 icon: 'description',
+
                 tooltip: 'Detalle del Módulo',
                 onClick: (event, rowData) => this.handleClickOpen(rowData)
               },

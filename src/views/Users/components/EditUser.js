@@ -4,7 +4,7 @@ import { Route, Switch, Link, withRouter } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/styles';
 
-import axios from "axios";
+import Database from "variables/Database.js";
 import { toast,ToastContainer } from 'react-toastify';
 
 import CardHeader from "components/Card/CardHeader.js";
@@ -54,10 +54,10 @@ class EditUser extends Component {
 
 
   getUsersType = () => {
-    axios.get('/list-users_type')
+    Database.get('/list-users_type',this)
       .then(res => {
-        if (res.data.success == 1) {
-          let resultadoUserType = [...res.data.result];
+
+          let resultadoUserType = [...res.result];
           let a = [];
           resultadoUserType.forEach(function (entry) {
             a.push({
@@ -74,7 +74,9 @@ class EditUser extends Component {
           })
 
 
-        }
+
+      },err => {
+        toast.error(err.message);
       })
   }
 
@@ -104,18 +106,18 @@ class EditUser extends Component {
 
 
   getUserEdit = (id) => {
-    axios.get('/list-users/' + id)
+    Database.get('/list-users/' + id)
       .then(resultado => {
-        if (resultado.data.success == 1) {
-          if (resultado.data.result.length > 0) {
+
+          if (resultado.result.length > 0) {
             this.setState({
-              userEdit: resultado.data.result[0]
+              userEdit: resultado.result[0]
             })
 
             let editUserFormAlt = { ...this.state.editUserForm };
-            editUserFormAlt.username.value = resultado.data.result[0].username;
-            editUserFormAlt.nombre.value = resultado.data.result[0].nombre;
-            editUserFormAlt.tipoUser.value = resultado.data.result[0].id_users_type.toString();
+            editUserFormAlt.username.value = resultado.result[0].username;
+            editUserFormAlt.nombre.value = resultado.result[0].nombre;
+            editUserFormAlt.tipoUser.value = resultado.result[0].id_users_type.toString();
             for (let key in editUserFormAlt) {
               editUserFormAlt[key].touched = true;
               editUserFormAlt[key].valid = true;
@@ -127,7 +129,7 @@ class EditUser extends Component {
               userEdit: null
             })
           }
-        }
+
       })
   }
 
@@ -137,35 +139,20 @@ class EditUser extends Component {
     this.setState({
      disableAllButtons:true
     })
-    axios.post(`/update-user`, { id: this.props.match.params.iduser,username:this.state.editUserForm.username.value, nombre: this.state.editUserForm.nombre.value, id_users_type: this.state.editUserForm.tipoUser.value })
+    Database.post(`/update-user`, { id: this.props.match.params.iduser,username:this.state.editUserForm.username.value, nombre: this.state.editUserForm.nombre.value, id_users_type: this.state.editUserForm.tipoUser.value })
       .then(res => {
-        let estadoAlt = null
 
-        if (res.data.success == 1) {
-          estadoAlt = true
-        } else {
-          estadoAlt = false
-        }
-
-        if (estadoAlt) {
-     
           this.setState({
             successSubmitEdit: true,
             editFormIsValid: false,
             disableAllButtons:false
           },()=>{
               toast.success("El Usuario se ha modificado con exito!");
-              
-              this.props.getUsersAdmin();
-          
-          })
-        } else {
 
-            toast.error(res.data.error_msj);
-            this.setState({
-              disableAllButtons:false
-            })
-        }
+              this.props.getUsersAdmin();
+
+          })
+
       },err =>{
           toast.error(err.message);
           this.setState({
