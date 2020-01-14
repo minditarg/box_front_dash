@@ -23,6 +23,7 @@ class Database {
           },err => {
             if(err.response){
               if(err.response.status == 401) {
+                if(_this)
               _this.props.history.replace("/");
               reject({message:"No inició sesión en la aplicación"})
               }
@@ -62,12 +63,19 @@ class Database {
             }
           },err => {
             if(err.response){
-              if(err.response.status == 401)
+              if(err.response.status == 401) {
+                if(_this)
+              _this.props.history.replace("/");
               reject({message:"No inició sesión en la aplicación"})
+              }
               else if(err.response.status == 406)
+              {
               reject({message:"No tiene permisos en esta sección"})
+              }
               else
+              {
               reject({message:"error desconocido"});
+              }
             } else if(err.message) {
               reject({message:err.message});
             } else {

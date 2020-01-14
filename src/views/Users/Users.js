@@ -165,7 +165,7 @@ class Users extends Component {
 
 
       },err =>{
-        toast.error(err);
+        toast.error(err.message);
 
       })
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import Database from "variables/Database.js";
 
 import { Route, Switch ,Link} from 'react-router-dom';
 // core components
@@ -97,10 +97,10 @@ class Users extends Component {
       ////////////////////////
       getUsersAdmin = () => {
 
-        axios.get('/list-users')
+        Database.get('/list-users',this)
           .then(res => {
-            if (res.data.success == 1) {
-              let resultado = [...res.data.result];
+
+              let resultado = [...res.result];
               this.setState({
                 users:resultado,
                 checked:[],
@@ -120,7 +120,9 @@ class Users extends Component {
                   }
                 }
               })
-            }
+
+          },err => {
+            toast.error(err.message);
           })
         }
 
@@ -136,7 +138,7 @@ class Users extends Component {
 
     }
 
-    
+
 
 
 

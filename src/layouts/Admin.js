@@ -197,9 +197,6 @@ export default function Admin({ ...rest }) {
                 return false;
               })
 
-              console.log(accesosUser);
-              console.log(routesFilter);
-
 
 
                   setUser(res.result[0][0]);
@@ -208,6 +205,7 @@ export default function Admin({ ...rest }) {
 
 
             }, err => {
+              rest.history.replace("/");
               toast.error(err.message);
             })
 
