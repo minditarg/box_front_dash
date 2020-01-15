@@ -15,8 +15,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import ImageIcon from '@material-ui/icons/Image';
-import WorkIcon from '@material-ui/icons/Work';
-import BeachAccessIcon from '@material-ui/icons/BeachAccess';
+import CategoryIcon from '@material-ui/icons/Category';
+import DescriptionIcon from '@material-ui/icons/Description';
 import Divider from '@material-ui/core/Divider';
 
 import { ColumnsListadoAnalisisInsumos, StateListado } from "./VariablesState";
@@ -147,11 +147,11 @@ class ModulosAnalisisDetalle extends Component {
                       </p>
               </CardHeader>
               <CardBody>
-              <List title="Montos">
+              <List>
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
-                    <ImageIcon />
+                    <DescriptionIcon />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={"$ " + this.state.montodiseno} secondary="Diseño" />
@@ -160,7 +160,7 @@ class ModulosAnalisisDetalle extends Component {
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
-                    <WorkIcon />
+                    <CategoryIcon />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={"$ " + this.state.montoproduccion} secondary="Producción" />
