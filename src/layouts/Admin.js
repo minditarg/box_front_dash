@@ -89,6 +89,16 @@ export default function Admin({ ...rest }) {
         return null;
       })}
       { /* <Redirect from="/admin" to="/admin/stock" /> */ }
+      <Route
+        path="/admin"
+        exact
+        render={() => {
+
+          return (<div><h2>Bienvenid@ a Box Rental APP</h2><h4>Seleccione un Item del menú lateral para continuar</h4></div>)
+
+        }}
+
+        />
     </Switch>
   );
 
