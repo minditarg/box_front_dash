@@ -269,7 +269,7 @@ class NewIngreso extends Component {
         this.closeDialog();
 
                     let resultado = {...rowInsumo};
-                    resultado.cantidad = cantidad;
+                    resultado.cantidad = parseInt(cantidad);
                     let detalleingresoant = [...this.state.detalleingresos];
 
                     detalleingresoant.push(resultado);

@@ -264,7 +264,7 @@ class NewPlantilla extends Component {
         event.preventDefault();
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
-            this.setState({ disableAllButtons: true });
+
             Database.post('/insert-plantilla', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 codigo: this.state.orderForm.codigo.value,
@@ -278,7 +278,7 @@ class NewPlantilla extends Component {
                         this.props.history.push("/admin/plantillas");
 
                 },err => {
-                  this.setState({ disableAllButtons: false });
+
                   toast.error(err.message);
                 })
         }

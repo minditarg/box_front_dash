@@ -54,9 +54,7 @@ class NewUser extends Component {
 
   handleSubmitNewUser = (event) => {
     event.preventDefault();
-    this.setState({
-      disableAllButtons:true
-    })
+
     Database.post(`/signup-json`, { username: this.state.newUserForm.username.value, password: this.state.newUserForm.password.value, nombre: this.state.newUserForm.nombre.value, id_users_type: this.state.newUserForm.tipoUser.value },this)
       .then(res => {
 
@@ -64,7 +62,6 @@ class NewUser extends Component {
           this.setState({
             successSubmit: true,
             formIsValid: false,
-            disableAllButtons:false
           },()=>{
               this.props.getUsersAdmin();
           })
@@ -73,10 +70,7 @@ class NewUser extends Component {
 
       },err => {
         toast.error(err.message);
-        this.setState({
-          disableAllButtons:false
-        })
-
+        
       })
   }
 

@@ -49,7 +49,11 @@ class Database {
 
   static post(url,data,_this) {
     return new Promise((resolve, reject) => {
+        if(_this)
+          _this.setState({ disableAllButtons: true});
           axios.post(url,data) .then(res => {
+            if(_this)
+              _this.setState({ disableAllButtons: false});
             if(res.data.success == 1)
             {
               resolve(res.data);
@@ -62,6 +66,8 @@ class Database {
               reject({message:"Error desconocido"});
             }
           },err => {
+            if(_this)
+              _this.setState({ disableAllButtons: false});
             if(err.response){
               if(err.response.status == 401) {
                 if(_this)

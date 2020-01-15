@@ -12,7 +12,7 @@ import { withStyles } from '@material-ui/styles';
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
-import Button from "components/CustomButtons/Button.js";
+import Button from '@material-ui/core/Button';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
 
@@ -54,6 +54,8 @@ const styles = {
 
 class NewInsumo extends Component {
   state = JSON.parse(JSON.stringify(StateNewInsumo))
+
+
 
   checkValidity = (value, rules) => {
     let isValid = true;
@@ -234,7 +236,8 @@ resetForm = () => {
     newInsumoForm[key].value = ''
   }
   this.setState({
-    newInsumoForm:newInsumoForm
+    newInsumoForm:newInsumoForm,
+    formIsValid:false,
   })
 
 }
@@ -282,7 +285,7 @@ componentDidMount() {
               />
             ))}
 
-            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/insumos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid} type="submit" ><Save /> Guardar</Button>
+            <Button style={{ marginTop: '25px' }} variant="contained" color="info" onClick={() => this.props.history.push('/admin/insumos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} variant="contained" color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
           </CardBody>
         </Card>

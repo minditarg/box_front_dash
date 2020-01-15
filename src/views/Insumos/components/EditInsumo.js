@@ -338,7 +338,7 @@ class EditInsumo extends Component {
               ))}
             </div>
 
-            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/insumos')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" type="submit" ><Save /> Guardar</Button>
+            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/insumos')} ><ArrowBack />Volver</Button><Button disabled={this.state.disableAllButtons} style={{ marginTop: '25px' }} color="primary" type="submit" ><Save /> Guardar</Button>
 
 
           </CardBody>

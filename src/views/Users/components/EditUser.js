@@ -136,9 +136,7 @@ class EditUser extends Component {
   handleSubmitEditUser = (event) => {
 
     event.preventDefault();
-    this.setState({
-     disableAllButtons:true
-    })
+
     Database.post(`/update-user`, { id: this.props.match.params.iduser,username:this.state.editUserForm.username.value, nombre: this.state.editUserForm.nombre.value, id_users_type: this.state.editUserForm.tipoUser.value })
       .then(res => {
 
@@ -155,9 +153,7 @@ class EditUser extends Component {
 
       },err =>{
           toast.error(err.message);
-          this.setState({
-            disableAllButtons:false
-          })
+
       })
 
   }

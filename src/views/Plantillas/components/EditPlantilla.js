@@ -356,9 +356,7 @@ class EditPlantilla extends Component {
 
                 return false
             })
-        this.setState({
-          disableAllButtons:true
-        });
+
 
             Database.post('/update-plantilla', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
@@ -375,9 +373,6 @@ class EditPlantilla extends Component {
 
                 },err => {
 
-                     this.setState({
-                       disableAllButtons:false
-                     });
                      toast.error(err.message);
                 })
         }

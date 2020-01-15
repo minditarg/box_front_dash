@@ -350,9 +350,6 @@ class NewEditModulo extends Component {
 
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
-            this.setState({
-                disableAllButtons: true
-            });
             let detalleEdit = this.detalleModulos.filter(elem => {
                 if (elem.modificado || elem.eliminado || elem.insertado)
                     return true;
@@ -375,14 +372,9 @@ class NewEditModulo extends Component {
                         this.props.getModulos();
                         this.props.history.push("/admin/modulos");
 
-                    this.setState({
-                        disableAllButtons: false
-                    });
                 }, err => {
                     toast.error(err.message);
-                    this.setState({
-                        disableAllButtons: false
-                    });
+                  
                 })
         }
     }

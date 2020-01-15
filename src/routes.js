@@ -39,6 +39,7 @@ import CompareArrows from "@material-ui/icons/CompareArrows";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import DvrIcon from '@material-ui/icons/Dvr';
 
 
 // core components/views for Admin layout
@@ -58,6 +59,7 @@ import AlertaCostos from "views/Alertas/AlertaCostos";
 import NewInsumo from "views/Insumos/NewInsumo";
 import Categorias from "views/Insumos/Categorias";
 import NewCategoria from "views/Insumos/NewCategoria";
+import MovimientosInsumos from "views/Insumos/MovimientosInsumos";
 import Ingresos from "views/Ingresos/Ingresos";
 import NewIngreso from "views/Ingresos/NewIngreso";
 import Stock from "views/Stock/Stock";
@@ -69,6 +71,8 @@ import Modulos from "views/Modulos/Modulos";
 import NewPlantilla from "views/Plantillas/NewPlantilla";
 import Plantillas from "views/Plantillas/Plantillas";
 import ModulosPaniol from "views/Paniol/ModulosPaniol";
+import MovimientoStock from "views/Stock/MovimientoStock";
+
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 import ModulosEstados from "views/Modulos/ModulosEstados";
@@ -185,6 +189,15 @@ const dashboardRoutes = [
         icon: ListIcon,
         component: Insumos,
         layout: "/admin"
+      },
+      {
+        accesos: [],
+        path: "/movimientosinsumos",
+        name: "Movimientos",
+        rtlName: "LI",
+        icon: DvrIcon,
+        component: MovimientosInsumos,
+        layout: "/admin"
       }
      ]
   },
@@ -243,7 +256,21 @@ const dashboardRoutes = [
       icon: LocalShippingIcon,
       component: Ingresos,
       layout: "/admin"
-    }]
+    }
+    ,
+    {
+      accesos: [],
+    path: "/movimientostock",
+    name: "Movimientos",
+    rtlName: "NP",
+    icon: DvrIcon,
+    component: MovimientoStock,
+    layout: "/admin"
+  }
+
+
+
+  ]
   },
    {
      accesos: [],

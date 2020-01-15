@@ -174,10 +174,7 @@ class EditPedido extends Component {
         event.preventDefault();
 
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
-        if (1) {
-          this.setState({
-            disableAllButtons:true
-          })
+
 
           console.log(this.state.detallepedidos);
             Database.post('/update-pedidos', {
@@ -195,12 +192,10 @@ class EditPedido extends Component {
                          },1000)
 
                 },err => {
-                  this.setState({
-                    disableAllButtons:false
-                  })
+                
                     toast.error(err.message);
                 })
-        }
+
     }
 
     openDialog() {

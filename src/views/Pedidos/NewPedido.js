@@ -173,9 +173,7 @@ class NewPedido extends Component {
 
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
-          this.setState({
-            disableAllButtons:true
-          })
+
 
             Database.post('/insert-pedidos', {
                 detalle: this.state.detallepedidos
@@ -190,9 +188,7 @@ class NewPedido extends Component {
                         },1000)
 
                 },err => {
-                  this.setState({
-                    disableAllButtons:false
-                  })
+                
                     toast.error(err.message);
                 })
         }
