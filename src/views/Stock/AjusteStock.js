@@ -72,6 +72,7 @@ class AjusteStock extends Component {
         actionsInsumos: [],
         insumos: [],
         insumoSeleccionado: 0,
+        rowDetalle: null,
         orderForm: {
             codigo: {
                 elementType: 'input',
@@ -190,9 +191,9 @@ class AjusteStock extends Component {
     handleSubmitNewPedido = (event) => {
         event.preventDefault();
         Database.post('/ajuste-stock', {
-            codigo: event.target[0].value,
-            descripcion: event.target[1].value,
-            cantidad: event.target[2].value
+            id: this.state.rowDetalle.id,
+
+            cantidad: this.state.orderForm.cantidad.value
 
         },this)
             .then(res => {
@@ -216,7 +217,7 @@ class AjusteStock extends Component {
 
                     let resultado = {...rowData};
                     let ordenformNuevo = { ...this.state.orderForm };
-                    ordenformNuevo.codigo.value = resultado.id;
+                    ordenformNuevo.codigo.value = resultado.codigo + resultado.numero ;
                      ordenformNuevo.codigo.elementConfig.disabled = false;
                      ordenformNuevo.codigo.elementConfig.InputProps = { readOnly: true};
                     ordenformNuevo.codigo.touched = true;
@@ -231,7 +232,8 @@ class AjusteStock extends Component {
                     ordenformNuevo.cantidad.touched = false;
                     this.setState({
                         orderForm: ordenformNuevo,
-                        formIsValid: false
+                        formIsValid: false,
+                        rowDetalle: resultado
                     })
 
 
