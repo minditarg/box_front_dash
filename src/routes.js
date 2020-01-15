@@ -179,7 +179,7 @@ const dashboardRoutes = [
         path: "/categorias",
         name: "Categorias",
         rtlName: "LCA",
-        icon: ListIcon,
+        icon: AssignmentIcon,
         component: Categorias,
         layout: "/admin"
       },
