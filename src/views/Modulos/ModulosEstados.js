@@ -382,11 +382,11 @@ class ModulosEstados extends Component {
 
   handleDisenoaProducir(rowData) {
     if (rowData.id) {
-      axios.post('/disenoaproducir-modulo', {
+      Database.post('/disenoaproducir-modulo', {
         id: rowData.id
-      })
+      }, this)
         .then(res => {
-          if (res.data.success == 1) {
+          if (res.success == 1) {
             this.handleCloseProducir();
             this.getModulosDiseno();
             this.getModulosPausados();

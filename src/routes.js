@@ -69,6 +69,7 @@ import Modulos from "views/Modulos/Modulos";
 import NewPlantilla from "views/Plantillas/NewPlantilla";
 import Plantillas from "views/Plantillas/Plantillas";
 import ModulosPaniol from "views/Paniol/ModulosPaniol";
+import ModulosAnalisis from "views/Modulos/ModulosAnalisis";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 import ModulosEstados from "views/Modulos/ModulosEstados";
@@ -252,6 +253,15 @@ const dashboardRoutes = [
      open: 'open4',
      icon: PictureInPictureIcon,
      dependences: [
+      {
+        accesos: [],
+        path: "/modulosanalisis",
+        name: "Analisis",
+        rtlName: "AN",
+        icon: ListIcon,
+        component: ModulosAnalisis,
+        layout: "/admin"
+      },
        {
          accesos: [],
          path: "/modulos",
@@ -265,7 +275,7 @@ const dashboardRoutes = [
          accesos: [],
         path: "/modulosestados",
         name: "Estados",
-        rtlName: "LM",
+        rtlName: "LME",
         icon: ListIcon,
         component: ModulosEstados,
         layout: "/admin"
