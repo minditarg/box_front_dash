@@ -71,8 +71,12 @@ import Modulos from "views/Modulos/Modulos";
 import NewPlantilla from "views/Plantillas/NewPlantilla";
 import Plantillas from "views/Plantillas/Plantillas";
 import ModulosPaniol from "views/Paniol/ModulosPaniol";
+<<<<<<< HEAD
 import MovimientoStock from "views/Stock/MovimientoStock";
 
+=======
+import ModulosAnalisis from "views/Modulos/ModulosAnalisis";
+>>>>>>> 9e69ccab32f09429a9bf40832433c9006d0ec1fb
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 import ModulosEstados from "views/Modulos/ModulosEstados";
@@ -279,6 +283,15 @@ const dashboardRoutes = [
      open: 'open4',
      icon: PictureInPictureIcon,
      dependences: [
+      {
+        accesos: [],
+        path: "/modulosanalisis",
+        name: "Analisis",
+        rtlName: "AN",
+        icon: ListIcon,
+        component: ModulosAnalisis,
+        layout: "/admin"
+      },
        {
          accesos: [],
          path: "/modulos",
@@ -292,7 +305,7 @@ const dashboardRoutes = [
          accesos: [],
         path: "/modulosestados",
         name: "Estados",
-        rtlName: "LM",
+        rtlName: "LME",
         icon: ListIcon,
         component: ModulosEstados,
         layout: "/admin"

@@ -386,7 +386,7 @@ class ModulosEstados extends Component {
         id: rowData.id
       },this)
         .then(res => {
-          if (res.data.success == 1) {
+          if (res.success == 1) {
             this.handleCloseProducir();
             this.getModulosDiseno();
             this.getModulosPausados();
