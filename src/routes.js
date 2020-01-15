@@ -40,6 +40,10 @@ import ArrowForward from "@material-ui/icons/ArrowForward";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import DvrIcon from '@material-ui/icons/Dvr';
+import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import BarChartIcon from '@material-ui/icons/BarChart';
+import DeviceHubIcon from '@material-ui/icons/DeviceHub';
 
 
 // core components/views for Admin layout
@@ -73,6 +77,7 @@ import Plantillas from "views/Plantillas/Plantillas";
 import ModulosPaniol from "views/Paniol/ModulosPaniol";
 import MovimientoStock from "views/Stock/MovimientoStock";
 import MovimientosModulos from "views/Modulos/MovimientosModulos";
+import ScatterPlotIcon from '@material-ui/icons/ScatterPlot';
 
 import ModulosAnalisis from "views/Modulos/ModulosAnalisis";
 // core components/views for RTL layout
@@ -179,7 +184,7 @@ const dashboardRoutes = [
         path: "/categorias",
         name: "Categorias",
         rtlName: "LCA",
-        icon: ListIcon,
+        icon: ScatterPlotIcon,
         component: Categorias,
         layout: "/admin"
       },
@@ -200,6 +205,15 @@ const dashboardRoutes = [
         icon: DvrIcon,
         component: MovimientosInsumos,
         layout: "/admin"
+      },
+      {
+        accesos: [],
+        path: "/costos",
+        name: "Costos",
+        rtlName: "CO",
+        icon: AttachMoneyIcon,
+        component: Costos,
+        layout: "/admin"
       }
      ]
   },
@@ -209,7 +223,7 @@ const dashboardRoutes = [
     groupComponent: true,
     name: 'Alertas',
     open: 'open6',
-    icon: ViewComfyIcon,
+    icon: AccessAlarmIcon,
     dependences: [
 
       {
@@ -217,7 +231,7 @@ const dashboardRoutes = [
         path: "/alertaCosto",
         name: "Costos",
         rtlName: "ALC",
-        icon: ListIcon,
+        icon: AttachMoneyIcon,
         component: AlertaCostos,
         layout: "/admin"
       }
@@ -229,7 +243,7 @@ const dashboardRoutes = [
     accesos: [],
     groupComponent: true,
     name: 'Stock',
-    open: 'openStock',
+    open: 'open10',
     icon: FormatAlignJustifyIcon,
     dependences: [
       {
@@ -281,12 +295,21 @@ const dashboardRoutes = [
      open: 'open4',
      icon: PictureInPictureIcon,
      dependences: [
+       {
+         accesos: [],
+         path: "/plantillas",
+         name: "Plantillas",
+         rtlName: "Pla",
+         icon: AssignmentIcon,
+         component: Plantillas,
+         layout: "/admin"
+       },
       {
         accesos: [],
         path: "/modanalisis",
         name: "Analisis",
         rtlName: "AN",
-        icon: ListIcon,
+        icon: BarChartIcon,
         component: ModulosAnalisis,
         layout: "/admin"
       },
@@ -304,7 +327,7 @@ const dashboardRoutes = [
         path: "/modestados",
         name: "Estados",
         rtlName: "LME",
-        icon: ListIcon,
+        icon: DeviceHubIcon,
         component: ModulosEstados,
         layout: "/admin"
       },
@@ -356,15 +379,7 @@ const dashboardRoutes = [
 
       }]
   },
-  {
-    accesos: [],
-    path: "/plantillas",
-    name: "Plantillas",
-    rtlName: "Pla",
-    icon: AssignmentIcon,
-    component: Plantillas,
-    layout: "/admin"
-  },
+
   {
     accesos: [],
     path: "/pedidos",
@@ -374,15 +389,7 @@ const dashboardRoutes = [
     component: Pedidos,
     layout: "/admin"
   },
-  {
-    accesos: [],
-    path: "/costos",
-    name: "Costos",
-    rtlName: "CO",
-    icon: ListIcon,
-    component: Costos,
-    layout: "/admin"
-  }
+
 
 
 
