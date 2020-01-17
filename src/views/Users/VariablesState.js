@@ -196,5 +196,5 @@ export const StateNewUser = {
 export const ColumnsListado = [
 { title: "Nombre", field: "nombre" },
 { title: "Usuario", field: "username" },
-{ title: "Tipo de Usuario", field: "desc" }
+{ title: "Tipo de Usuario", field: "descripcion_users_type" }
 ];

@@ -142,6 +142,7 @@ class Users extends Component {
     Database.get('/list-users',this)
       .then(res => {
         let resultado = [...res.result];
+        console.log(resultado);
         this.setState({
           isLoading:false,
           users: resultado,

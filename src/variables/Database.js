@@ -15,7 +15,10 @@ class Database {
             }
             else if(res.data.success == 0)
             {
-              reject({message:"Error en consulta SQL"});
+              if(res.data.error_msj)
+                reject({message:"Error en consulta SQL. " + res.data.error_msj})
+                else
+                reject({message:"Error en consulta SQL"});
             } else {
 
               reject({message:"Error desconocido"});
@@ -60,7 +63,10 @@ class Database {
             }
             else if(res.data.success == 0)
             {
-              reject({message:"Error en consulta SQL"});
+              if(res.data.error_msj)
+                reject({message:"Error en consulta SQL. " + res.data.error_msj})
+                else
+                reject({message:"Error en consulta SQL"});
             } else {
 
               reject({message:"Error desconocido"});
