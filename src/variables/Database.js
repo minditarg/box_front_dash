@@ -34,6 +34,10 @@ class Database {
 
               reject({message:"No tiene permisos en esta sección"})
               }
+              else if(err.response.status == 500)
+              {
+              reject({message:err.response.data})
+              }
               else {
               reject({message:"error desconocido"});
               }
@@ -83,6 +87,10 @@ class Database {
               else if(err.response.status == 406)
               {
               reject({message:"No tiene permisos en esta sección"})
+              }
+              else if(err.response.status == 500)
+              {
+              reject({message:err.response.data})
               }
               else
               {

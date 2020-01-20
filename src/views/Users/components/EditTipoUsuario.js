@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import Input from 'components/Input/Input';
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
+import Database from "variables/Database.js";
+import { toast } from 'react-toastify';
 
 import { withStyles } from '@material-ui/styles';
-
-import Database from "variables/Database.js";
-import { toast,ToastContainer } from 'react-toastify';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -13,9 +12,6 @@ import Card from "components/Card/Card.js";
 import Button from "components/CustomButtons/Button.js";
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
-
-import { StateEditUser } from "../VariablesState";
-
 
 
 const styles = {
@@ -49,38 +45,61 @@ const styles = {
 };
 
 
-class EditUser extends Component {
-  state = JSON.parse(JSON.stringify(StateEditUser));
+class EditTipoUsuario extends Component {
 
 
-  getUsersType = () => {
-    Database.get('/list-users_type',this)
-      .then(res => {
+  getTipoUsuarioEdit = (id) => {
+    Database.get('/list-tipo-usuario/' + id,this)
+      .then(resultado => {
 
-          let resultadoUserType = [...res.result];
-          let a = [];
-          resultadoUserType.forEach(function (entry) {
-            a.push({
-              value: entry.id,
-              displayValue: entry.descripcion
-            });
-          })
+          if (resultado.result.length > 0) {
+            this.setState({
+              tipoUsuarioEdit: resultado.result[0]
+            })
 
+            let orderFormAlt = { ...this.state.orderForm };
+            orderFormAlt.codigo.value = resultado.result[0].codigo;
+            orderFormAlt.descripcion.value = resultado.result[0].descripcion;
 
-          let formulario = { ...this.state.editUserForm }
-          formulario.tipoUser.elementConfig.options = [...a];
-          this.setState({
-            editUserForm: formulario
-          })
-
-
+            for (let key in orderFormAlt) {
+              orderFormAlt[key].touched = true;
+              orderFormAlt[key].valid = true;
+            }
+            this.setState({
+              orderForm: orderFormAlt
+            })
+          }
+          else {
+            this.setState({
+              tipoUsuarioEdit: null
+            })
+          }
 
       },err => {
         toast.error(err.message);
       })
   }
 
+  handleSubmitEditTipoUsuario = (event) => {
 
+    event.preventDefault();
+    Database.post(`/update-tipo-usuario`, { id: this.state.tipoUsuarioEdit.id, codigo: this.state.tipoUsuarioEdit.codigo.value, descripcion: this.state.tipoUsuarioEdit.descripcion.value },this)
+      .then(res => {
+
+          this.props.getTiposUsuarios();
+
+          this.setState({
+            formIsValid: false
+          }, () => {
+            toast.success("Los cambios se realizaron correctamente");
+          })
+
+
+      },err => {
+        toast.error(err.message);
+      })
+
+  }
 
   checkValidity = (value, rules) => {
     let isValid = true;
@@ -105,64 +124,12 @@ class EditUser extends Component {
   }
 
 
-  getUserEdit = (id) => {
-    Database.get('/list-users/' + id)
-      .then(resultado => {
-
-          if (resultado.result.length > 0) {
-            this.setState({
-              userEdit: resultado.result[0]
-            })
-
-            let editUserFormAlt = { ...this.state.editUserForm };
-            editUserFormAlt.username.value = resultado.result[0].username;
-            editUserFormAlt.nombre.value = resultado.result[0].nombre;
-            editUserFormAlt.tipoUser.value = resultado.result[0].id_users_type.toString();
-            for (let key in editUserFormAlt) {
-              editUserFormAlt[key].touched = true;
-              editUserFormAlt[key].valid = true;
-            }
-            this.getUsersType("edit", editUserFormAlt);
-          }
-          else {
-            this.setState({
-              userEdit: null
-            })
-          }
-
-      })
-  }
-
-  handleSubmitEditUser = (event) => {
-
-    event.preventDefault();
-
-    Database.post(`/update-user`, { id: this.props.match.params.iduser,username:this.state.editUserForm.username.value, nombre: this.state.editUserForm.nombre.value, id_users_type: this.state.editUserForm.tipoUser.value })
-      .then(res => {
-
-          this.setState({
-            successSubmitEdit: true,
-            editFormIsValid: false,
-            disableAllButtons:false
-          },()=>{
-              toast.success("El Usuario se ha modificado con exito!");
-
-              this.props.getUsersAdmin();
-
-          })
-
-      },err =>{
-          toast.error(err.message);
-
-      })
-
-  }
 
 
   inputEditChangedHandler = (event, inputIdentifier) => {
     let checkValid;
     const updatedOrderForm = {
-      ...this.state.editUserForm
+      ...this.state.editCategoriaForm
     };
     const updatedFormElement = {
       ...updatedOrderForm[inputIdentifier]
@@ -179,63 +146,49 @@ class EditUser extends Component {
       formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
     }
     this.setState({
-      editUserForm: updatedOrderForm,
-      editFormIsValid: formIsValidAlt
+      orderForm: updatedOrderForm,
+      formIsValid: formIsValidAlt
     })
 
   }
 
 
-
-
-
-  resetEditForm = () => {
-    let editUserFormAlt = { ...this.state.editUserForm };
-    let successSubmitEdit = this.state.successSubmitEdit;
-    for (let key in editUserFormAlt) {
-      editUserFormAlt[key].value = ''
-    }
-
-    this.setState({
-      editFormIsValid: false,
-      successSubmitEdit: successSubmitEdit
-    })
-
-
+  editSingleCategoria = value => {
+    this.props.history.push(this.props.match.url + '/editarcategoria/' + value);
   }
+
+
+
+
 
   componentDidMount() {
+    this.getTipoUsuarioEdit(this.props.match.params.idTipoUsuario);
 
-    this.getUsersType();
-    this.getUserEdit(this.props.match.params.iduser);
   }
 
-  render() {
 
+
+  render() {
     const formElementsArray = [];
-    for (let key in this.state.editUserForm) {
+    for (let key in this.state.orderForm) {
       formElementsArray.push({
         id: key,
-        config: this.state.editUserForm[key]
+        config: this.state.orderForm[key]
       });
     }
-
     return (
 
       <form onSubmit={(event) => {
-        this.handleSubmitEditUser(event)
+        this.handleSubmitEditCategoria(event)
 
       } }>
 
 
-
-
-
         <Card>
           <CardHeader color="primary">
-            <h4 className={this.props.classes.cardTitleWhite}>Editar Usuario</h4>
+            <h4 className={this.props.classes.cardTitleWhite}>Categoria</h4>
             <p className={this.props.classes.cardCategoryWhite}>
-              Formulario para modificar los datos del usuario
+              Detalles del Categoria
       </p>
           </CardHeader>
           <CardBody>
@@ -243,7 +196,7 @@ class EditUser extends Component {
             <div className="mt-3 mb-3">
               {formElementsArray.map(formElement => (
                 <Input
-                  key={"edituser-" + formElement.id}
+                  key={formElement.id}
                   elementType={formElement.config.elementType}
                   elementConfig={formElement.config.elementConfig}
                   value={formElement.config.value}
@@ -256,7 +209,7 @@ class EditUser extends Component {
               ))}
             </div>
 
-            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/usuarios')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.editFormIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/categorias')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.editFormIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
 
           </CardBody>
@@ -269,6 +222,8 @@ class EditUser extends Component {
     )
   }
 
+
+
 };
 
-export default withRouter(withStyles(styles)(EditUser));
+export default withRouter(withStyles(styles)(EditCategoria));

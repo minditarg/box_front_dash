@@ -56,6 +56,7 @@ import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 import Users from "views/Users/Users.js";
+import TiposUsuarios from "views/Users/TiposUsuarios.js";
 import Insumos from "views/Insumos/Insumos";
 import Pedidos from "views/Pedidos/Pedidos";
 import Costos from "views/Costos/Costos";
@@ -152,7 +153,7 @@ const dashboardRoutes = [
   // },
 
   {
-    accesos: [],
+    accesos: [1,2,3,4,5,6,7,8,9],
     path: "/configuracion",
     name: "Configuracion",
     rtlName: "Co",
@@ -161,18 +162,44 @@ const dashboardRoutes = [
     layout: "/admin"
   },
 
-  {
-    accesos: [],
-    path: "/usuarios",
-    name: "Usuarios",
-    rtlName: "Us",
-    icon: Person,
-    component: Users,
-    layout: "/admin"
-  },
 
   {
-    accesos: [],
+    accesos: [11,12,13,14,15,16,17,18,19],
+    groupComponent: true,
+    name: 'Usuarios',
+    open: 'open20',
+    icon: Person,
+    dependences: [
+      {
+        accesos: [11],
+        path: "/usuarios",
+        name: "Usuarios",
+        rtlName: "Us",
+        icon: Person,
+        component: Users,
+        layout: "/admin"
+      },
+
+      {
+        accesos: [12],
+        path: "/tiposusuarios",
+        name: "Tipos Usuarios",
+        rtlName: "Us",
+        icon: Person,
+        component: TiposUsuarios,
+        layout: "/admin"
+      },
+
+
+
+
+    ]
+  },
+
+
+
+  {
+    accesos: [21,22,23,24,25,26,27,28,29],
     groupComponent: true,
     name: 'Insumos',
     open: 'open2',
@@ -180,7 +207,7 @@ const dashboardRoutes = [
     dependences: [
 
       {
-        accesos: [],
+        accesos: [21],
         path: "/categorias",
         name: "Categorias",
         rtlName: "LCA",
@@ -189,7 +216,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
-        accesos: [],
+        accesos: [22],
         path: "/insumos",
         name: "Insumos",
         rtlName: "LI",
@@ -198,7 +225,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
-        accesos: [],
+        accesos: [24],
         path: "/movimientosinsumos",
         name: "Movimientos",
         rtlName: "LI",
@@ -207,7 +234,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
-        accesos: [],
+        accesos: [23],
         path: "/costos",
         name: "Costos",
         rtlName: "CO",
@@ -219,7 +246,7 @@ const dashboardRoutes = [
   },
 
   {
-    accesos: [],
+    accesos: [31,32,33,34,35,36,37],
     groupComponent: true,
     name: 'Alertas',
     open: 'open6',
@@ -227,7 +254,7 @@ const dashboardRoutes = [
     dependences: [
 
       {
-        accesos: [],
+        accesos: [31],
         path: "/alertaCosto",
         name: "Costos",
         rtlName: "ALC",
@@ -240,14 +267,14 @@ const dashboardRoutes = [
 
 
   {
-    accesos: [],
+    accesos: [41,42,43,44,45,46],
     groupComponent: true,
     name: 'Stock',
     open: 'open10',
     icon: FormatAlignJustifyIcon,
     dependences: [
       {
-        accesos: [],
+        accesos: [41],
         path: "/stock",
         name: "Listado",
         rtlName: "LI",
@@ -256,7 +283,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
-        accesos: [],
+        accesos: [42],
         path: "/AjusteStock",
         name: "Ajuste",
         rtlName: "NI",
@@ -265,7 +292,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
-        accesos: [],
+        accesos: [43],
       path: "/ingresos",
       name: "Ingresos",
       rtlName: "NP",
@@ -275,7 +302,7 @@ const dashboardRoutes = [
     }
     ,
     {
-      accesos: [],
+      accesos: [44],
     path: "/movimientostock",
     name: "Movimientos",
     rtlName: "NP",
@@ -289,14 +316,14 @@ const dashboardRoutes = [
   ]
   },
    {
-     accesos: [],
+     accesos: [51,52,53,54,55,56,57,58,59],
      groupComponent: true,
      name: 'Modulos',
      open: 'open4',
      icon: PictureInPictureIcon,
      dependences: [
        {
-         accesos: [],
+         accesos: [53],
          path: "/plantillas",
          name: "Plantillas",
          rtlName: "Pla",
@@ -305,7 +332,7 @@ const dashboardRoutes = [
          layout: "/admin"
        },
       {
-        accesos: [],
+        accesos: [54],
         path: "/modanalisis",
         name: "Analisis",
         rtlName: "AN",
@@ -314,7 +341,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
        {
-         accesos: [],
+         accesos: [51],
          path: "/modulos",
          name: "Listado",
          rtlName: "LM",
@@ -323,7 +350,7 @@ const dashboardRoutes = [
          layout: "/admin"
        },
        {
-         accesos: [],
+         accesos: [52],
         path: "/modestados",
         name: "Estados",
         rtlName: "LME",
@@ -332,7 +359,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
-        accesos: [],
+        accesos: [55],
        path: "/modmovimientos",
        name: "Movimientos",
        rtlName: "LME",
@@ -344,14 +371,14 @@ const dashboardRoutes = [
    },
 
   {
-    accesos: [],
+    accesos: [61,62,63,64,65,66,67],
     groupComponent: true,
     name: 'Pañol',
     open: 'open5',
     icon: CompareArrows,
     dependences: [
        {
-         accesos: [],
+         accesos: [61],
         path: "/paniolmodulos",
         name: "Módulos",
         rtlName: "LM",
@@ -360,7 +387,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
-        accesos: [],
+        accesos: [62],
         path: "/entregas",
         name: "Entregas",
         rtlName: "LM",
@@ -369,7 +396,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
-        accesos: [],
+        accesos: [63],
         path: "/devoluciones",
         name: "Devoluciones",
         rtlName: "NM",
@@ -381,7 +408,7 @@ const dashboardRoutes = [
   },
 
   {
-    accesos: [],
+    accesos: [71],
     path: "/pedidos",
     name: "Pedidos",
     rtlName: "Ped",

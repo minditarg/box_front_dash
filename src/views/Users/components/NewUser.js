@@ -70,7 +70,7 @@ class NewUser extends Component {
 
       },err => {
         toast.error(err.message);
-        
+
       })
   }
 
@@ -127,7 +127,7 @@ class NewUser extends Component {
           resultadoUserType.forEach(function (entry) {
             a.push({
               value: entry.id,
-              displayValue: entry.desc
+              displayValue: entry.descripcion
             });
           })
           let formulario = { ...this.state.newUserForm }
