@@ -374,7 +374,7 @@ class NewEditModulo extends Component {
 
                 }, err => {
                     toast.error(err.message);
-                  
+
                 })
         }
     }
@@ -710,8 +710,7 @@ class NewEditModulo extends Component {
 
         if (this.props.match.params.idModulo)
             this.getInsumosParcial(this.props.match.params.idModulo)
-            else
-              this.setState({ openPlantillaDialog:true});
+            
 
             this.getPlantillas();
 

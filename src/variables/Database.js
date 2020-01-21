@@ -15,7 +15,10 @@ class Database {
             }
             else if(res.data.success == 0)
             {
-              reject({message:"Error en consulta SQL"});
+              if(res.data.error_msj)
+                reject({message:"Error en consulta SQL. " + res.data.error_msj})
+                else
+                reject({message:"Error en consulta SQL"});
             } else {
 
               reject({message:"Error desconocido"});
@@ -30,6 +33,10 @@ class Database {
               else if(err.response.status == 406) {
 
               reject({message:"No tiene permisos en esta sección"})
+              }
+              else if(err.response.status == 500)
+              {
+              reject({message:err.response.data})
               }
               else {
               reject({message:"error desconocido"});
@@ -60,7 +67,10 @@ class Database {
             }
             else if(res.data.success == 0)
             {
-              reject({message:"Error en consulta SQL"});
+              if(res.data.error_msj)
+                reject({message:"Error en consulta SQL. " + res.data.error_msj})
+                else
+                reject({message:"Error en consulta SQL"});
             } else {
 
               reject({message:"Error desconocido"});
@@ -77,6 +87,10 @@ class Database {
               else if(err.response.status == 406)
               {
               reject({message:"No tiene permisos en esta sección"})
+              }
+              else if(err.response.status == 500)
+              {
+              reject({message:err.response.data})
               }
               else
               {

@@ -62,7 +62,7 @@ class EditUser extends Component {
           resultadoUserType.forEach(function (entry) {
             a.push({
               value: entry.id,
-              displayValue: entry.desc
+              displayValue: entry.descripcion
             });
           })
 
@@ -263,7 +263,6 @@ class EditUser extends Component {
         </Card>
 
 
-        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}  autoClose={3000}/>
       </ form>
 
 
