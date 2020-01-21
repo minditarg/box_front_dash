@@ -83,11 +83,11 @@ tipoUsuarioEdit:null,
             })
             if(indexResultado > -1)
             {
-            elem.id_users_type =  resultado.detalleAccesos[indexResultado].id_user_type
             elem.checked =true
           } else {
             elem.checked = false
           }
+          elem.id_users_type =  resultado.tipoUsuario[0].id
 
             return elem;
           });

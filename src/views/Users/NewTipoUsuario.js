@@ -16,6 +16,10 @@ import Button from "components/CustomButtons/Button.js";
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
 
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+
 import {  toast } from 'react-toastify';
 
 
@@ -53,6 +57,7 @@ const styles = {
 
 class NewTipoUsuario extends Component {
   state = {
+    accesos:[],
     orderForm:{
       descripcion: {
           elementType: 'input',
@@ -156,6 +161,26 @@ resetForm = () => {
 
 }
 
+componentDidMount() {
+Database.get("/list-accesos",this)
+        .then(res => {
+          let resultado = [...res.result];
+          resultado = resultado.map(elem => {
+            return {
+              ...elem,
+              checked:false
+            }
+          })
+          this.setState({
+            accesos: resultado
+          })
+
+        },err => {
+          toast.error(err.message);
+        })
+
+}
+
   render() {
     const formElementsArray = [];
     for (let key in this.state.orderForm) {
@@ -193,6 +218,27 @@ resetForm = () => {
                 changed={(event) => this.inputChangedHandler(event, formElement.id)}
               />
             ))}
+
+            <div className="mt-3 mb-3">
+            <h4>Permisos</h4>
+            <FormGroup row>
+            { this.state.accesos.map((elem,index) => {
+              return (
+
+                  <FormControlLabel
+                    control={
+                        <Checkbox checked={elem.checked} onChange={(event) => this.handleCheckbox(event,index)}  value={ "id_acceso" + elem.id } />
+                        }
+                          label={elem.descripcion}
+                      />
+
+              )
+
+            })
+
+            }
+            </FormGroup>
+            </div>
             <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/tiposusuarios')} ><ArrowBack />Volver</Button>
             <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 

@@ -86,6 +86,8 @@ class Database {
               }
               else if(err.response.status == 406)
               {
+                if(_this)
+              _this.props.history.replace("/");
               reject({message:"No tiene permisos en esta sección"})
               }
               else if(err.response.status == 500)

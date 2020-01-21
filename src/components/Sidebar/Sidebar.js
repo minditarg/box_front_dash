@@ -60,7 +60,7 @@ export default function Sidebar(props) {
 
           className={ classes.item}
 
-        
+
         >
         <ListItem button className={classes.itemLink } onClick={()=>handleClick(prop.open)}>
         {typeof prop.icon === "string" ? (
@@ -155,6 +155,7 @@ export default function Sidebar(props) {
             className={activePro + classes.item}
             activeClassName="active"
            key={"sidebar-" + key}
+           
           >
             <ListItem button className={classes.itemLink + listItemClasses}>
               {typeof prop.icon === "string" ? (
