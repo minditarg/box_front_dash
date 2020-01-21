@@ -10,8 +10,7 @@ export const StateListado = {
 
 }
 export const ColumnsListado = [
-  { title: "Codigo", field: "codigo" },
-  { title: "Número", field: "numero" },
+  { title: "Identificador", field: "identificador",sort:(a,b) => { if(a.identificador.localeCompare(b.identificador) == 0) { return a.numero - b.numero } else { return a.identificador.localeCompare(b.identificador) } } },
   { title: "Descripcion", field: "descripcion" },
   { title: "Unidad", field: "unidad" },
   { title: "Stock Minimo", field: "minimo" }

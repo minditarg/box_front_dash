@@ -9,6 +9,8 @@ import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import { CardActions } from "@material-ui/core";
 import {  toast } from 'react-toastify';
 import NewTipoUsuario from './NewTipoUsuario';
+import EditTipoUsuario from './components/EditTipoUsuario';
+import ModalDeleteTipoUsuario from "./ModalDeleteTipoUsuario";
 
 
 
@@ -109,15 +111,17 @@ state = {
   }
 
   handleDelete(rowData) {
+
     if (rowData.id) {
+        this.handleClose();
       Database.post('/delete-tipos-usuarios', {
         id: rowData.id
       },this)
         .then(res => {
 
-            this.handleClose();
+
             this.getCategorias();
-            toast.success("Tipos de usuario Eliminado");
+            toast.success("Tipo de usuario Eliminado");
 
         }, err => {
           toast.error(err.message);
@@ -133,7 +137,12 @@ state = {
   }
 
 
-
+  deleteTipoUsuario = (rowData) => {
+    this.setState({
+      openDeleteDialog: true,
+      deleteRowData: rowData
+    })
+  }
 
 
 
@@ -166,13 +175,13 @@ state = {
                   localization={localization}
                   actions={[{
                     icon: 'edit',
-                    tooltip: 'Editar Categoria',
-                    onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarcategoria/' + rowData.id)
+                    tooltip: 'Editar Tipo Usuario',
+                    onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editartipousuario/' + rowData.id)
                   },
                   {
                     icon: 'delete',
                     tooltip: 'Borrar Categoria',
-                    onClick: (event, rowData) => this.deleteMaterial(rowData)
+                    onClick: (event, rowData) => this.deleteTipoUsuario(rowData)
                   }]}
                   options={{
                     exportButton: true,
@@ -194,7 +203,21 @@ state = {
           />
           } />
 
-      </Switch>
+          <Route path={this.props.match.url + "/editartipousuario/:idTipoUsuario"} exact render={() =>
+
+          <EditTipoUsuario
+            getTiposUsuarios= {()=>this.getTiposUsuarios()}
+          />
+          } />
+
+      </Switch>,
+      <ModalDeleteTipoUsuario
+        openDeleteDialog={this.state.openDeleteDialog}
+        deleteRowData={this.state.deleteRowData}
+
+        handleClose={() => this.handleClose()}
+        handleDelete={(rowData) => this.handleDelete(rowData)}
+      />,
 
 
     ]);

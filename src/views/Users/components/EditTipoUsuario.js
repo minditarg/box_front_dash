@@ -13,6 +13,10 @@ import Button from "components/CustomButtons/Button.js";
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
 
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+
 
 const styles = {
   cardCategoryWhite: {
@@ -46,20 +50,57 @@ const styles = {
 
 
 class EditTipoUsuario extends Component {
+state = {
+tipoUsuarioEdit:null,
+  orderForm:{
+    descripcion: {
+        elementType: 'input',
+        elementConfig: {
+            type: 'text',
+            label: 'descripcion',
+            fullWidth: true
+        },
+        value: '',
+        validation: {
+            required: true
+        },
+        valid: false,
+        touched: false
+    }
+  },
+  formIsValid:true,
+  disableAllButtons: false
 
+}
 
   getTipoUsuarioEdit = (id) => {
     Database.get('/list-tipo-usuario/' + id,this)
       .then(resultado => {
+          if (resultado.tipoUsuario.length > 0) {
+          resultado.accesos =  resultado.accesos.map(elem =>{
+            let indexResultado = resultado.detalleAccesos.findIndex(elem2 =>{
+              return  elem2.id_acceso == elem.id
+            })
+            if(indexResultado > -1)
+            {
+            elem.id_users_type =  resultado.detalleAccesos[indexResultado].id_user_type
+            elem.checked =true
+          } else {
+            elem.checked = false
+          }
 
-          if (resultado.result.length > 0) {
+            return elem;
+          });
+
+          delete resultado.success;
+          delete resultado.detalleAccesos;
+
             this.setState({
-              tipoUsuarioEdit: resultado.result[0]
+              tipoUsuarioEdit: resultado
             })
 
             let orderFormAlt = { ...this.state.orderForm };
-            orderFormAlt.codigo.value = resultado.result[0].codigo;
-            orderFormAlt.descripcion.value = resultado.result[0].descripcion;
+            orderFormAlt.descripcion.value = resultado.tipoUsuario[0].descripcion;
 
             for (let key in orderFormAlt) {
               orderFormAlt[key].touched = true;
@@ -81,9 +122,8 @@ class EditTipoUsuario extends Component {
   }
 
   handleSubmitEditTipoUsuario = (event) => {
-
     event.preventDefault();
-    Database.post(`/update-tipo-usuario`, { id: this.state.tipoUsuarioEdit.id, codigo: this.state.tipoUsuarioEdit.codigo.value, descripcion: this.state.tipoUsuarioEdit.descripcion.value },this)
+    Database.post(`/update-tipo-usuario`, { id: this.state.tipoUsuarioEdit.tipoUsuario[0].id, accesos: this.state.tipoUsuarioEdit.accesos, descripcion: this.state.orderForm.descripcion.value },this)
       .then(res => {
 
           this.props.getTiposUsuarios();
@@ -129,7 +169,7 @@ class EditTipoUsuario extends Component {
   inputEditChangedHandler = (event, inputIdentifier) => {
     let checkValid;
     const updatedOrderForm = {
-      ...this.state.editCategoriaForm
+      ...this.state.orderForm
     };
     const updatedFormElement = {
       ...updatedOrderForm[inputIdentifier]
@@ -153,8 +193,18 @@ class EditTipoUsuario extends Component {
   }
 
 
-  editSingleCategoria = value => {
-    this.props.history.push(this.props.match.url + '/editarcategoria/' + value);
+
+
+  handleCheckbox = (event,index) => {
+    let resultado = { ... this.state.tipoUsuarioEdit };
+    resultado.accesos[index].checked = event.target.checked;
+
+    this.setState(
+      {
+        tipoUsuarioEdit: resultado
+      }
+    )
+
   }
 
 
@@ -186,9 +236,9 @@ class EditTipoUsuario extends Component {
 
         <Card>
           <CardHeader color="primary">
-            <h4 className={this.props.classes.cardTitleWhite}>Categoria</h4>
+            <h4 className={this.props.classes.cardTitleWhite}>Editar Tipo de Usuario</h4>
             <p className={this.props.classes.cardCategoryWhite}>
-              Detalles del Categoria
+              Detalle del Tipo de Usuario
       </p>
           </CardHeader>
           <CardBody>
@@ -208,8 +258,28 @@ class EditTipoUsuario extends Component {
                   />
               ))}
             </div>
+              <div className="mt-3 mb-3">
+              <h4>Permisos</h4>
+              <FormGroup row>
+              { this.state.tipoUsuarioEdit && this.state.tipoUsuarioEdit.accesos.map((elem,index) => {
+                return (
 
-            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/categorias')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.editFormIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+                    <FormControlLabel
+                      control={
+                          <Checkbox checked={elem.checked} onChange={(event) => this.handleCheckbox(event,index)}  value={ "id_acceso" + elem.id } />
+                          }
+                            label={elem.descripcion}
+                        />
+
+                )
+
+              })
+
+              }
+              </FormGroup>
+              </div>
+
+            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/categorias')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} onClick={this.handleSubmitEditTipoUsuario} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
 
           </CardBody>
@@ -226,4 +296,4 @@ class EditTipoUsuario extends Component {
 
 };
 
-export default withRouter(withStyles(styles)(EditCategoria));
+export default withRouter(withStyles(styles)(EditTipoUsuario));
