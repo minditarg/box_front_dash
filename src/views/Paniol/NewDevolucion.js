@@ -140,19 +140,18 @@ class NewDevolucion extends Component {
                 valid: false,
                 touched: false
             },
-            comentario: {
-                elementType: 'input',
+            motivo: {
+                elementType: 'textarea',
                 elementConfig: {
-                    type: 'text',
-                    label: 'Comentario',
+                    label: 'Motivo',
                     fullWidth: true
                 },
                 value: '',
                 validation: {
-                    required: true
+                    //required: true
                 },
-                valid: false,
-                touched: false
+                valid: true,
+                touched: true
             }
         },
         formIsValid: false,
@@ -235,7 +234,7 @@ class NewDevolucion extends Component {
             Database.post('/insert-devoluciones', {
                 id_modulo: this.state.orderForm.modulo.value,
                 referencia: this.state.orderForm.referencia.value,
-                comentario: this.state.orderForm.referencia.value,
+                motivo: this.state.orderForm.motivo.value,
 
                 detalle: this.state.detalleDevoluciones
             },this)
