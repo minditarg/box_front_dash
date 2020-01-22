@@ -1,30 +1,44 @@
 import React, { Component } from "react";
 import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
-import moment from 'moment';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
 import MaterialTable from "material-table";
-import SnackbarContent from "components/Snackbar/SnackbarContent.js";
+import {toast } from 'react-toastify';
 import { CardActions } from "@material-ui/core";
-import { toast } from 'react-toastify';
-import ModalDelete from "./ModalDelete";
-import EditPedido from "./components/EditPedido.js";
-import Button from "components/CustomButtons/Button.js";
-
-import { ColumnsListado, StateListado } from "./VariablesState";
+import Moment from 'react-moment';
+import moment from 'moment';
 import { localization } from "variables/general.js";
 import lightGreen from '@material-ui/core/colors/lightGreen';
-import AddIcon from '@material-ui/icons/Add';
+import Button from "components/CustomButtons/Button.js";
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
 import Paper from '@material-ui/core/Paper';
+import AddIcon from '@material-ui/icons/Add';
+
+//import DetalleIngresos from './components/DetalleIngresos'
 import NewPedido from './NewPedido';
+import DetallePedidos from './components/DetallePedidos';
+
 
 import { withStyles } from '@material-ui/styles';
+
+
+const columns = [
+    { title: "Identificador", field: "identificador"},
+  { title: "Usuario", field: "username" },
+  { title: "Fecha", field: "fecha", customSort: (a, b) => moment(a.fecha,"DD/MM/YYYY").format("YYYYMMDD") - moment(b.fecha,"DD/MM/YYYY").format("YYYYMMDD")  },
+];
+
+/*
+render: rowData => <img src={rowData.url} style={{width: 50, borderRadius: '50%'}}
+ <Moment format="YYYY/MM/DD">
+                1976-04-19T12:59-0500
+            </Moment>
+ */
 
 const styles = {
   cardCategoryWhite: {
@@ -57,160 +71,125 @@ const styles = {
 };
 
 class Pedidos extends Component {
-  state = JSON.parse(JSON.stringify(StateListado));
+  state = {
+    pedidos: [],
+    actions: [],
+    isLoading: false
+  };
 
 
-  deleteMaterial = (rowData) => {
-    this.handleClickOpen(rowData);
+  deleteMaterial = (id) => {
+    //alert("You want to delete " + id);
+    Database.post('/delete-pedidos', {
+      id: id
+    },this)
+      .then(res => {
+          this.getPedidos();
+          toast.info("Ingreso eliminado");
 
+      },err => {
+        toast.error(err.message);
+      })
   }
 
   getPedidos = () => {
     this.setState({
-      isLoading:true
+      isLoading: true
     })
     Database.get('/list-pedidos',this)
       .then(res => {
 
           let resultado = [...res.result];
           resultado = resultado.map(elem=>{
-            return {...elem}
+            return {
+              ...elem,
+              //identificador: elem.descripcion_id + elem.id,
+              fecha: moment(elem.fecha).format("DD/MM/YYYY")
+            }
           })
           this.setState({
             pedidos: resultado,
-            isLoading:false
+            isLoading: false
           })
 
-      }, err => {
+      },err => {
         this.setState({
-          isLoading:false
+          isLoading: false
         })
         toast.error(err.message);
       })
   }
 
-  handleClickOpen(rowData) {
-    this.setState({
-      openDeleteDialog: true,
-      deleteRowData: rowData
-    })
-  }
-
-  handleClose() {
-    this.setState({
-      openDeleteDialog: false,
-      deleteRowData: null
-    })
-  }
-
-  handleDelete(rowData) {
-    if (rowData.id) {
-      Database.post('/delete-pedidos', {
-        id: rowData.id
-      },this)
-        .then(res => {
-            this.handleClose();
-            this.getPedidos();
-            toast.success("Pedido eliminado");
-
-        }, err => {
-          toast.error(err.message);
-        })
-    }
-
-  }
-
   componentDidMount() {
-
     this.getPedidos();
 
-  }
-
-
-
-
-
-
-  reloadPedidos = () => {
-    this.getPedidos();
   }
 
 
   render() {
-   let style={  maxWidth: "100%"}
-    if(this.props.match.url != this.props.location.pathname) {
-      style={ display:'none', maxWidth: "100%"}
+    let style = {}
+    if (this.props.match.url != this.props.location.pathname) {
+      style = { display: 'none' }
     }
-    return ([
-       <div key={"pedidos-list-pedidos"} style={style}>
-            <Card>
-              <CardHeader color="primary">
-                <h4 className={this.props.classes.cardTitleWhite} >PEDIDOS</h4>
-                <p className={this.props.classes.cardCategoryWhite} >
-                  Listado de Pedidos
+    return (
+
+      <div style={{ maxWidth: "100%" }}>
+        <Card style={style}>
+          <CardHeader color="primary">
+            <h4 className={this.props.classes.cardTitleWhite} >PEDIDOS</h4>
+            <p className={this.props.classes.cardCategoryWhite} >
+              Listado de Pedidos
                       </p>
-              </CardHeader>
-              <CardBody>
-               <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/nuevopedido')} color="primary"><AddIcon /> Nuevo Pedido</Button>
-                <MaterialTable
-                isLoading={this.state.isLoading}
-                  columns={ColumnsListado}
-                  data={this.state.pedidos}
-                  title=""
-                  localization={localization}
-                  actions={[{
-                    icon: 'edit',
-                    tooltip: 'Editar Pedido',
-                    onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarpedido/' + rowData.id)
-                  },
-                  {
-                    icon: 'delete',
-                    tooltip: 'Borrar Pedido',
-                    onClick: (event, rowData) => this.deleteMaterial(rowData)
-                  }]}
-                  options={{
-                    exportButton: true,
-                    exportAllData:true,
-                    exportFileName:"Pedidos " + moment().format("DD-MM-YYYY"),
-                    exportDelimiter:";",
-                    headerStyle: {
-                      backgroundColor: lightGreen[700],
-                      color: '#FFF'
-                    },
-                  }}
-                />
-              </CardBody>
-            </Card>
+          </CardHeader>
+          <CardBody>
+          <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/nuevapedido')} color="primary"><AddIcon /> Nuevo Pedido</Button>
 
-          </div>,
-      <Switch  key={"pedidos-switch"}>
+            <MaterialTable
+              isLoading={this.state.isLoading}
+              columns={columns}
+              data={this.state.pedidos}
+              title=""
+              actions={this.state.actions}
 
-        <Route path={this.props.match.url + "/editarpedido/:idpedido"} exact render={() =>
+              localization={localization}
 
-          <EditPedido
-          getPedidos={()=>this.getPedidos()}
-          />
-        } />
+              options={{
+                exportButton: true,
+                exportAllData:true,
+                exportFileName:"Pedidos " + moment().format("DD-MM-YYYY"),
+                exportDelimiter:";",
+                headerStyle: {
+                  backgroundColor: lightGreen[700],
+                  color: '#FFF'
+                },
+              }}
+              detailPanel={rowData => {
+                console.log(rowData);
+                return (
+                  <DetallePedidos idPedido={rowData.id} cantidadRegistros="7" />
+                )
+              } }
 
-          <Route path={this.props.match.url + "/nuevopedido/"} exact render={() =>
+              />
+          </CardBody>
+        </Card>
 
-          <NewPedido
-          getPedidos={()=>this.getPedidos()}
-          />
-        } />
+        <Switch>
 
-      </Switch>,
-      <ModalDelete
-      key={"pedidos-modal"}
-        openDeleteDialog={this.state.openDeleteDialog}
-        deleteRowData={this.state.deleteRowData}
-
-        handleClose={() => this.handleClose()}
-        handleDelete={(rowData) => this.handleDelete(rowData)}
-      />,
+          <Route path={this.props.match.url + "/nuevapedido"} exact render={() =>
+            <NewPedido
+            getPedidos={()=>this.getPedidos()}
+             />
+          } />
 
 
-    ]);
+
+        </Switch>
+
+
+
+      </div>
+    );
   }
 }
 
