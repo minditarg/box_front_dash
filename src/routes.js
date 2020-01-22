@@ -227,7 +227,7 @@ const dashboardRoutes = [
       {
         accesos: [24],
         path: "/movimientosinsumos",
-        name: "Movimientos",
+        name: "Auditoria",
         rtlName: "LI",
         icon: DvrIcon,
         component: MovimientosInsumos,
@@ -304,7 +304,7 @@ const dashboardRoutes = [
     {
       accesos: [44],
     path: "/movimientostock",
-    name: "Movimientos",
+    name: "Auditoria",
     rtlName: "NP",
     icon: DvrIcon,
     component: MovimientoStock,
@@ -361,7 +361,7 @@ const dashboardRoutes = [
       {
         accesos: [55],
        path: "/modmovimientos",
-       name: "Movimientos",
+       name: "Auditoria",
        rtlName: "LME",
        icon: DvrIcon,
        component: MovimientosModulos,

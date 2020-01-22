@@ -128,7 +128,7 @@ class NewEntrega extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    label: 'Referencia',
+                    label: 'Nombre',
                     fullWidth: true
                 },
                 value: '',
