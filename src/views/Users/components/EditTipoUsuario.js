@@ -127,12 +127,8 @@ tipoUsuarioEdit:null,
       .then(res => {
 
           this.props.getTiposUsuarios();
-
-          this.setState({
-            formIsValid: false
-          }, () => {
             toast.success("Los cambios se realizaron correctamente");
-          })
+        
 
 
       },err => {
@@ -279,7 +275,7 @@ tipoUsuarioEdit:null,
               </FormGroup>
               </div>
 
-            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/categorias')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} onClick={this.handleSubmitEditTipoUsuario} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/tiposusuarios')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} onClick={this.handleSubmitEditTipoUsuario} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
 
           </CardBody>

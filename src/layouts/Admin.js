@@ -11,12 +11,13 @@ import Navbar from "components/Navbars/Navbar.js";
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
+import storeRedux from "store/store";
+import routesTotal from "routes.js";
 
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
-import routesTotal from "routes.js";
 import { breadcrumRoutes } from "routes.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
@@ -29,6 +30,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 let ps;
 
+var setRoutesOut;
+var setUserOut;
 
 
 const useStyles = makeStyles(styles);
@@ -37,6 +40,65 @@ toast.configure({
    position: toast.POSITION.BOTTOM_RIGHT,
    autoClose: 2000,
 });
+
+
+const meRoutes = () => {
+
+  Database.get('/me')
+     .then(res => {
+
+       let accesosUser = res.result[1].map( elem => {
+         return parseInt(elem.id_acceso);
+       });
+       let routesFilter = routesTotal.map(elem=> {
+         let indexAccesos = elem.accesos.findIndex(elem2 => {
+           return (accesosUser.indexOf(elem2) > -1);
+         })
+
+         if(indexAccesos > -1 || elem.accesos.length == 0) {
+           if(elem.groupComponent) {
+           let dependences = elem.dependences.map(elem3 => {
+             let indexAccesosDependences = elem3.accesos.findIndex(elem4 => {
+               return (accesosUser.indexOf(elem4) > -1);
+             })
+             if(indexAccesosDependences > -1 || elem3.accesos.length == 0) {
+               elem3.show = true;
+               return elem3
+             }
+             elem3.show = false
+             return elem3
+           })
+           elem.show = true
+           elem.dependences = dependences;
+           return elem;
+
+           } else {
+             elem.show =true;
+             return elem;
+           }
+
+         }
+         elem.show = false;
+         return elem;
+       })
+
+
+
+           setUserOut(res.result[0][0]);
+
+           setRoutesOut(routesFilter);
+
+
+     }, err => {
+       toast.error(err.message);
+     })
+
+
+}
+
+storeRedux.subscribe(() => {
+  meRoutes();
+})
 
 
 
@@ -53,6 +115,9 @@ export default function Admin({ ...rest }) {
   const [color, setColor] = React.useState("green");
   const [fixedClasses, setFixedClasses] = React.useState("dropdown show");
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  setRoutesOut = setRoutes;
+  setUserOut = setUser;
+
 
   function mapBreadscrumRoutes(array) {
     return array.find(elem => {
@@ -93,7 +158,6 @@ export default function Admin({ ...rest }) {
         path="/admin"
         exact
         render={() => {
-
           return (<div><h2>Bienvenid@ a Box Rental APP</h2><h4>Seleccione un Item del menú lateral para continuar</h4></div>)
 
         }}
@@ -153,6 +217,10 @@ export default function Admin({ ...rest }) {
       setMobileOpen(false);
     }
   };
+
+
+
+
   // initialize and destroy the PerfectScrollbar plugin
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -174,50 +242,7 @@ export default function Admin({ ...rest }) {
 
   React.useEffect(() => {
 
-         Database.get('/me')
-            .then(res => {
-              let accesosUser = res.result[1].map( elem => {
-                return parseInt(elem.id_acceso);
-              });
-              let routesFilter = routesTotal.filter(elem=> {
-                let indexAccesos = elem.accesos.findIndex(elem2 => {
-                  return (accesosUser.indexOf(elem2) > -1);
-                })
-
-                if(indexAccesos > -1 || elem.accesos.length == 0) {
-                  if(elem.groupComponent) {
-                  let dependences = elem.dependences.filter(elem3 => {
-                    let indexAccesosDependences = elem3.accesos.findIndex(elem4 => {
-                      return (accesosUser.indexOf(elem4) > -1);
-                    })
-                    if(indexAccesosDependences > -1 || elem3.accesos.length == 0) {
-                      return true
-                    }
-                    return false
-                  })
-
-                  elem.dependences = dependences;
-                  return true
-
-                  } else {
-                    return true;
-                  }
-
-                }
-                return false;
-              })
-
-
-
-                  setUser(res.result[0][0]);
-
-                  setRoutes(routesFilter);
-
-
-            }, err => {
-              rest.history.replace("/");
-              toast.error(err.message);
-            })
+            meRoutes();
 
 
   }, []);

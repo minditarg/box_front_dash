@@ -52,7 +52,7 @@ export default function Sidebar(props) {
   var links = (
     <List className={classes.list}>
       {routes.map((prop, key) => {
-        if(prop.groupComponent) {
+        if(prop.groupComponent && prop.show) {
 
       return(
         <div key={"sidebar-" + key}>
@@ -85,6 +85,8 @@ export default function Sidebar(props) {
       <Collapse in={openVar[prop.open]} timeout="auto" unmountOnExit>
             <List className={classes.list,classes.nested}>
           {prop.dependences.map((prop, key) => {
+            if(prop.show)
+            {
             var listItemClasses;
 
               listItemClasses = classNames({
@@ -125,7 +127,7 @@ export default function Sidebar(props) {
                 />
               </ListItem>
             </NavLink>
-
+          }
 
         })}
         </List>
@@ -133,7 +135,7 @@ export default function Sidebar(props) {
       </div>
    )
 
-        } else {
+ } else if(prop.show) {
         var activePro = " ";
         var listItemClasses;
         if (prop.path === "/upgrade-to-pro") {
@@ -155,7 +157,7 @@ export default function Sidebar(props) {
             className={activePro + classes.item}
             activeClassName="active"
            key={"sidebar-" + key}
-           
+
           >
             <ListItem button className={classes.itemLink + listItemClasses}>
               {typeof prop.icon === "string" ? (

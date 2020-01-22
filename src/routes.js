@@ -153,6 +153,7 @@ const dashboardRoutes = [
   // },
 
   {
+    show:false,
     accesos: [1,2,3,4,5,6,7,8,9],
     path: "/configuracion",
     name: "Configuracion",
@@ -164,6 +165,7 @@ const dashboardRoutes = [
 
 
   {
+    show:false,
     accesos: [11,12,13,14,15,16,17,18,19],
     groupComponent: true,
     name: 'Usuarios',
@@ -171,6 +173,7 @@ const dashboardRoutes = [
     icon: Person,
     dependences: [
       {
+        show:false,
         accesos: [11],
         path: "/usuarios",
         name: "Usuarios",
@@ -181,6 +184,7 @@ const dashboardRoutes = [
       },
 
       {
+        show:false,
         accesos: [12],
         path: "/tiposusuarios",
         name: "Tipos Usuarios",
@@ -199,6 +203,7 @@ const dashboardRoutes = [
 
 
   {
+    show:false,
     accesos: [21,22,23,24,25,26,27,28,29],
     groupComponent: true,
     name: 'Insumos',
@@ -207,6 +212,7 @@ const dashboardRoutes = [
     dependences: [
 
       {
+        show:false,
         accesos: [21],
         path: "/categorias",
         name: "Categorias",
@@ -216,6 +222,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
+        show:false,
         accesos: [22],
         path: "/insumos",
         name: "Insumos",
@@ -225,6 +232,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
+        show:false,
         accesos: [24],
         path: "/movimientosinsumos",
         name: "Movimientos",
@@ -234,6 +242,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
+        show:false,
         accesos: [23],
         path: "/costos",
         name: "Costos",
@@ -246,6 +255,7 @@ const dashboardRoutes = [
   },
 
   {
+    show:false,
     accesos: [31,32,33,34,35,36,37],
     groupComponent: true,
     name: 'Alertas',
@@ -254,6 +264,7 @@ const dashboardRoutes = [
     dependences: [
 
       {
+        show:false,
         accesos: [31],
         path: "/alertaCosto",
         name: "Costos",
@@ -267,6 +278,7 @@ const dashboardRoutes = [
 
 
   {
+    show:false,
     accesos: [41,42,43,44,45,46],
     groupComponent: true,
     name: 'Stock',
@@ -274,6 +286,7 @@ const dashboardRoutes = [
     icon: FormatAlignJustifyIcon,
     dependences: [
       {
+        show:false,
         accesos: [41],
         path: "/stock",
         name: "Listado",
@@ -283,6 +296,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
+        show:false,
         accesos: [42],
         path: "/AjusteStock",
         name: "Ajuste",
@@ -292,6 +306,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
+        show:false,
         accesos: [43],
       path: "/ingresos",
       name: "Ingresos",
@@ -302,6 +317,7 @@ const dashboardRoutes = [
     }
     ,
     {
+      show:false,
       accesos: [44],
     path: "/movimientostock",
     name: "Movimientos",
@@ -316,6 +332,7 @@ const dashboardRoutes = [
   ]
   },
    {
+     show:false,
      accesos: [51,52,53,54,55,56,57,58,59],
      groupComponent: true,
      name: 'Modulos',
@@ -323,6 +340,7 @@ const dashboardRoutes = [
      icon: PictureInPictureIcon,
      dependences: [
        {
+         show:false,
          accesos: [53],
          path: "/plantillas",
          name: "Plantillas",
@@ -332,6 +350,7 @@ const dashboardRoutes = [
          layout: "/admin"
        },
       {
+        show:false,
         accesos: [54],
         path: "/modanalisis",
         name: "Analisis",
@@ -341,6 +360,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
        {
+         show:false,
          accesos: [51],
          path: "/modulos",
          name: "Listado",
@@ -350,6 +370,7 @@ const dashboardRoutes = [
          layout: "/admin"
        },
        {
+         show:false,
          accesos: [52],
         path: "/modestados",
         name: "Estados",
@@ -359,6 +380,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
+        show:false,
         accesos: [55],
        path: "/modmovimientos",
        name: "Movimientos",
@@ -371,6 +393,7 @@ const dashboardRoutes = [
    },
 
   {
+    show:false,
     accesos: [61,62,63,64,65,66,67],
     groupComponent: true,
     name: 'Pañol',
@@ -378,6 +401,7 @@ const dashboardRoutes = [
     icon: CompareArrows,
     dependences: [
        {
+         show:false,
          accesos: [61],
         path: "/paniolmodulos",
         name: "Módulos",
@@ -387,6 +411,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
+        show:false,
         accesos: [62],
         path: "/entregas",
         name: "Entregas",
@@ -396,6 +421,7 @@ const dashboardRoutes = [
         layout: "/admin"
       },
       {
+        show:false,
         accesos: [63],
         path: "/devoluciones",
         name: "Devoluciones",
@@ -408,6 +434,7 @@ const dashboardRoutes = [
   },
 
   {
+    show:false,
     accesos: [71],
     path: "/pedidos",
     name: "Pedidos",

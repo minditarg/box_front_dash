@@ -136,7 +136,8 @@ class NewTipoUsuario extends Component {
   handleSubmitNewTipoUsuario = (event) => {
     event.preventDefault();
     Database.post('/insert-tipo-usuario', {
-      descripcion: this.state.orderForm.descripcion.value
+      descripcion: this.state.orderForm.descripcion.value,
+      accesos: this.state.accesos
     },this)
       .then(res => {
 
@@ -152,14 +153,35 @@ class NewTipoUsuario extends Component {
 
 resetForm = () => {
   let newOrderForm = { ...this.state.orderForm };
+  let accesos = [... this.state.accesos];
+  accesos = accesos.map(elem => {
+    return {
+      ...elem,
+      checked:false
+    }
+  })
   for(let key in newOrderForm) {
     newOrderForm[key].value = ''
   }
   this.setState({
-    orderForm:newOrderForm
+    orderForm:newOrderForm,
+    accesos:accesos
   })
 
 }
+
+handleCheckbox = (event,index) => {
+  let resultado =[  ... this.state.accesos ];
+  resultado[index].checked = event.target.checked;
+
+  this.setState(
+    {
+      accesos: resultado
+    }
+  )
+
+}
+
 
 componentDidMount() {
 Database.get("/list-accesos",this)
@@ -227,7 +249,7 @@ Database.get("/list-accesos",this)
 
                   <FormControlLabel
                     control={
-                        <Checkbox checked={elem.checked} onChange={(event) => this.handleCheckbox(event,index)}  value={ "id_acceso" + elem.id } />
+                        <Checkbox checked={elem.checked} onChange={(event) => this.handleCheckbox(event,index)}  />
                         }
                           label={elem.descripcion}
                       />

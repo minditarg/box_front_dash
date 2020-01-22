@@ -31,7 +31,7 @@ class Database {
               reject({message:"No inició sesión en la aplicación"})
               }
               else if(err.response.status == 406) {
-
+                _this.props.history.replace("/");
               reject({message:"No tiene permisos en esta sección"})
               }
               else if(err.response.status == 500)

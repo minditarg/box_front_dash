@@ -11,6 +11,7 @@ import {  toast } from 'react-toastify';
 import NewTipoUsuario from './NewTipoUsuario';
 import EditTipoUsuario from './components/EditTipoUsuario';
 import ModalDeleteTipoUsuario from "./ModalDeleteTipoUsuario";
+import storeDefault from 'store/store';
 
 
 
@@ -131,6 +132,8 @@ state = {
   }
 
   componentDidMount() {
+
+    storeDefault.dispatch({type:"INCREMENT"});
 
     this.getTiposUsuarios();
 

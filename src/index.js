@@ -22,6 +22,7 @@ import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import storeDefault from 'store/store';
 import thunk from 'redux-thunk';
 
 import { ThemeProvider } from '@material-ui/styles';
