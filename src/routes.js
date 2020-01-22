@@ -417,7 +417,15 @@ const dashboardRoutes = [
     layout: "/admin"
   },
 
-
+  {
+    accesos: [81],
+    path: "/pedidos",
+    name: "Pedidos",
+    rtlName: "Ped",
+    icon: AssignmentIcon,
+    component: Pedidos,
+    layout: "/admin"
+  },
 
 
 

@@ -3,7 +3,6 @@ import Database from "variables/Database.js";
 import Input from "components/Input/Input";
 import moment from "moment";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
-import esLocale from "date-fns/locale/es";
 
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
@@ -57,7 +56,9 @@ const columnsInsumos = [
     { title: "Identificador", field: "identificador", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },
     { title: "Cantidad", field: "cantidad", type: 'numeric' },
-    { title: "Unidades", field: "unidad", editable: 'never'}
+    { title: "Unidad", field: "unidad", editable: 'never' },
+
+    //{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
 ];
 
 const styles = {
@@ -100,15 +101,63 @@ class NewPedido extends Component {
     state = {
         pedidos: [],
         open: false,
-        detallepedidos: [],
+        detallePedidos: [],
         actions: [],
-        actionsInsumos: [],
+        actionsPedidos: [],
+        disableAllButtons: true,
 
         insumoSeleccionado: 0,
+        orderForm: {
+            // modulo: {
+            //     elementType: 'select',
+            //     elementConfig: {
+            //         label: 'Módulo',
+            //         fullWidth: true,
+            //         options: [
+
+            //         ]
+            //     },
+            //     value: '',
+            //     validation: {
+            //         required: true
+            //     },
+            //     valid: false,
+            //     touched: false
+            // },
+            referencia: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    label: 'Referencia',
+                    fullWidth: true
+                },
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
+             }//,
+            // comentario: {
+            //     elementType: 'textarea',
+            //     elementConfig: {
+            //         label: 'Comentario',
+            //         fullWidth: true
+            //     },
+            //     value: '',
+            //     validation: {
+                    
+            //     },
+            //     valid: false,
+            //     touched: false
+            // }
+        },
         formIsValid: false,
-        pedidoInsertado: false,
-        disableAllButtons: false
+        asignacionInsertada: false
     }
+
+
+
 
     checkValidity = (value, rules) => {
         let isValid = true;
@@ -134,30 +183,39 @@ class NewPedido extends Component {
 
     inputChangedHandler = (event, inputIdentifier) => {
         //alert("modificado");
-
+        let checkValid;
         const updatedOrderForm = {
             ...this.state.orderForm
         };
-        if(inputIdentifier) {
-        let checkValid;
 
-        const updatedFormElement = {
-            ...updatedOrderForm[inputIdentifier]
-        };
-        updatedFormElement.value = event.target.value;
-        checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
-        updatedFormElement.valid = checkValid.isValid;
-        updatedFormElement.textValid = checkValid.textValid;
-        updatedFormElement.touched = true;
-        updatedOrderForm[inputIdentifier] = updatedFormElement;
+        if (inputIdentifier) {
+            const updatedFormElement = {
+                ...updatedOrderForm[inputIdentifier]
+            };
+            // if (inputIdentifier == 'modulo') {
+            //     this.setState({
+            //         detallePedidos: [],
+            //         disableAllButtons: false,
+            //     })
+            // }
+            if (inputIdentifier == 'referencia') {
+                this.setState({
+                    detallePedidos: [],
+                    disableAllButtons: false,
+                })
+            }
+            updatedFormElement.value = event.target.value;
+            checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+            updatedFormElement.valid = checkValid.isValid;
+            updatedFormElement.textValid = checkValid.textValid;
+            updatedFormElement.touched = true;
+            updatedOrderForm[inputIdentifier] = updatedFormElement;
         }
         let formIsValidAlt = true;
         for (let inputIdentifier in updatedOrderForm) {
             formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
         }
-
-  //    formIsValidAlt = this.state.dateFormIsValid && formIsValidAlt;
-      formIsValidAlt = (this.state.detallepedidos.length > 0) && formIsValidAlt;
+        formIsValidAlt = (this.state.detallePedidos.length > 0) && formIsValidAlt;
 
         this.setState({
             orderForm: updatedOrderForm,
@@ -173,23 +231,49 @@ class NewPedido extends Component {
 
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
-
-
+            this.setState({
+                disableAllButtons: true
+            })
             Database.post('/insert-pedidos', {
-                detalle: this.state.detallepedidos
+           //     id_modulo: this.state.orderForm.modulo.value,
+           //     referencia: this.state.orderForm.referencia.value,
+            //    comentario: this.state.orderForm.comentario.value,
+              //  detalle: this.state.detallePedidos
+              
             },this)
                 .then(res => {
-                        // this.setState({pedidoInsertado: true});
-                        this.props.getPedidos();
-                        toast.success("Nuevo pedido creado");
+                    this.setState({
+                        disableAllButtons: false
+                    })
 
-                        setTimeout(()=>{
-                          this.props.history.push("/admin/pedidos");
-                        },1000)
+                        toast.success("Nuevo pedido creado");
+                        let orderForm = { ...this.state.orderForm };
+                        for (let key in orderForm) {
+                            orderForm[key].value = ''
+                        };
+                        this.setState({
+                            orderForm: orderForm,
+                            detallePedidos: []
+                        });
+                        if (this.props.getPedidos)
+                            this.props.getPedidos();
+
+                            // if (this.props.getModulos)
+                            //     this.props.getModulos();
+
+
+                          if(this.props.paniol)
+                          this.props.history.push('/admin/paniolmodulos');
+                          else
+                        this.props.history.push('/admin/pedidos');
+
+
 
                 },err => {
-                
-                    toast.error(err.message);
+                  this.setState({
+                      disableAllButtons: false
+                  });
+                  toast.error(err.message);
                 })
         }
     }
@@ -205,15 +289,36 @@ class NewPedido extends Component {
     onClickInsumo = (rowInsumo, cantidad) => {
         this.closeDialog();
 
-                    let resultado = {...rowInsumo};
-                    resultado.cantidad = cantidad;
-                    let detallepedidoant = [];
-                    detallepedidoant.push(resultado);
-                    this.setState({
-                        detallepedidos: [...detallepedidoant]
-                    },()=>{
-                      this.inputChangedHandler(null,null);
-                    })
+        let resultado = { ...rowInsumo };
+        resultado.cantidad = cantidad;
+
+        let indexInsumo;
+        indexInsumo = this.state.detallePedidos.findIndex(elem => {
+            if (rowInsumo.numero == elem.numero && rowInsumo.codigo == elem.codigo)
+                return true;
+
+            return false
+        })
+
+        if (indexInsumo > -1) {
+            toast.error('El insumo ya se encuentra en el listado');
+
+        } else {
+            let detallePedidos = [...this.state.detallePedidos];
+
+            detallePedidos.push(resultado);
+
+            this.setState({
+                detallePedidos: [...detallePedidos]
+            }, () => {
+                this.inputChangedHandler(null, null);
+            })
+
+        }
+
+
+
+
     }
 
 
@@ -221,16 +326,35 @@ class NewPedido extends Component {
 
         //alert("eliminando: " + this.state.detallepedidos.indexOf(rowData));
         //data.splice(data.indexOf(oldData), 1);
-        let detallepedidosant = [...this.state.detallepedidos];
+        let detallepedidosant = [...this.state.detallePedidos];
         detallepedidosant.splice(detallepedidosant.indexOf(rowData), 1);
         this.setState({
-            detallepedidos: detallepedidosant
-        },()=>{
-          this.inputChangedHandler(null,null);
+            detallePedidos: detallepedidosant
+        }, () => {
+            this.inputChangedHandler(null, null);
         });
         //this.state.detallepedidos.splice(this.state.detallepedidos.indexOf(rowData), 1);
     }
 
+    // getModulos = () => {
+    //     Database.get('/list-modulos',this).then((res) => {
+
+    //         let options = [];
+    //         let orderForm = { ...this.state.orderForm };
+    //         res.result.forEach((elem) => {
+    //             options.push({ displayValue: elem.chasis, value: elem.id })
+
+    //         })
+    //         orderForm.modulo.elementConfig.options = options;
+    //         this.setState({
+    //             orderForm: orderForm
+    //         })
+
+    //     },err => {
+    //       toast.error(err.message)
+    //     })
+
+    // }
 
     componentDidMount() {
 
@@ -241,13 +365,28 @@ class NewPedido extends Component {
                 onClick: (event, rowData) => this.deleteInsumo(rowData)
             }
         ];
-        this.state.actionsInsumos = [
+        this.state.actionsPedidos = [
             {
                 icon: 'save',
                 tooltip: 'Seleccionar Insumo',
                 onClick: (event, rowData) => this.insumoSelectHandler(rowData.id)
 
             }];
+
+        // if(this.props.match.params.idModulo)
+        // {
+        //     let orderForm = { ...this.state.orderForm };
+        //     orderForm.modulo.value = this.props.match.params.idModulo;
+        //     orderForm.modulo.valid = true;
+        //     this.setState({
+        //         orderForm:orderForm,
+        //         disableAllButtons:false
+        //     })
+        // }
+
+        // this.getModulos();
+
+
     }
 
     render() {
@@ -269,12 +408,14 @@ class NewPedido extends Component {
                     <GridItem xs={12} sm={10} md={10} >
                         <Card>
                             <CardHeader color="primary">
-                                <h4 className={this.props.classes.cardTitleWhite} >Nuevo Pedido</h4>
+                                <h4 className={this.props.classes.cardTitleWhite} >NUEVO PEDIDO</h4>
                                 <p className={this.props.classes.cardCategoryWhite} >
-                                    Detalles del Pedido
+                                    Generacion de nuevo pedido
                                   </p>
                             </CardHeader>
                             <CardBody>
+
+
                                 {formElementsArray.map(formElement => (
                                     <Input
                                         key={formElement.id}
@@ -289,12 +430,12 @@ class NewPedido extends Component {
                                         />
                                 ))}
 
-                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} >Seleccionar Insumo</Button>
+                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
 
                                 <MaterialTable
                                     columns={columnsInsumos}
-                                    data={this.state.detallepedidos}
-                                    title="Insumo a pedir"
+                                    data={this.state.detallePedidos}
+                                    title="Listado de Insumos"
                                     actions={this.state.actions}
                                     localization={localization}
                                     editable={{
@@ -303,7 +444,7 @@ class NewPedido extends Component {
                                             new Promise((resolve, reject) => {
                                                 setTimeout(() => {
                                                     {
-                                                        const data = this.state.detallepedidos;
+                                                        const data = this.state.detallePedidos;
                                                         const index = data.indexOf(oldData);
                                                         data[index] = newData;
                                                         this.setState({ data }, () => resolve());
@@ -321,7 +462,16 @@ class NewPedido extends Component {
                                     />
 
 
-                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/pedidos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+                                <Button style={{ marginTop: '25px' }} color="info"
+                                onClick={() =>{
+                                  if(this.props.paniol)
+                                   this.props.history.push('/admin/paniolmodulos')
+                                   else
+                                  this.props.history.push('/admin/pedidos');
+
+                                }} ><ArrowBack />Volver</Button>
+
+                                <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Guardar</Button>
 
                             </CardBody>
                         </Card>
@@ -344,7 +494,8 @@ class NewPedido extends Component {
                     <DialogContent>
                         {this.state.open &&
                             <StepAgregarInsumo
-                                columnsInsumos={columnsInsumos}
+                               // idModulo={this.state.orderForm.modulo.value}
+                                pedido={true}
                                 onClickInsumo={(id, cantidad) => this.onClickInsumo(id, cantidad)}
                                 />
                         }

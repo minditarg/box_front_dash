@@ -118,6 +118,7 @@ class EditCosto extends Component {
       costo: this.state.editCostoForm.costo.value
 
     }
+    
     Database.post(`/update-insumos-costos`, objetoUpdate,this)
       .then(res => {
 
