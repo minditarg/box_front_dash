@@ -116,7 +116,7 @@ class ModulosPaniol extends Component {
     this.setState({
       isLoading: true
     })
-    Database.get('/list-modulos-paniol',this)
+    Database.get('/list-modulos-paniol',this,null,true)
       .then(res => {
 
           let resultado = [...res.modulos];

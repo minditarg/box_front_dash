@@ -79,7 +79,7 @@ class Stock extends Component {
     this.setState({
       isLoading: true
     })
-    Database.get('/list-insumos',this)
+    Database.get('/list-insumos',this,null,true)
       .then(res => {
 
           let resultado = [...res.result];

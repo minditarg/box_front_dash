@@ -445,6 +445,7 @@ const dashboardRoutes = [
   },
 
   {
+    show:false,
     accesos: [81],
     path: "/pedidos",
     name: "Pedidos",

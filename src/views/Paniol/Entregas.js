@@ -100,7 +100,7 @@ class Entregas extends Component {
     this.setState({
       isLoading: true
     })
-    Database.get('/list-entregas',this)
+    Database.get('/list-entregas',this,null,true)
       .then(res => {
 
 

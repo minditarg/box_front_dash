@@ -69,7 +69,7 @@ class Plantillas extends Component {
     this.setState({
       isLoading:true
     })
-    Database.get('/list-plantillas',this)
+    Database.get('/list-plantillas',this,null,true)
       .then(res => {
 
           let resultado = [...res.result];

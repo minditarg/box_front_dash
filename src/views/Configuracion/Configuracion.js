@@ -51,7 +51,7 @@ class Configuracion extends Component {
   state = JSON.parse(JSON.stringify(StateEditConfiguracion));
 
   getConfiguracionEdit = (id) => {
-    Database.get('/list-configuraciones/',this)
+    Database.get('/list-configuraciones/',this,null,true)
       .then(resultado => {
           if (resultado.result.length > 0) {
             this.setState({

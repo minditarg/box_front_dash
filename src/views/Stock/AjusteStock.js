@@ -124,7 +124,7 @@ class AjusteStock extends Component {
     }
 
     getInsumos = () => {
-        Database.get('/list-insumos',this)
+        Database.get('/list-insumos',this,null,true)
             .then(res => {
 
                     let resultado = [...res.result];

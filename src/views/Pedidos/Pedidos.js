@@ -96,7 +96,7 @@ class Pedidos extends Component {
     this.setState({
       isLoading: true
     })
-    Database.get('/list-pedidos',this)
+    Database.get('/list-pedidos',this,null,true)
       .then(res => {
 
           let resultado = [...res.result];

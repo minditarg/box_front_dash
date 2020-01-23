@@ -32,6 +32,7 @@ let ps;
 
 var setRoutesOut;
 var setUserOut;
+var propsOut;
 
 
 const useStyles = makeStyles(styles);
@@ -44,7 +45,7 @@ toast.configure({
 
 const meRoutes = () => {
 
-  Database.get('/me')
+  Database.get('/me',null,propsOut)
      .then(res => {
 
        let accesosUser = res.result[1].map( elem => {
@@ -117,6 +118,7 @@ export default function Admin({ ...rest }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   setRoutesOut = setRoutes;
   setUserOut = setUser;
+  propsOut = rest;
 
 
   function mapBreadscrumRoutes(array) {
@@ -131,6 +133,7 @@ export default function Admin({ ...rest }) {
   const switchRoutes = (
     <Switch>
       {routes.map((prop, key) => {
+        if(prop.show) {
         if (prop.layout === "/admin" && !prop.groupComponent) {
           return (
             <Route
@@ -141,6 +144,7 @@ export default function Admin({ ...rest }) {
           );
         } else if (prop.groupComponent) {
           return prop.dependences.map((prop, key) => {
+            if(prop.show) {
             return (
               <Route
                 path={prop.layout + prop.path}
@@ -148,11 +152,14 @@ export default function Admin({ ...rest }) {
                 key={key}
                 />
             )
+          }
           })
 
         }
         return null;
-      })}
+      }
+    }
+    )}
       { /* <Redirect from="/admin" to="/admin/stock" /> */ }
       <Route
         path="/admin"

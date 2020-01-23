@@ -80,13 +80,13 @@ class ModulosAnalisisDetalle extends Component {
     })
 
     //,{id: rowData.id}this.props.match.params.idinsumo
-    Database.get('/modulos-montos/'+ this.props.match.params.idModulo, this)
+    Database.get('/modulos-montos/'+ this.props.match.params.idModulo, this,null,true)
       .then(res => {
         this.setState({
           isLoading:false,
           montodiseno:res.modulos[0].montodiseno,
           montoproduccion:res.modulos[0].montoproduccion,
-        }) 
+        })
           console.log(res);
       }, err => {
         this.setState({
@@ -108,7 +108,7 @@ class ModulosAnalisisDetalle extends Component {
         this.setState({
           isLoading:false,
           modulos:res.modulos
-        }) 
+        })
           console.log(res);
       }, err => {
         this.setState({
@@ -180,7 +180,7 @@ class ModulosAnalisisDetalle extends Component {
                     },
                   }}
                 />
-                
+
               </CardBody>
             </Card>
           </div>,
