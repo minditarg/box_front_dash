@@ -3,9 +3,11 @@ import React from 'react';
 import Database from "variables/Database.js";
 import { toast } from 'react-toastify';
 
+
 //COMPONENTES LOCALES
 import Input from "components/Input/Input";
 import {localization} from "variables/general.js";
+import $ from 'jquery';
 
 //ESTILOS Y COLORES
 import { makeStyles } from '@material-ui/core/styles';
@@ -79,8 +81,8 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
 
      React.useEffect(() => {
-
         getInsumos();
+
         if(props.rowEditInsumo)
         {
           setRowInsumo(props.rowEditInsumo);
@@ -95,10 +97,10 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     }, []);
 
      const getInsumos = () => {
-        setIsLoading(true);
+       setIsLoading(true);
         Database.get('/list-insumos',this)
             .then(res => {
-                setIsLoading(false);
+                    setIsLoading(false);
                     let resultado = [...res.result];
                     resultado = resultado.map(elem=>{
                         return {
@@ -107,6 +109,10 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                         }
                     })
                     setInsumos(resultado);
+                    $(".MuiDialog-root input").each(function(index,element){
+                      if(index == 0)
+                      element.focus();
+                    })
 
             },err => {
                 setIsLoading(false);
@@ -132,6 +138,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
     const handleBack = () => {
         setActiveStep(prevActiveStep => prevActiveStep - 1);
+
     };
 
     const handleReset = () => {
@@ -191,6 +198,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const getStepContent = (stepIndex) => {
         switch (stepIndex) {
             case 0:
+
                 return <MaterialTable
                     isLoading={isLoading}
                     columns={columns}
@@ -210,7 +218,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
 
                     />;
-
+                
             case 1:
 
                 return (<React.Fragment>

@@ -186,7 +186,7 @@ const SortableItem = sortableElement(({value, deleteInsumo, editInsumo, undoDele
         {iconos}
 
         <TableCell>
-            {value.codigo + value.numero}
+            {value.identificador}
         </TableCell>
         <TableCell>
             {value.descripcion}
@@ -517,6 +517,12 @@ class NewEditModulo extends Component {
                         }
 
                     }
+                    res.insumos = res.insumos.map(elem => {
+                      return {
+                        ...elem,
+                        identificador: elem.codigo + elem.numero
+                      }
+                    })
 
                     this.detalleModulos = [...res.insumos];
                     this.copiaDetalleModulos = JSON.parse(JSON.stringify(res.insumos));
@@ -687,7 +693,7 @@ class NewEditModulo extends Component {
         let detalle;
         if (value && value != '') {
             detalle = this.detalleModulos.filter(elem => {
-                if (elem.descripcion.toLowerCase().indexOf(value.toLowerCase()) >= 0)
+                if (elem.descripcion.toLowerCase().indexOf(value.toLowerCase()) >= 0 || elem.identificador.toLowerCase().indexOf(value.toLowerCase()) >= 0)
                     return true;
 
                 return false;
@@ -710,7 +716,7 @@ class NewEditModulo extends Component {
 
         if (this.props.match.params.idModulo)
             this.getInsumosParcial(this.props.match.params.idModulo)
-            
+
 
             this.getPlantillas();
 

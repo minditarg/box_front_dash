@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 //CONTENEDORES
 import MaterialTable, { MTableBodyRow } from "material-table";
 import Paper from '@material-ui/core/Paper';
+import $ from 'jquery';
 
 //BOTONES Y VARIOS
 import Button from '@material-ui/core/Button';
@@ -110,6 +111,10 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                         }
                     })
                     setInsumos(resultado);
+                    $(".MuiDialog-root input").each(function(index,element){
+                      if(index == 0)
+                      element.focus();
+                    })
 
             },err => {
               setIsLoading(false);

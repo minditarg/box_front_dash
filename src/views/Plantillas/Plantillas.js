@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
+import $ from 'jquery';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -118,6 +119,7 @@ class Plantillas extends Component {
   }
 
   componentDidMount() {
+
 
     this.getPlantillas();
 
