@@ -14,7 +14,7 @@ import { withStyles } from '@material-ui/styles';
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
-import Button from "components/CustomButtons/Button.js";
+import Button from '@material-ui/core/Button';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
@@ -146,7 +146,7 @@ class NewPedido extends Component {
             //     },
             //     value: '',
             //     validation: {
-                    
+
             //     },
             //     valid: false,
             //     touched: false
@@ -239,7 +239,7 @@ class NewPedido extends Component {
            //     referencia: this.state.orderForm.referencia.value,
             //    comentario: this.state.orderForm.comentario.value,
               //  detalle: this.state.detallePedidos
-              
+
             },this)
                 .then(res => {
                     this.setState({

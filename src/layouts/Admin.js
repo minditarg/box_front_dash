@@ -39,7 +39,7 @@ const useStyles = makeStyles(styles);
 
 toast.configure({
    position: toast.POSITION.BOTTOM_RIGHT,
-   autoClose: 2000,
+   autoClose: 3500,
 });
 
 
