@@ -139,7 +139,7 @@ class Users extends Component {
       isLoading: true
     })
 
-    Database.get('/list-users',this)
+    Database.get('/list-users',this,null,true)
       .then(res => {
         let resultado = [...res.result];
         console.log(resultado);

@@ -11,7 +11,7 @@ import {  toast } from 'react-toastify';
 import NewTipoUsuario from './NewTipoUsuario';
 import EditTipoUsuario from './components/EditTipoUsuario';
 import ModalDeleteTipoUsuario from "./ModalDeleteTipoUsuario";
-import storeDefault from 'store/store';
+
 
 
 
@@ -80,7 +80,7 @@ state = {
     this.setState({
       isLoading:true
     })
-    Database.get('/list-tipos-usuarios',this)
+    Database.get('/list-tipos-usuarios',this,null,true)
       .then(res => {
         this.setState({
           isLoading:false
@@ -115,13 +115,13 @@ state = {
 
     if (rowData.id) {
         this.handleClose();
-      Database.post('/delete-tipos-usuarios', {
+      Database.post('/delete-tipo-usuario', {
         id: rowData.id
       },this)
         .then(res => {
 
 
-            this.getCategorias();
+            this.getTiposUsuarios();
             toast.success("Tipo de usuario Eliminado");
 
         }, err => {
@@ -132,8 +132,6 @@ state = {
   }
 
   componentDidMount() {
-
-    storeDefault.dispatch({type:"INCREMENT"});
 
     this.getTiposUsuarios();
 

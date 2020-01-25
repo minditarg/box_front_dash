@@ -69,7 +69,7 @@ class AlertaCostos extends Component {
     this.setState({
       isLoading:true
     })
-    Database.get('/list-insumos-alertados',this)
+    Database.get('/list-insumos-alertados',this,null,true)
       .then(res => {
         this.setState({
           isLoading:false
@@ -111,6 +111,7 @@ class AlertaCostos extends Component {
 
 
   componentDidMount() {
+
 
     this.getInsumos();
 

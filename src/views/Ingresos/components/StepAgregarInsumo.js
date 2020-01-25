@@ -6,6 +6,7 @@ import Database from "variables/Database.js";
 import Input from "components/Input/Input";
 import {localization} from "variables/general.js";
 import {toast } from 'react-toastify';
+import $ from 'jquery';
 
 //ESTILOS Y COLORES
 import { makeStyles } from '@material-ui/core/styles';

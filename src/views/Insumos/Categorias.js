@@ -69,7 +69,7 @@ class Categorias extends Component {
     this.setState({
       isLoading:true
     })
-    Database.get('/list-categorias',this)
+    Database.get('/list-categorias',this,null,true)
       .then(res => {
         this.setState({
           isLoading:false

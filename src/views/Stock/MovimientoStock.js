@@ -116,7 +116,7 @@ class MovimientoStock extends Component {
     this.setState({
       isLoading: true
     })
-    Database.get('/list-movimientos-stock',this)
+    Database.get('/list-movimientos-stock',this,null,true)
       .then(res => {
 
           let resultado = [...res.result];

@@ -121,7 +121,7 @@ class MovimientosModulos extends Component {
     this.setState({
       isLoading: true
     })
-    Database.get('/list-modulos-movimientos',this)
+    Database.get('/list-modulos-movimientos',this,null,true)
       .then(res => {
 
           let resultado = [...res.result];
@@ -236,7 +236,7 @@ class MovimientosModulos extends Component {
                 tooltip: 'Detalle del Módulo',
                 onClick: (event, rowData) => this.handleClickOpen(rowData)
               },
-          
+
               ]}
               options={{
                 exportButton: true,
