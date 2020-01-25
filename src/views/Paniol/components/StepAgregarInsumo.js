@@ -233,6 +233,8 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                       {rowInsumo.codigo}</p>
                      <p><span style={{ fontWeight:'300'}}>Descripción: </span>
                       {rowInsumo.descripcion}</p>
+                      <p><span style={{ fontWeight:'300'}}>Unidad: </span>
+                      {rowInsumo.unidad}</p>
                        <p><span style={{ fontWeight:'300'}}>Stock:
                       </span>{rowInsumo.cantidad + " " +  rowInsumo.unidad}<br/>
                       <span style={{ fontWeight:'300'}}>Total Módulo: </span>{rowInsumo.cantidad_modulo_insumo + " " +  rowInsumo.unidad} <br/>
