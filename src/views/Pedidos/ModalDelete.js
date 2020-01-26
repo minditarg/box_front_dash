@@ -16,7 +16,7 @@ onClose={props.handleClose}
 aria-labelledby="alert-dialog-title"
 aria-describedby="alert-dialog-description"
 >
-<DialogTitle id="alert-dialog-title">{props.deleteRowData && (`Eliminar el Pedido "${props.deleteRowData.descripcion}"?` )}</DialogTitle>
+<DialogTitle id="alert-dialog-title">{props.deleteRowData && (`Eliminar el pedido "${props.deleteRowData.referencia}"?` )}</DialogTitle>
 <DialogContent>
  <DialogContentText id="alert-dialog-description">
  Se eliminará el pedido seleccionado. Realmente desea eliminarlo?

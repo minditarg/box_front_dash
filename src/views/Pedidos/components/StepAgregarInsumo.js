@@ -1,11 +1,13 @@
 //COMPONENTES GENERALES
 import React from 'react';
 import Database from "variables/Database.js";
+import { toast } from 'react-toastify';
+
 
 //COMPONENTES LOCALES
 import Input from "components/Input/Input";
 import {localization} from "variables/general.js";
-import { toast } from 'react-toastify';
+import $ from 'jquery';
 
 //ESTILOS Y COLORES
 import { makeStyles } from '@material-ui/core/styles';
@@ -42,7 +44,7 @@ const columns = [
 ];
 
 function getSteps() {
-    return ['Seleccione un Insumo', 'Seleccione cantidad a pedir'];
+    return ['Seleccione un Insumo', 'Modificar cantidad'];
 }
 
 
@@ -79,17 +81,26 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
 
      React.useEffect(() => {
-
         getInsumos();
+
+        if(props.rowEditInsumo)
+        {
+          setRowInsumo(props.rowEditInsumo);
+          handleNext();
+          let orderFormAlt = {...orderForm};
+
+          orderFormAlt.cantidad.value = props.rowEditInsumo.cantidad;
+          setOrderForm(orderFormAlt);
+
+        }
 
     }, []);
 
      const getInsumos = () => {
-        setIsLoading(true);
+       setIsLoading(true);
         Database.get('/list-insumos',this)
             .then(res => {
-                setIsLoading(false);
-
+                    setIsLoading(false);
                     let resultado = [...res.result];
                     resultado = resultado.map(elem=>{
                         return {
@@ -98,10 +109,14 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                         }
                     })
                     setInsumos(resultado);
+                    $(".MuiDialog-root input").each(function(index,element){
+                      if(index == 0)
+                      element.focus();
+                    })
 
             },err => {
-              setIsLoading(false);
-              toast.error(err.message);
+                setIsLoading(false);
+                toast.error(err.message);
             })
     }
 
@@ -123,6 +138,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
     const handleBack = () => {
         setActiveStep(prevActiveStep => prevActiveStep - 1);
+
     };
 
     const handleReset = () => {
@@ -182,6 +198,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const getStepContent = (stepIndex) => {
         switch (stepIndex) {
             case 0:
+
                 return <MaterialTable
                     isLoading={isLoading}
                     columns={columns}
@@ -201,7 +218,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
 
                     />;
-
+                
             case 1:
 
                 return (<React.Fragment>
@@ -211,8 +228,6 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                       {rowInsumo.descripcion}</p>
                       <p><span style={{ fontWeight:'300'}}>Unidad: </span>
                       {rowInsumo.unidad}</p>
-                      <p><span style={{ fontWeight:'300'}}>Cantidad actual: </span>
-                      {rowInsumo.cantidad + " " + rowInsumo.unidad }</p>
 
                     {
                         formElementsArray.map(formElement => (
@@ -250,17 +265,17 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                     </Step>
                 ))}
             </Stepper>
-            <div>
-                <div >
-                    <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+
+                    {getStepContent(activeStep)}
                     <div style={{ marginTop:'2em'}}>
-                        <Button
+                  { !props.rowEditInsumo &&   <Button
                             disabled={activeStep === 0}
                             onClick={handleBack}
                             className={classes.backButton}
                             >
                             Atras
               </Button>
+            }
                         {activeStep === steps.length - 1 ? (
                             <Button variant="contained" color="primary" disabled={!formIsValid } onClick={handleFinish}>
                                 Agregar
@@ -268,9 +283,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                         ) : null}
 
                     </div>
-                </div>
 
-            </div>
         </div>
     );
 }
