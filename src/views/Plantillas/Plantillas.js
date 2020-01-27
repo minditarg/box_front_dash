@@ -309,7 +309,7 @@ class Plantillas extends Component {
             <CSVLink
             data={this.state.detallePlantillas}
             asyncOnClick={true}
-    filename={"Plantilla " + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(new Date()).format("DD-MM-YYYY") }
+    filename={"Plantilla " + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(new Date()).format("DD-MM-YYYY") + ".csv" }
             headers={headers}
             separator={";"}
 
