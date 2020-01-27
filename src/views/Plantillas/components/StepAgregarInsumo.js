@@ -226,7 +226,8 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                       {rowInsumo.codigo + rowInsumo.numero}</p>
                      <p><span style={{ fontWeight:'300'}}>Descripción: </span>
                       {rowInsumo.descripcion}</p>
-
+                      <p><span style={{ fontWeight:'300'}}>Unidad: </span>
+                      {rowInsumo.unidad}</p>
 
                     {
                         formElementsArray.map(formElement => (

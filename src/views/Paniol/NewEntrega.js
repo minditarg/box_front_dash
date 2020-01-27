@@ -331,7 +331,7 @@ class NewEntrega extends Component {
     }
 
     getModulos = () => {
-        Database.get('/list-modulos',this).then((res) => {
+        Database.get('/list-modulos-produccion',this).then((res) => {
 
             let options = [];
             let orderForm = { ...this.state.orderForm };
