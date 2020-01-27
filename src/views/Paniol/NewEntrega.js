@@ -52,6 +52,7 @@ import { localization } from "variables/general";
 // { title: "Fecha", field: "fecha" }
 // ];
 
+
 const columnsInsumos = [
     { title: "Identificador", field: "identificador", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },

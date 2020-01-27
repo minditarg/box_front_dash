@@ -209,7 +209,7 @@ const SortableContainer = sortableContainer(({children}) => {
 
 class EditPlantilla extends Component {
     state = {
-        plantillas: [],
+        plantilla: null,
         disableAllButtons:false,
         open: false,
         rowEditInsumo: null,
@@ -486,6 +486,7 @@ class EditPlantilla extends Component {
                     this.copiaDetallePlantillas = JSON.parse(JSON.stringify(res.insumos));
 
                     this.setState({
+                        plantilla: res.plantilla[0],
                         orderForm: orderForm,
                         detallePlantillas: res.insumos,
                         isLoading: false
@@ -647,7 +648,7 @@ class EditPlantilla extends Component {
                         <Card>
                         { this.props.match.params.idPlantilla ?
                             <CardHeader color="primary">
-                                <h4 className={this.props.classes.cardTitleWhite} >Modificar Plantilla</h4>
+                                <h4 className={this.props.classes.cardTitleWhite} >Modificar Plantilla: { " " + (this.state.plantilla ? this.state.plantilla.codigo : null)}</h4>
                                 <p className={this.props.classes.cardCategoryWhite} >
                                     Modificación de plantilla para la construcción de Módulos
                                   </p>
@@ -676,7 +677,7 @@ class EditPlantilla extends Component {
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
 
-                                <CSVLink data={this.detallePlantillas} headers={headers}>
+                                <CSVLink data={this.detallePlantillas} filename={"Plantilla-" + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(Date.now()).format("DD_MM_YYYY")} headers={headers} separator={";"}>
                                     <Button color="info" >Descargar csv</Button>
                                 </CSVLink>
                                 <div style={{ padding: 20 }} >
