@@ -465,7 +465,7 @@ class NewEntrega extends Component {
 
                                 }} ><ArrowBack />Volver</Button>
 
-                                <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Entregar</Button>
+                                <Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save />Entregar</Button>
 
                             </CardBody>
                         </Card>

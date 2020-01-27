@@ -18,7 +18,6 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
 import Button from '@material-ui/core/Button';
-import ButtonMat from '@material-ui/core/Button';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import ControlCamera from '@material-ui/icons/ControlCamera';
 import Save from '@material-ui/icons/Save';
@@ -801,7 +800,7 @@ class NewEditModulo extends Component {
                                     </div>
 
                                 }
-                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/modulos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/modulos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
                             </CardBody>
                         </Card>
@@ -873,10 +872,10 @@ class NewEditModulo extends Component {
                       </FixedSizeList> </div>}
 
                       <div style={{ marginTop:'25px',textAlign:'right'}}>
-                      <ButtonMat onClick={this.closeDialog.bind(this)} style={{marginRight:'10px'}}>Cancelar</ButtonMat>
-                      <ButtonMat type="submit" disabled={this.state.detalleSelectPlantilla.length <= 0} variant="contained" color="primary"  >
+                      <Button onClick={this.closeDialog.bind(this)} style={{marginRight:'10px'}}>Cancelar</Button>
+                      <Button type="submit" disabled={this.state.detalleSelectPlantilla.length <= 0} variant="contained" color="primary"  >
                           Seleccionar
-                        </ButtonMat>
+                        </Button>
                         </ div>
                         </form>
                     </DialogContent>

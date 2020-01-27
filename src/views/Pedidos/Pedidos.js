@@ -73,6 +73,12 @@ class Pedidos extends Component {
       .then(res => {
 
           let resultado = [...res.result];
+          resultado = resultado.map(elem => {
+            return {
+              ...elem,
+              identificador: "P" + elem.id
+            }
+          })
           this.setState({
             insumos: resultado,
             isLoading:false

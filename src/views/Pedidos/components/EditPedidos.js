@@ -367,7 +367,7 @@ class EditPedidos extends Component {
                 id: this.props.match.params.idPedido
             },this)
                 .then(res => {
-
+                        toast.success("Guardado de pedido con éxito");
                         this.props.getPedidos();
                         this.props.history.push("/admin/pedidos");
 
@@ -704,7 +704,7 @@ class EditPedidos extends Component {
                                     </div>
 
                                 }
-                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/pedidos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/pedidos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
                             </CardBody>
                         </Card>

@@ -66,6 +66,12 @@ const styles = {
       fontWeight: "400",
       lineHeight: "1"
     }
+  },
+  closeButton: {
+    position: 'absolute',
+    right: '0.5em',
+    top: '0.5em',
+    color: 'grey',
   }
 };
 
@@ -230,7 +236,7 @@ class Plantillas extends Component {
                     onClick: (event, rowData) => this.deleteMaterial(rowData)
                   },
                   {
-                    icon: 'delete',
+                    icon: 'file_copy',
                     tooltip: 'Descargar CSV',
                     onClick: (event, rowData) => this.clickDownloadCSV(rowData)
                   },
@@ -281,7 +287,7 @@ class Plantillas extends Component {
           fullWidth={true}
           maxWidth={"md"}
           >
-          <DialogTitle>Plantilla
+          <DialogTitle>Plantilla:  { this.state.plantilla && <span>{ this.state.plantilla.codigo }</span> }
                   <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeCSVDialog.bind(this)}>
                   <CloseIcon />
               </IconButton>
@@ -303,7 +309,7 @@ class Plantillas extends Component {
             <CSVLink
             data={this.state.detallePlantillas}
             asyncOnClick={true}
-            filename={"Plantilla-hola" }
+    filename={"Plantilla " + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(new Date()).format("DD-MM-YYYY") }
             headers={headers}
             separator={";"}
 
@@ -311,7 +317,7 @@ class Plantillas extends Component {
 
 
              >
-              DESCARGAR CSV
+              <Button variant="contained" color="primary">DESCARGAR CSV</Button>
             </CSVLink>
 
 

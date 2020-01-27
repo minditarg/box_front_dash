@@ -366,7 +366,7 @@ class EditPlantilla extends Component {
                 id: this.props.match.params.idPlantilla
             },this)
                 .then(res => {
-
+                         toast.success("Guardado de plantilla con éxito");
                         this.props.getPlantillas();
                         this.props.history.push("/admin/plantillas");
 
@@ -704,7 +704,7 @@ class EditPlantilla extends Component {
                                     </div>
 
                                 }
-                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/plantillas')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/plantillas')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
                             </CardBody>
                         </Card>

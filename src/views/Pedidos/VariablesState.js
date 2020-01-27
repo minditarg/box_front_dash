@@ -10,12 +10,7 @@ export const StateListado = {
 
 }
 export const ColumnsListado = [
-  { title: "Codigo", field: "codigo", editable: 'never' },
-  { title: "Referencia", field: "referencia" }
-];
-
-export const ColumnsListadoCategorias = [
-  { title: "Codigo", field: "codigo" },
+  { title: "Identificador", field: "identificador" },
   { title: "Referencia", field: "referencia" }
 ];
 
