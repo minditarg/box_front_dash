@@ -18,6 +18,7 @@ import ImageIcon from '@material-ui/icons/Image';
 import CategoryIcon from '@material-ui/icons/Category';
 import DescriptionIcon from '@material-ui/icons/Description';
 import Divider from '@material-ui/core/Divider';
+import moment from 'moment';
 
 import { ColumnsListadoAnalisisInsumos, StateListado } from "./VariablesState";
 import { localization } from "variables/general.js";
@@ -105,9 +106,11 @@ class ModulosAnalisisDetalle extends Component {
     //,{id: rowData.id}this.props.match.params.idinsumo
     Database.get('/modulos-analizar-insumos/'+ this.props.match.params.idModulo, this)
       .then(res => {
+        console.log(res);
         this.setState({
           isLoading:false,
-          modulos:res.modulos
+          insumos:res.insumos,
+          modulo:res.modulo[0]
         })
           console.log(res);
       }, err => {
@@ -169,11 +172,14 @@ class ModulosAnalisisDetalle extends Component {
                 <MaterialTable
                   isLoading={this.state.isLoading}
                   columns={ColumnsListadoAnalisisInsumos}
-                  data={this.state.modulos}
+                  data={this.state.insumos}
                   title=""
                   localization={localization}
                   options={{
-                    exportButton: true,
+                     exportButton: true,
+                    exportAllData:true,
+                    exportFileName:"Modulo " + (this.state.modulo ? this.state.modulo.descripcion : null )  +  moment().format("DD-MM-YYYY"),
+                    exportDelimiter:";",
                     headerStyle: {
                       backgroundColor: lightGreen[700],
                       color: '#FFF'

@@ -76,7 +76,7 @@ const styles = {
 };
 
 const headers = [
-    { label: "Codigo", key: "codigo" },
+    { label: "Identificador", key: "identificador" },
     { label: "Descripcion", key: "descripcion" },
     { label: "Cantidad", key: "cantidad" }
 ];
@@ -121,6 +121,14 @@ class Plantillas extends Component {
      Database.get('/list-plantillas-insumos/' + rowData.id,this)
 
       .then(res => {
+
+        res.insumos = res.insumos.map(elem =>{
+          return {
+            ...elem,
+            identificador: elem.codigo + elem.numero
+          }
+        })
+
         this.setState({
           plantilla: res.plantilla[0],
           detallePlantillas: res.insumos
@@ -181,7 +189,7 @@ class Plantillas extends Component {
 
     return (
       <ListItem button style={style} key={index}>
-        <ListItemText primary={this.state.detallePlantillas[index].descripcion} secondary={this.state.detallePlantillas[index].codigo} />
+        <ListItemText primary={this.state.detallePlantillas[index].descripcion} secondary={this.state.detallePlantillas[index].identificador} />
 
         <span>{ this.state.detallePlantillas[index].cantidad }</span>
 

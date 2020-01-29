@@ -586,6 +586,7 @@ class NewEditModulo extends Component {
                 delete elem.cantidad;
                 return {
                   ...elem,
+                  identificador: elem.codigo + elem.numero,
                   insertado:true,
                   cantidad_requerida:cantidad
                 }
@@ -593,7 +594,7 @@ class NewEditModulo extends Component {
 
 
               if(insumos.length < this.state.detalleSelectPlantilla.length)
-                toast.info("algunos insumos duplicados no se agregaron");
+                toast.info("Insumos duplicados no se agregaron");
 
               this.detalleModulos = insumos.concat(this.detalleModulos);
               this.buscarInsumo(this.buscarRef.current.value);
@@ -610,7 +611,7 @@ class NewEditModulo extends Component {
 
       return (
         <ListItem button style={style} key={index}>
-          <ListItemText primary={this.state.detalleSelectPlantilla[index].descripcion} secondary={this.state.detalleSelectPlantilla[index].codigo} />
+          <ListItemText primary={this.state.detalleSelectPlantilla[index].descripcion} secondary={this.state.detalleSelectPlantilla[index].codigo + this.state.detalleSelectPlantilla[index].numero} />
 
           <span>{ this.state.detalleSelectPlantilla[index].cantidad }</span>
 
