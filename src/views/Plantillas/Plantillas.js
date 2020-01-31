@@ -333,7 +333,7 @@ class Plantillas extends Component {
 
           </DialogContent>
       </Dialog>
-
+    
 
 
     ]);
