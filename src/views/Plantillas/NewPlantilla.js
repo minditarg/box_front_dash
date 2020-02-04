@@ -4,6 +4,7 @@ import Input from "components/Input/Input";
 import moment from "moment";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import InputFiles from 'react-input-files';
+import ExportXLS from 'components/ExportXLS/ExportXLS';
 
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
@@ -426,6 +427,7 @@ class NewPlantilla extends Component {
                                 ))}
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
+                                <ExportXLS csvData={this.state.detallePlantillas} fileName={"Plantilla-" + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(Date.now()).format("DD_MM_YYYY")} header={headers} />
                                 <InputFiles accept="text/csv" onChange={files => console.log(files)}>
                                     <Button color="info">Subir plantilla</Button>
                                 </InputFiles>
