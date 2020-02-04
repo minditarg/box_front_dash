@@ -444,6 +444,7 @@ const dashboardRoutes = [
     layout: "/admin"
   },
 
+<<<<<<< HEAD
   {
     show:false,
     accesos: [81],
@@ -455,6 +456,8 @@ const dashboardRoutes = [
     layout: "/admin"
   },
 
+=======
+>>>>>>> 45c5458a654978c8071d8d611657bc06e95fe442
 
 
 ];

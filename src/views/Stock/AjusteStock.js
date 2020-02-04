@@ -298,7 +298,7 @@ class AjusteStock extends Component {
 
 
 
-                        <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Ajustar </Button>
+                        <Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Ajustar </Button>
 
 
                     </CardBody>

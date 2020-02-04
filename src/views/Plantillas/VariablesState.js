@@ -1,6 +1,7 @@
 export const StateListado = {
   insumos: [],
-
+  detallePlantillas: [],
+  plantilla: {},
 
 
   openDeleteDialog: false,

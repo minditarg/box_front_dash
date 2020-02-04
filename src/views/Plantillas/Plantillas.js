@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
 import $ from 'jquery';
+<<<<<<< HEAD
+=======
+import moment from "moment";
+>>>>>>> 45c5458a654978c8071d8d611657bc06e95fe442
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -12,11 +16,23 @@ import { toast } from 'react-toastify';
 import ModalDelete from "./ModalDelete";
 import EditPlantilla from "./components/EditPlantilla";
 import Button from "components/CustomButtons/Button.js";
+import { CSVLink, CSVDownload } from "react-csv";
+
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import { FixedSizeList } from 'react-window';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import { ColumnsListado, StateListado } from "./VariablesState";
 import { localization } from "variables/general.js";
 import lightGreen from '@material-ui/core/colors/lightGreen';
 import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -53,8 +69,20 @@ const styles = {
       fontWeight: "400",
       lineHeight: "1"
     }
+  },
+  closeButton: {
+    position: 'absolute',
+    right: '0.5em',
+    top: '0.5em',
+    color: 'grey',
   }
 };
+
+const headers = [
+    { label: "Identificador", key: "identificador" },
+    { label: "Descripcion", key: "descripcion" },
+    { label: "Cantidad", key: "cantidad" }
+];
 
 class Plantillas extends Component {
   state = JSON.parse(JSON.stringify(StateListado));
@@ -73,6 +101,7 @@ class Plantillas extends Component {
       .then(res => {
 
           let resultado = [...res.result];
+
           this.setState({
             insumos: resultado,
             isLoading:false
@@ -84,6 +113,46 @@ class Plantillas extends Component {
         })
         toast.error(err.message);
       })
+  }
+
+  clickDownloadCSV = (rowData) => {
+    this.setState({
+      plantilla:null,
+      detallePlantillas:[],
+      openCSVDialog: true
+    })
+     Database.get('/list-plantillas-insumos/' + rowData.id,this)
+
+      .then(res => {
+
+        res.insumos = res.insumos.map(elem =>{
+          return {
+            ...elem,
+            identificador: elem.codigo + elem.numero
+          }
+        })
+
+        this.setState({
+          plantilla: res.plantilla[0],
+          detallePlantillas: res.insumos
+        })
+
+
+
+      },err => {
+        this.setState({ isLoading: false });
+        toast.error(err.message);
+      })
+
+
+
+
+  }
+
+
+
+  closeCSVDialog() {
+      this.setState({ openCSVDialog: false,openPlantillaDialog:false });
   }
 
   handleClickOpen(rowData) {
@@ -117,6 +186,20 @@ class Plantillas extends Component {
     }
 
   }
+
+  RowPlantilla(props) {
+    const { index, style } = props;
+
+    return (
+      <ListItem button style={style} key={index}>
+        <ListItemText primary={this.state.detallePlantillas[index].descripcion} secondary={this.state.detallePlantillas[index].identificador} />
+
+        <span>{ this.state.detallePlantillas[index].cantidad }</span>
+
+      </ListItem>
+    );
+  }
+
 
   componentDidMount() {
 
@@ -162,7 +245,17 @@ class Plantillas extends Component {
                     icon: 'delete',
                     tooltip: 'Borrar Plantilla',
                     onClick: (event, rowData) => this.deleteMaterial(rowData)
-                  }]}
+                  },
+                  {
+                    icon: 'file_copy',
+                    tooltip: 'Descargar CSV',
+                    onClick: (event, rowData) => this.clickDownloadCSV(rowData)
+                  },
+
+
+
+
+                ]}
                   options={{
                     exportButton: true,
                     headerStyle: {
@@ -171,6 +264,8 @@ class Plantillas extends Component {
                     },
                   }}
                 />
+
+
               </CardBody>
             </Card>
 
@@ -196,6 +291,52 @@ class Plantillas extends Component {
         handleClose={() => this.handleClose()}
         handleDelete={(rowData) => this.handleDelete(rowData)}
       />,
+
+      <Dialog
+          open={this.state.openCSVDialog}
+          onClose={this.closeCSVDialog.bind(this)}
+          fullWidth={true}
+          maxWidth={"md"}
+          >
+          <DialogTitle>Plantilla:  { this.state.plantilla && <span>{ this.state.plantilla.codigo }</span> }
+                  <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeCSVDialog.bind(this)}>
+                  <CloseIcon />
+              </IconButton>
+          </DialogTitle>
+
+
+          <DialogContent>
+
+
+
+            { this.state.plantilla && <div><p>Descripción: {this.state.plantilla.descripcion} </p>
+
+            <FixedSizeList height={200} width={900} itemSize={65} itemCount={this.state.detallePlantillas.length}>
+                {this.RowPlantilla.bind(this)}
+            </FixedSizeList> </div>}
+
+            <div style={{ marginTop:'25px',textAlign:'right'}}>
+            <Button onClick={this.closeCSVDialog.bind(this)} style={{marginRight:'10px'}}>Cerrar</Button>
+            <CSVLink
+            data={this.state.detallePlantillas}
+            asyncOnClick={true}
+    filename={"Plantilla " + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(new Date()).format("DD-MM-YYYY") + ".csv" }
+            headers={headers}
+            separator={";"}
+
+
+
+
+             >
+              <Button variant="contained" color="primary">DESCARGAR CSV</Button>
+            </CSVLink>
+
+
+              </ div>
+
+          </DialogContent>
+      </Dialog>
+    
 
 
     ]);

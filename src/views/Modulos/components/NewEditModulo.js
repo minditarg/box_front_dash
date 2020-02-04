@@ -18,7 +18,10 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
 import Button from '@material-ui/core/Button';
+<<<<<<< HEAD
 import ButtonMat from '@material-ui/core/Button';
+=======
+>>>>>>> 45c5458a654978c8071d8d611657bc06e95fe442
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import ControlCamera from '@material-ui/icons/ControlCamera';
 import Save from '@material-ui/icons/Save';
@@ -587,6 +590,7 @@ class NewEditModulo extends Component {
                 delete elem.cantidad;
                 return {
                   ...elem,
+                  identificador: elem.codigo + elem.numero,
                   insertado:true,
                   cantidad_requerida:cantidad
                 }
@@ -594,7 +598,7 @@ class NewEditModulo extends Component {
 
 
               if(insumos.length < this.state.detalleSelectPlantilla.length)
-                toast.info("algunos insumos duplicados no se agregaron");
+                toast.info("Insumos duplicados no se agregaron");
 
               this.detalleModulos = insumos.concat(this.detalleModulos);
               this.buscarInsumo(this.buscarRef.current.value);
@@ -611,7 +615,7 @@ class NewEditModulo extends Component {
 
       return (
         <ListItem button style={style} key={index}>
-          <ListItemText primary={this.state.detalleSelectPlantilla[index].descripcion} secondary={this.state.detalleSelectPlantilla[index].codigo} />
+          <ListItemText primary={this.state.detalleSelectPlantilla[index].descripcion} secondary={this.state.detalleSelectPlantilla[index].codigo + this.state.detalleSelectPlantilla[index].numero} />
 
           <span>{ this.state.detalleSelectPlantilla[index].cantidad }</span>
 
@@ -801,7 +805,7 @@ class NewEditModulo extends Component {
                                     </div>
 
                                 }
-                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/modulos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/modulos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
                             </CardBody>
                         </Card>
@@ -873,10 +877,10 @@ class NewEditModulo extends Component {
                       </FixedSizeList> </div>}
 
                       <div style={{ marginTop:'25px',textAlign:'right'}}>
-                      <ButtonMat onClick={this.closeDialog.bind(this)} style={{marginRight:'10px'}}>Cancelar</ButtonMat>
-                      <ButtonMat type="submit" disabled={this.state.detalleSelectPlantilla.length <= 0} variant="contained" color="primary"  >
+                      <Button onClick={this.closeDialog.bind(this)} style={{marginRight:'10px'}}>Cancelar</Button>
+                      <Button type="submit" disabled={this.state.detalleSelectPlantilla.length <= 0} variant="contained" color="primary"  >
                           Seleccionar
-                        </ButtonMat>
+                        </Button>
                         </ div>
                         </form>
                     </DialogContent>

@@ -1,5 +1,8 @@
 export const StateListado = {
-  pedidos: [],
+  insumos: [],
+
+
+
   openDeleteDialog: false,
   deleteRowData: null,
   isLoading: false
@@ -7,21 +10,21 @@ export const StateListado = {
 
 }
 export const ColumnsListado = [
-  { title: "Pedido", field: "id" },
   { title: "Identificador", field: "identificador" },
-  { title: "Descripcion", field: "descripcion" },
-  { title: "Cantidad", field: "cantidad" }
+  { title: "Referencia", field: "referencia" }
 ];
 
-export const StateNewPedido =
+
+
+export const StateNewCategoria =
 {
-  pedidos: [],
-  newPedidoForm: {
-    descripcion: {
+  insumos: [],
+  newCategoriaForm: {
+    codigo: {
       elementType: 'input',
       elementConfig: {
         type: 'text',
-        label: 'Descripcion',
+        label: 'Codigo Interno',
         fullWidth: true
       },
       value: '',
@@ -31,11 +34,120 @@ export const StateNewPedido =
       valid: false,
       touched: false
     },
-    cantidad: {
+    referencia: {
       elementType: 'input',
       elementConfig: {
         type: 'text',
-        label: 'Cantidad',
+        label: 'Referencia',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    }
+  },
+  formIsValid: false
+}
+
+export const StateNewPedido =
+{
+  insumos: [],
+  newInsumoForm: {
+    categoria: {
+      elementType: 'select',
+      elementConfig: {
+        label: 'Categoria de Insumo',
+        options: [
+
+        ],
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+
+      valid: false,
+      touched: false
+    },
+    codigo: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Codigo Interno',
+        disabled: true,
+        fullWidth: true
+
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    numero: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Número',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    referencia: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Referencia',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    unidad: {
+      elementType: 'autosuggest',
+      elementConfig: {
+        type: 'text',
+        label: 'Unidad',
+        fullWidth: true,
+        suggestions:[
+          {label: 'kilogramos'},
+          {label: 'gramos'},
+          {label: 'miligramos'},
+          {label: 'litros'},
+          {label: 'mililitros'},
+          {label: 'metros'},
+          {label: 'milimetros'},
+          {label: 'centimetros'},
+          {label: 'unidades'},
+
+        ]
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    minimo: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Stock Minimo',
         fullWidth: true
       },
       value: '',
@@ -52,12 +164,13 @@ export const StateNewPedido =
 export const StateEditPedido =
 {
   editFormIsValid: false,
-  pedidoEdit: null,
+  insumoEdit: null,
+  disableAllButtons: false,
   editPedidoForm: {
     categoria: {
       elementType: 'select',
       elementConfig: {
-        label: 'Categoria de Pedido',
+        label: 'Categoria de Insumo',
         options: [
 
         ],
@@ -100,34 +213,84 @@ export const StateEditPedido =
       valid: false,
       touched: false
     },
-      descripcion: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'text',
-          label: 'Descripcion',
-          fullWidth: true
-        },
-        value: '',
-        validation: {
-          required: true
-        },
-        valid: false,
-        touched: false
+    referencia: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Referencia',
+        fullWidth: true
       },
-      cantidad: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'text',
-          label: 'Cantidad',
-          fullWidth: true
-        },
-        value: '',
-        validation: {
-          required: true
-        },
-        valid: false,
-        touched: false
-      }
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    unidad: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Unidad',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    minimo: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Stock Minimo',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    }
   }
 
+}
+
+export const StateEditCategoria =
+{
+  editFormIsValid: false,
+  insumoEdit: null,
+  editCategoriaForm: {
+    codigo: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Codigo Interno',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+    referencia: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Referencia',
+        fullWidth: true
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    }
+  }
 }

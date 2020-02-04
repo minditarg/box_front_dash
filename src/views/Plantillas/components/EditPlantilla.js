@@ -14,6 +14,7 @@ import { withStyles } from '@material-ui/styles';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import TextField from '@material-ui/core/TextField';
+import ExportXLS from 'components/ExportXLS/ExportXLS';
 
 
 import CardHeader from "components/Card/CardHeader.js";
@@ -84,6 +85,11 @@ const columnsCsv = [
     //{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
 ];
 
+const headers2 = [
+    { value: "Codigo", key: "codigo" },
+    { value: "Descripcion", key: "descripcion" },
+    { value: "Cantidad Asignada", key: "cantidad" }
+];
 
 const headers = [
     { label: "Codigo", key: "codigo" },
@@ -209,7 +215,7 @@ const SortableContainer = sortableContainer(({children}) => {
 
 class EditPlantilla extends Component {
     state = {
-        plantillas: [],
+        plantilla: null,
         disableAllButtons:false,
         open: false,
         rowEditInsumo: null,
@@ -251,7 +257,7 @@ class EditPlantilla extends Component {
             }
         },
         formIsValid: false,
-        disableAllButtons: false,
+        
         isLoading: true
     }
 
@@ -264,6 +270,9 @@ class EditPlantilla extends Component {
 
 
     }
+
+
+  
 
     checkValidity = (value, rules) => {
         let isValid = true;
@@ -366,7 +375,7 @@ class EditPlantilla extends Component {
                 id: this.props.match.params.idPlantilla
             },this)
                 .then(res => {
-
+                         toast.success("Guardado de plantilla con éxito");
                         this.props.getPlantillas();
                         this.props.history.push("/admin/plantillas");
 
@@ -486,6 +495,7 @@ class EditPlantilla extends Component {
                     this.copiaDetallePlantillas = JSON.parse(JSON.stringify(res.insumos));
 
                     this.setState({
+                        plantilla: res.plantilla[0],
                         orderForm: orderForm,
                         detallePlantillas: res.insumos,
                         isLoading: false
@@ -647,7 +657,7 @@ class EditPlantilla extends Component {
                         <Card>
                         { this.props.match.params.idPlantilla ?
                             <CardHeader color="primary">
-                                <h4 className={this.props.classes.cardTitleWhite} >Modificar Plantilla</h4>
+                                <h4 className={this.props.classes.cardTitleWhite} >Modificar Plantilla: { " " + (this.state.plantilla ? this.state.plantilla.codigo : null)}</h4>
                                 <p className={this.props.classes.cardCategoryWhite} >
                                     Modificación de plantilla para la construcción de Módulos
                                   </p>
@@ -676,9 +686,11 @@ class EditPlantilla extends Component {
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
 
-                                <CSVLink data={this.detallePlantillas} headers={headers}>
+                                <CSVLink data={this.detallePlantillas} filename={"Plantilla-" + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(Date.now()).format("DD_MM_YYYY")} headers={headers} separator={";"}>
                                     <Button color="info" >Descargar csv</Button>
                                 </CSVLink>
+                                <ExportXLS csvData={this.state.detallePlantillas} fileName={"hola"} header={headers2} />
+
                                 <div style={{ padding: 20 }} >
                                     <Grid container alignItems="flex-end" justify="flex-end" spacing={2}>
                                         <Grid item>
@@ -703,7 +715,7 @@ class EditPlantilla extends Component {
                                     </div>
 
                                 }
-                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/plantillas')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/plantillas')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
                             </CardBody>
                         </Card>
