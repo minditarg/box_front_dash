@@ -14,7 +14,7 @@ import { withStyles } from '@material-ui/styles';
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
-import Button from "components/CustomButtons/Button.js";
+import Button from '@material-ui/core/Button';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
@@ -330,7 +330,7 @@ class NewEntrega extends Component {
     }
 
     getModulos = () => {
-        Database.get('/list-modulos',this).then((res) => {
+        Database.get('/list-modulos-produccion',this).then((res) => {
 
             let options = [];
             let orderForm = { ...this.state.orderForm };

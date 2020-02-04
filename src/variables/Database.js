@@ -1,12 +1,16 @@
 
 import axios from "axios";
+import storeDefault from 'store/store';
 
 
 
 class Database {
 
 
-  static get(url,_this) {
+  static get(url,_this,props,sendMeSignal ) {
+    if(sendMeSignal)
+    storeDefault.dispatch({type:"INCREMENT"});
+
     return new Promise((resolve, reject) => {
           axios.get(url) .then(res => {
             if(res.data.success == 1)
@@ -28,10 +32,16 @@ class Database {
               if(err.response.status == 401) {
                 if(_this)
               _this.props.history.replace("/");
+              if(props)
+              props.history.replace("/");
               reject({message:"No inició sesión en la aplicación"})
               }
               else if(err.response.status == 406) {
+                if(_this)
                 _this.props.history.replace("/");
+
+                if(props)
+                props.history.replace("/");
               reject({message:"No tiene permisos en esta sección"})
               }
               else if(err.response.status == 500)
@@ -54,7 +64,7 @@ class Database {
 
   }
 
-  static post(url,data,_this) {
+  static post(url,data,_this,props) {
     return new Promise((resolve, reject) => {
         if(_this)
           _this.setState({ disableAllButtons: true});
@@ -82,12 +92,16 @@ class Database {
               if(err.response.status == 401) {
                 if(_this)
               _this.props.history.replace("/");
+              if(props)
+              props.history.replace("/");
               reject({message:"No inició sesión en la aplicación"})
               }
               else if(err.response.status == 406)
               {
                 if(_this)
               _this.props.history.replace("/");
+              if(props)
+              props.history.replace("/");
               reject({message:"No tiene permisos en esta sección"})
               }
               else if(err.response.status == 500)

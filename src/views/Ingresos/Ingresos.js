@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
 
+
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
 import MaterialTable from "material-table";
@@ -99,7 +100,7 @@ class Ingresos extends Component {
     this.setState({
       isLoading: true
     })
-    Database.get('/list-ingresos',this)
+    Database.get('/list-ingresos',this,null,true)
       .then(res => {
         this.setState({
           isLoading: false
@@ -124,6 +125,7 @@ class Ingresos extends Component {
   }
 
   componentDidMount() {
+
     this.getIngresos();
 
   }

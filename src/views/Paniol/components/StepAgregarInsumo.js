@@ -6,6 +6,7 @@ import {toast } from 'react-toastify';
 //COMPONENTES LOCALES
 import Input from "components/Input/Input";
 import {localization} from "variables/general.js";
+import $ from 'jquery';
 
 //ESTILOS Y COLORES
 import { makeStyles } from '@material-ui/core/styles';
@@ -117,6 +118,10 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                         }
                     })
                     setInsumos(resultado);
+                    $(".MuiDialog-root input").each(function(index,element){
+                      if(index == 0)
+                      element.focus();
+                    })
 
             },err => {
               setIsLoading(false);
@@ -233,6 +238,8 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                       {rowInsumo.codigo}</p>
                      <p><span style={{ fontWeight:'300'}}>Descripción: </span>
                       {rowInsumo.descripcion}</p>
+                      <p><span style={{ fontWeight:'300'}}>Unidad: </span>
+                      {rowInsumo.unidad}</p>
                        <p><span style={{ fontWeight:'300'}}>Stock:
                       </span>{rowInsumo.cantidad + " " +  rowInsumo.unidad}<br/>
                       <span style={{ fontWeight:'300'}}>Total Módulo: </span>{rowInsumo.cantidad_modulo_insumo + " " +  rowInsumo.unidad} <br/>

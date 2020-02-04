@@ -116,7 +116,7 @@ class MovimientosInsumos extends Component {
     this.setState({
       isLoading: true
     })
-    Database.get('/list-insumos-movimientos',this)
+    Database.get('/list-insumos-movimientos',this,null,true)
       .then(res => {
 
           let resultado = [...res.result];

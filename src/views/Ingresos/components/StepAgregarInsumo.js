@@ -6,6 +6,7 @@ import Database from "variables/Database.js";
 import Input from "components/Input/Input";
 import {localization} from "variables/general.js";
 import {toast } from 'react-toastify';
+import $ from 'jquery';
 
 //ESTILOS Y COLORES
 import { makeStyles } from '@material-ui/core/styles';
@@ -208,6 +209,8 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                       {rowInsumo.codigo + rowInsumo.numero}</p>
                      <p><span style={{ fontWeight:'300'}}>Descripción: </span>
                       {rowInsumo.descripcion}</p>
+                      <p><span style={{ fontWeight:'300'}}>Unidad: </span>
+                      {rowInsumo.unidad}</p>
                       <p><span style={{ fontWeight:'300'}}>Cantidad actual: </span>
                       {rowInsumo.cantidad + " " + rowInsumo.unidad }</p>
 

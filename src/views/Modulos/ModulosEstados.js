@@ -106,7 +106,7 @@ class ModulosEstados extends Component {
     this.setState({
       isLoading:true
     })
-    Database.get('/list-modulos-produccion',this)
+    Database.get('/list-modulos-produccion',this,null,true)
       .then(res => {
         this.setState({
           isLoading:false

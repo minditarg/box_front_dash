@@ -72,7 +72,7 @@ class ModulosAnalisis extends Component {
     this.setState({
       isLoading:true
     })
-    Database.get('/list-modulos',this)
+    Database.get('/list-modulos',this,null,true)
       .then(res => {
         this.setState({
           isLoading:false
