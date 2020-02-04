@@ -218,7 +218,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
 
                     />;
-                
+
             case 1:
 
                 return (<React.Fragment>
@@ -228,6 +228,9 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                       {rowInsumo.descripcion}</p>
                       <p><span style={{ fontWeight:'300'}}>Unidad: </span>
                       {rowInsumo.unidad}</p>
+                      <p><span style={{ fontWeight:'300'}}>Cantidad actual: </span>
+                      {rowInsumo.cantidad + " " + rowInsumo.unidad }</p>
+
 
                     {
                         formElementsArray.map(formElement => (

@@ -442,7 +442,7 @@ const dashboardRoutes = [
     icon: AssignmentIcon,
     component: Pedidos,
     layout: "/admin"
-  },
+  }
 
 
 

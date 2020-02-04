@@ -14,6 +14,7 @@ import { withStyles } from '@material-ui/styles';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import TextField from '@material-ui/core/TextField';
+import ExportXLS from 'components/ExportXLS/ExportXLS';
 
 
 import CardHeader from "components/Card/CardHeader.js";
@@ -86,9 +87,9 @@ const columnsCsv = [
 
 
 const headers = [
-    { label: "Codigo", key: "codigo" },
+    { label: "Identificador", key: "identificador" },
     { label: "Descripcion", key: "descripcion" },
-    { label: "Cantidad", key: "cantidad" }
+    { label: "Cantidad Requerida", key: "cantidad" }
 ];
 
 const styles = {
@@ -251,7 +252,7 @@ class EditPlantilla extends Component {
             }
         },
         formIsValid: false,
-        disableAllButtons: false,
+
         isLoading: true
     }
 
@@ -264,6 +265,9 @@ class EditPlantilla extends Component {
 
 
     }
+
+
+
 
     checkValidity = (value, rules) => {
         let isValid = true;
@@ -680,6 +684,8 @@ class EditPlantilla extends Component {
                                 <CSVLink data={this.detallePlantillas} filename={"Plantilla-" + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(Date.now()).format("DD_MM_YYYY")} headers={headers} separator={";"}>
                                     <Button color="info" >Descargar csv</Button>
                                 </CSVLink>
+                                <ExportXLS csvData={this.state.detallePlantillas} fileName={"Plantilla-" + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(Date.now()).format("DD_MM_YYYY")} header={headers} />
+
                                 <div style={{ padding: 20 }} >
                                     <Grid container alignItems="flex-end" justify="flex-end" spacing={2}>
                                         <Grid item>

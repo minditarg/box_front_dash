@@ -187,6 +187,7 @@ class NewPedido extends Component {
                 },
                 valid: false,
                 touched: false
+
             }
         },
         formIsValid: false,
@@ -262,6 +263,7 @@ class NewPedido extends Component {
         event.preventDefault();
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
+
 
             Database.post('/insert-pedido', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
