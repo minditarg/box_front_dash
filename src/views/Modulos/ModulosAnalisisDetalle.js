@@ -109,6 +109,9 @@ class ModulosAnalisisDetalle extends Component {
         console.log(res);
         this.setState({
           isLoading:false,
+
+          modulos:res.modulos,
+
           insumos:res.insumos,
           modulo:res.modulo[0]
         })
