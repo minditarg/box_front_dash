@@ -12,6 +12,11 @@ import MaterialTable from "material-table";
 import { CardActions } from "@material-ui/core";
 import { withStyles } from '@material-ui/styles';
 
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
@@ -34,6 +39,11 @@ import StepAgregarInsumo from './components/StepAgregarInsumo';
 import Paper from '@material-ui/core/Paper';
 
 import { toast } from 'react-toastify';
+import { FixedSizeList } from 'react-window';
+
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+
 
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -105,6 +115,12 @@ class NewIngreso extends Component {
         actions: [],
         actionsInsumos: [],
 
+        plantillas: [],
+        openPlantillaDialog: false,
+        idPlantilla:'',
+        rowSelectPlantilla:null,
+        detalleSelectPlantilla:[],
+
         selectedDate: new Date(),
 
         insumoSeleccionado: 0,
@@ -143,6 +159,17 @@ class NewIngreso extends Component {
         disableAllButtons: false,
         dateFormIsValid: true
     }
+
+
+    // constructor(props) {
+    //     super(props);
+    //     this.buscarRef = React.createRef();
+
+    //     // this.detallePedidos = [];
+    //     // this.copiaDetallePedidos = [];
+
+
+    // }
 
     handleDateChange = (date,value) => {
 
@@ -257,27 +284,140 @@ class NewIngreso extends Component {
         }
     }
 
+    handleSelectPlantilla = (event)=> {
+        event.preventDefault();
+        let idPlantilla = parseInt(event.target.value);
+        let indexSeleccionado = this.state.plantillas.findIndex(elem =>{
+          return (elem.id == idPlantilla);
+        })
+        if(indexSeleccionado > -1)
+        {
+          this.setState({
+            idPlantilla: event.target.value,
+            rowSelectPlantilla: this.state.plantillas[indexSeleccionado],
+            detalleSelectPlantilla: [],
+          })
+
+          Database.get('/list-plantillas-insumos/' + idPlantilla,this )
+            .then(res => {
+  
+                this.setState({
+                  detalleSelectPlantilla: res.insumos
+                })
+  
+  
+  
+            },err => {
+              toast.error(err.message);
+            })  
+  
+        }
+      }  
+
     openDialog() {
         this.setState({ open: true });
     }
 
     closeDialog() {
-        this.setState({ open: false });
+        this.setState({ open: false, openPlantillaDialog:false });
     }
+
+
+    getPlantillas = () => {
+
+        Database.get('/list-plantillas',this )
+            .then(res => {
+
+                    let plantillas = [ ...res.result ];
+                    this.setState({
+                        plantillas: plantillas,
+
+                    })
+
+            },err => {
+              toast.error(err.message);
+            })
+    }
+
+
+    openPlantilla = () => {
+
+        this.setState({
+          idPlantilla :'',
+          openPlantillaDialog:true,
+          rowSelectPlantilla:null,
+          detalleSelectPlantilla:[]
+        });
+      } 
+
+    
+      handleSubmitPlantillas = event => {
+
+       // alert("handleSubmitPlantillas");
+        event.preventDefault();
+        this.closeDialog();
+
+        console.log("detalleingresos");
+        console.log(this.state.detalleingresos);
+        
+        let insumos =this.state.detalleSelectPlantilla.filter(elem => {
+          let findIndex = this.state.detalleingresos.findIndex(elemFind =>{
+            return (elem.id == elemFind.id)
+          })
+          if(findIndex > -1)
+            return false
+            else
+            return true;
+        })
+        alert("sigue");
+                 insumos = insumos.map(elem => {
+                  let cantidad = elem.cantidad;
+                  delete elem.cantidad;
+                  return {
+                    ...elem,
+                    identificador: elem.codigo + elem.numero,
+                    insertado:true,
+                    cantidad_requerida:cantidad
+                  }
+                })
+                console.log(insumos);
+  
+                if(insumos.length < this.state.detalleSelectPlantilla.length)
+                  toast.info("Insumos duplicados no se agregaron");
+  
+                this.state.detalleingresos = insumos.concat(this.state.detalleingresos);
+                //this.buscarInsumo(this.buscarRef.current.value);
+                this.inputChangedHandler(null,null);
+      }
+
+      RowPlantilla(props) {
+        const { index, style } = props;
+  
+        return (
+          <ListItem button style={style} key={index}>
+            <ListItemText primary={this.state.detalleSelectPlantilla[index].descripcion} secondary={this.state.detalleSelectPlantilla[index].codigo + this.state.detalleSelectPlantilla[index].numero} />
+  
+            <span>{ this.state.detalleSelectPlantilla[index].cantidad }</span>
+  
+          </ListItem>
+        );
+      }
+
 
     onClickInsumo = (rowInsumo, cantidad) => {
         this.closeDialog();
 
-                    let resultado = {...rowInsumo};
-                    resultado.cantidad = parseInt(cantidad);
-                    let detalleingresoant = [...this.state.detalleingresos];
+        let resultado = {...rowInsumo};
+        resultado.cantidad = parseInt(cantidad);
+        let detalleingresoant = [...this.state.detalleingresos];
 
-                    detalleingresoant.push(resultado);
-                    this.setState({
-                        detalleingresos: [...detalleingresoant]
-                    },()=>{
-                      this.inputChangedHandler(null,null);
-                    })
+        detalleingresoant.push(resultado);
+        this.setState({
+            detalleingresos: [...detalleingresoant]
+        },()=>{
+           // this.buscarInsumo(this.buscarRef.current.value);
+            this.inputChangedHandler(null,null);
+        })
 
 
     }
@@ -314,6 +454,8 @@ class NewIngreso extends Component {
                 onClick: (event, rowData) => this.insumoSelectHandler(rowData.id)
 
             }];
+
+        this.getPlantillas();
     }
 
     render() {
@@ -372,7 +514,8 @@ class NewIngreso extends Component {
                                         />
                                 ))}
 
-                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
+                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumosss333sssss</Button>
+                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons} color="success" onClick={this.openPlantilla.bind(this)} ><AddIcon /> Pedido</Button>
 
                                 <MaterialTable
                                     columns={columnsInsumos}
@@ -431,6 +574,55 @@ class NewIngreso extends Component {
                                 onClickInsumo={(id, cantidad) => this.onClickInsumo(id, cantidad)}
                                 />
                         }
+                    </DialogContent>
+                </Dialog>,
+                <Dialog
+                    open={this.state.openPlantillaDialog}
+                    onClose={this.closeDialog.bind(this)}
+                    fullWidth={true}
+                    maxWidth={"md"}
+                    >
+                    <DialogTitle>Seleccionar Plantilla
+                            <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
+                            <CloseIcon />
+                        </IconButton>
+                    </DialogTitle>
+
+
+                    <DialogContent>
+                    <form onSubmit={ this.handleSubmitPlantillas }>
+                    <FormControl className={this.props.classes.formControl} >
+                      <InputLabel id="plantillas-label">Plantillas</InputLabel>
+                        <Select
+                          labelId="plantillas-label"
+                          id="plantillas-select"
+                          value={this.state.idPlantilla}
+                          onChange={this.handleSelectPlantilla}
+                          >
+                          { this.state.plantillas.map(elem =>{
+
+                            return (
+                              <MenuItem key={elem.id} value={elem.id}>{elem.codigo}</MenuItem>
+                            )
+
+                          })}
+
+                          </Select>
+                      </FormControl>
+
+                      { this.state.rowSelectPlantilla && <div><p>Descripción: {this.state.rowSelectPlantilla.descripcion} </p>
+
+                      <FixedSizeList height={200} width={900} itemSize={65} itemCount={this.state.detalleSelectPlantilla.length}>
+                          {this.RowPlantilla.bind(this)}
+                      </FixedSizeList> </div>}
+
+                      <div style={{ marginTop:'25px',textAlign:'right'}}>
+                      <Button onClick={this.closeDialog.bind(this)} style={{marginRight:'10px'}}>Cancelar</Button>
+                      <Button type="submit" disabled={this.state.detalleSelectPlantilla.length <= 0} variant="contained" color="primary"  >
+                          Seleccionar
+                        </Button>
+                        </ div>
+                        </form>
                     </DialogContent>
                 </Dialog>
             </ form>

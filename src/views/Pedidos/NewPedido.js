@@ -423,6 +423,8 @@ class NewPedido extends Component {
                                 ))}
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
+                               
+
                                 <InputFiles accept="text/csv" onChange={files => console.log(files)}>
                                     <Button color="info">Subir pedido</Button>
                                 </InputFiles>
