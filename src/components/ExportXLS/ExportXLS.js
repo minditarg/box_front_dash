@@ -5,16 +5,16 @@ import * as XLSX from 'xlsx';
 
  const ExportXLS = ({csvData, fileName,header}) => {
      const valores = header.map(elem => {
-         return elem.value
+         return elem.label
      })
 
      const keys = header.map(elem => {
          return elem.key
      })
 
-    
 
-    
+
+
 
     const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const fileExtension = '.xlsx';
@@ -27,7 +27,7 @@ import * as XLSX from 'xlsx';
          })
 
         return objectReturn
-          
+
         })
         const ws = XLSX.utils.json_to_sheet(jsonToExport);
         const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
