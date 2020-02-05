@@ -173,7 +173,7 @@ class ModulosAnalisisDetalle extends Component {
                 <ListItemText primary={"$ " + this.state.montoproduccion} secondary="Producción" />
               </ListItem>
             </List>
-            <ExportXLS csvData={this.state.detallePlantillas} fileName={"Modulos Detalle -" + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(Date.now()).format("DD_MM_YYYY")} header={headers} />
+            
 
                 <MaterialTable
                   isLoading={this.state.isLoading}
