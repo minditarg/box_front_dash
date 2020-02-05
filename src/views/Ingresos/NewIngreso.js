@@ -115,11 +115,11 @@ class NewIngreso extends Component {
         actions: [],
         actionsInsumos: [],
 
-        plantillas: [],
-        openPlantillaDialog: false,
-        idPlantilla:'',
-        rowSelectPlantilla:null,
-        detalleSelectPlantilla:[],
+        pedidos: [],
+        openPedidoDialog: false,
+        idPedido:'',
+        rowSelectPedido:null,
+        detalleSelectPedido:[],
 
         selectedDate: new Date(),
 
@@ -284,25 +284,25 @@ class NewIngreso extends Component {
         }
     }
 
-    handleSelectPlantilla = (event)=> {
+    handleSelectPedido = (event)=> {
         event.preventDefault();
-        let idPlantilla = parseInt(event.target.value);
-        let indexSeleccionado = this.state.plantillas.findIndex(elem =>{
-          return (elem.id == idPlantilla);
+        let idPedido = parseInt(event.target.value);
+        let indexSeleccionado = this.state.pedidos.findIndex(elem =>{
+          return (elem.id == idPedido);
         })
         if(indexSeleccionado > -1)
         {
           this.setState({
-            idPlantilla: event.target.value,
-            rowSelectPlantilla: this.state.plantillas[indexSeleccionado],
-            detalleSelectPlantilla: [],
+            idPedido: event.target.value,
+            rowSelectPedido: this.state.pedidos[indexSeleccionado],
+            detalleSelectPedido: [],
           })
 
-          Database.get('/list-plantillas-insumos/' + idPlantilla,this )
+          Database.get('/list-pedidos-insumos/' + idPedido,this )
             .then(res => {
   
                 this.setState({
-                  detalleSelectPlantilla: res.insumos
+                  detalleSelectPedido: res.insumos
                 })
   
   
@@ -319,18 +319,18 @@ class NewIngreso extends Component {
     }
 
     closeDialog() {
-        this.setState({ open: false, openPlantillaDialog:false });
+        this.setState({ open: false, openPedidoDialog:false });
     }
 
 
-    getPlantillas = () => {
+    getPedidos = () => {
 
-        Database.get('/list-plantillas',this )
+        Database.get('/list-pedidos',this )
             .then(res => {
 
-                    let plantillas = [ ...res.result ];
+                    let pedidos = [ ...res.result ];
                     this.setState({
-                        plantillas: plantillas,
+                        pedidos: pedidos,
 
                     })
 
@@ -340,18 +340,18 @@ class NewIngreso extends Component {
     }
 
 
-    openPlantilla = () => {
+    openPedido = () => {
 
         this.setState({
-          idPlantilla :'',
-          openPlantillaDialog:true,
-          rowSelectPlantilla:null,
-          detalleSelectPlantilla:[]
+          idPedido :'',
+          openPedidoDialog:true,
+          rowSelectPedido:null,
+          detalleSelectPedido:[]
         });
       } 
 
     
-      handleSubmitPlantillas = event => {
+      handleSubmitPedidos = event => {
 
        // alert("handleSubmitPlantillas");
         event.preventDefault();
@@ -360,7 +360,7 @@ class NewIngreso extends Component {
         console.log("detalleingresos");
         console.log(this.state.detalleingresos);
         
-        let insumos =this.state.detalleSelectPlantilla.filter(elem => {
+        let insumos =this.state.detalleSelectPedido.filter(elem => {
           let findIndex = this.state.detalleingresos.findIndex(elemFind =>{
             return (elem.id == elemFind.id)
           })
@@ -369,7 +369,7 @@ class NewIngreso extends Component {
             else
             return true;
         })
-        alert("sigue");
+     //   alert("sigue");
                  insumos = insumos.map(elem => {
                   let cantidad = elem.cantidad;
                   delete elem.cantidad;
@@ -377,12 +377,12 @@ class NewIngreso extends Component {
                     ...elem,
                     identificador: elem.codigo + elem.numero,
                     insertado:true,
-                    cantidad_requerida:cantidad
+                    cantidad:cantidad
                   }
                 })
                 console.log(insumos);
   
-                if(insumos.length < this.state.detalleSelectPlantilla.length)
+                if(insumos.length < this.state.detalleSelectPedido.length)
                   toast.info("Insumos duplicados no se agregaron");
   
                 this.state.detalleingresos = insumos.concat(this.state.detalleingresos);
@@ -390,14 +390,14 @@ class NewIngreso extends Component {
                 this.inputChangedHandler(null,null);
       }
 
-      RowPlantilla(props) {
+      RowPedido(props) {
         const { index, style } = props;
   
         return (
           <ListItem button style={style} key={index}>
-            <ListItemText primary={this.state.detalleSelectPlantilla[index].descripcion} secondary={this.state.detalleSelectPlantilla[index].codigo + this.state.detalleSelectPlantilla[index].numero} />
+            <ListItemText primary={this.state.detalleSelectPedido[index].descripcion} secondary={this.state.detalleSelectPedido[index].referencia} />
   
-            <span>{ this.state.detalleSelectPlantilla[index].cantidad }</span>
+            <span>{ this.state.detalleSelectPedido[index].cantidad }</span>
   
           </ListItem>
         );
@@ -405,10 +405,12 @@ class NewIngreso extends Component {
 
 
     onClickInsumo = (rowInsumo, cantidad) => {
+        //alert("hola");
         this.closeDialog();
+        
 
         let resultado = {...rowInsumo};
-        resultado.cantidad = parseInt(cantidad);
+        resultado.cantidad = parseFloat(cantidad);
         let detalleingresoant = [...this.state.detalleingresos];
 
         detalleingresoant.push(resultado);
@@ -455,7 +457,7 @@ class NewIngreso extends Component {
 
             }];
 
-        this.getPlantillas();
+        this.getPedidos();
     }
 
     render() {
@@ -514,8 +516,8 @@ class NewIngreso extends Component {
                                         />
                                 ))}
 
-                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumosss333sssss</Button>
-                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons} color="success" onClick={this.openPlantilla.bind(this)} ><AddIcon /> Pedido</Button>
+                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumos</Button>
+                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons} color="success" onClick={this.openPedido.bind(this)} ><AddIcon /> Pedido</Button>
 
                                 <MaterialTable
                                     columns={columnsInsumos}
@@ -529,10 +531,12 @@ class NewIngreso extends Component {
                                             new Promise((resolve, reject) => {
                                                 setTimeout(() => {
                                                     {
-                                                        const data = this.state.detalleingresos;
+                                                        
+                                                        
+                                                        const data = [ ...this.state.detalleingresos ];
                                                         const index = data.indexOf(oldData);
                                                         data[index] = newData;
-                                                        this.setState({ data }, () => resolve());
+                                                        this.setState({ detalleingresos:data }, () => resolve());
                                                     }
 
                                                 }, 200)
@@ -577,12 +581,12 @@ class NewIngreso extends Component {
                     </DialogContent>
                 </Dialog>,
                 <Dialog
-                    open={this.state.openPlantillaDialog}
+                    open={this.state.openPedidoDialog}
                     onClose={this.closeDialog.bind(this)}
                     fullWidth={true}
                     maxWidth={"md"}
                     >
-                    <DialogTitle>Seleccionar Plantilla
+                    <DialogTitle>Seleccionar Pedido
                             <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
                             <CloseIcon />
                         </IconButton>
@@ -590,19 +594,19 @@ class NewIngreso extends Component {
 
 
                     <DialogContent>
-                    <form onSubmit={ this.handleSubmitPlantillas }>
+                    <form onSubmit={ this.handleSubmitPedidos }>
                     <FormControl className={this.props.classes.formControl} >
-                      <InputLabel id="plantillas-label">Plantillas</InputLabel>
+                      <InputLabel id="plantillas-label">Pedidos</InputLabel>
                         <Select
                           labelId="plantillas-label"
                           id="plantillas-select"
-                          value={this.state.idPlantilla}
-                          onChange={this.handleSelectPlantilla}
+                          value={this.state.idPedido}
+                          onChange={this.handleSelectPedido}
                           >
-                          { this.state.plantillas.map(elem =>{
+                          { this.state.pedidos.map(elem =>{
 
                             return (
-                              <MenuItem key={elem.id} value={elem.id}>{elem.codigo}</MenuItem>
+                              <MenuItem key={elem.id} value={elem.id}>{elem.referencia}</MenuItem>
                             )
 
                           })}
@@ -610,15 +614,15 @@ class NewIngreso extends Component {
                           </Select>
                       </FormControl>
 
-                      { this.state.rowSelectPlantilla && <div><p>Descripción: {this.state.rowSelectPlantilla.descripcion} </p>
+                      { this.state.rowSelectPedido && <div><p>Descripción: {this.state.rowSelectPedido.descripcion} </p>
 
-                      <FixedSizeList height={200} width={900} itemSize={65} itemCount={this.state.detalleSelectPlantilla.length}>
-                          {this.RowPlantilla.bind(this)}
+                      <FixedSizeList height={200} width={900} itemSize={65} itemCount={this.state.detalleSelectPedido.length}>
+                          {this.RowPedido.bind(this)}
                       </FixedSizeList> </div>}
 
                       <div style={{ marginTop:'25px',textAlign:'right'}}>
                       <Button onClick={this.closeDialog.bind(this)} style={{marginRight:'10px'}}>Cancelar</Button>
-                      <Button type="submit" disabled={this.state.detalleSelectPlantilla.length <= 0} variant="contained" color="primary"  >
+                      <Button type="submit" disabled={this.state.detalleSelectPedido.length <= 0} variant="contained" color="primary"  >
                           Seleccionar
                         </Button>
                         </ div>
