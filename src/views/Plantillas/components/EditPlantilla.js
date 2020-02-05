@@ -174,13 +174,16 @@ const SortableItem = sortableElement(({value, deleteInsumo, editInsumo, undoDele
         {iconos}
 
         <TableCell>
-            {value.codigo + value.numero}
+            {value.identificador}
         </TableCell>
         <TableCell>
             {value.descripcion}
         </TableCell>
         <TableCell>
             {value.cantidad}
+        </TableCell>
+        <TableCell>
+            {value.unidad}
         </TableCell>
     </TableRow>)
 }
@@ -197,6 +200,7 @@ const SortableContainer = sortableContainer(({children}) => {
                 <TableCell>Identificador</TableCell>
                 <TableCell>Descripcion</TableCell>
                 <TableCell>Cantidad</TableCell>
+                <TableCell>Unidad</TableCell>
 
 
             </TableRow>
@@ -485,9 +489,16 @@ class EditPlantilla extends Component {
                         }
 
                     }
+                    res.insumos = res.insumos.map(elem => {
+                      return {
+                        ...elem,
+                        identificador: elem.codigo + elem.numero
+                      }
+                    })
 
                     this.detallePlantillas = [...res.insumos];
                     this.copiaDetallePlantillas = JSON.parse(JSON.stringify(res.insumos));
+
 
                     this.setState({
                         plantilla: res.plantilla[0],
@@ -680,10 +691,11 @@ class EditPlantilla extends Component {
                                 ))}
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
-
+                                { /*
                                 <CSVLink data={this.detallePlantillas} filename={"Plantilla-" + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(Date.now()).format("DD_MM_YYYY")} headers={headers} separator={";"}>
                                     <Button color="info" >Descargar csv</Button>
-                                </CSVLink>
+                                </CSVLink> */
+                              }
                                 <ExportXLS csvData={this.state.detallePlantillas} fileName={"Plantilla-" + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(Date.now()).format("DD_MM_YYYY")} header={headers} />
 
                                 <div style={{ padding: 20 }} >

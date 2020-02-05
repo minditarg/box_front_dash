@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import ModalDelete from "./ModalDelete";
 import Button from "components/CustomButtons/Button.js";
 import moment from 'moment';
+import ExportXLS from 'components/ExportXLS/ExportXLS';
 
 import { ColumnsListado, StateListado } from "./VariablesState";
 import { localization } from "variables/general.js";
@@ -156,6 +157,7 @@ class ModulosAnalisis extends Component {
                       </p>
               </CardHeader>
               <CardBody>
+              
                 <MaterialTable
                   isLoading={this.state.isLoading}
                   columns={ColumnsListado}

@@ -19,6 +19,7 @@ import CategoryIcon from '@material-ui/icons/Category';
 import DescriptionIcon from '@material-ui/icons/Description';
 import Divider from '@material-ui/core/Divider';
 import moment from 'moment';
+import ExportXLS from 'components/ExportXLS/ExportXLS';
 
 import { ColumnsListadoAnalisisInsumos, StateListado } from "./VariablesState";
 import { localization } from "variables/general.js";
@@ -172,6 +173,8 @@ class ModulosAnalisisDetalle extends Component {
                 <ListItemText primary={"$ " + this.state.montoproduccion} secondary="Producción" />
               </ListItem>
             </List>
+            <ExportXLS csvData={this.state.detallePlantillas} fileName={"Modulos Detalle -" + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(Date.now()).format("DD_MM_YYYY")} header={headers} />
+
                 <MaterialTable
                   isLoading={this.state.isLoading}
                   columns={ColumnsListadoAnalisisInsumos}
