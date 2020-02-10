@@ -59,6 +59,7 @@ import Users from "views/Users/Users.js";
 import TiposUsuarios from "views/Users/TiposUsuarios.js";
 import Insumos from "views/Insumos/Insumos";
 import Pedidos from "views/Pedidos/Pedidos";
+import PedidosEstados from "views/Pedidos/PedidosEstados";
 import Costos from "views/Costos/Costos";
 import AlertaCostos from "views/Alertas/AlertaCostos";
 import NewInsumo from "views/Insumos/NewInsumo";
@@ -435,14 +436,46 @@ const dashboardRoutes = [
 
   {
     show:false,
-    accesos: [71],
-    path: "/pedidos",
-    name: "Pedidos",
-    rtlName: "Ped",
+    accesos: [71,72],
+    groupComponent: true,
+    name: 'Pedidos',
+    open: 'open8',
     icon: AssignmentIcon,
-    component: Pedidos,
-    layout: "/admin"
-  }
+    dependences: [
+
+      {
+        show:false,
+        accesos: [71],
+        path: "/pedidos",
+        name: "Pedidos",
+        rtlName: "Ped",
+        icon: AssignmentIcon,
+        component: Pedidos,
+        layout: "/admin"
+      },
+      {
+        show:false,
+        accesos: [72],
+        path: "/pedidosestados",
+        name: "Estados",
+        rtlName: "PES",
+        icon: DeviceHubIcon,
+        component: PedidosEstados,
+        layout: "/admin"
+     }
+     ]
+   }//,
+
+  // {
+  //   show:false,
+  //   accesos: [71],
+  //   path: "/pedidos",
+  //   name: "Pedidos",
+  //   rtlName: "Ped",
+  //   icon: AssignmentIcon,
+  //   component: Pedidos,
+  //   layout: "/admin"
+  // }
 
 
 
