@@ -1,5 +1,6 @@
 export const StateListado = {
   modulos: [],
+  modulo:null,
   modulosdiseno: [],
   modulosFinalizados: [],
   modulosCancelados: [],
@@ -20,8 +21,9 @@ export const ColumnsListadoAnalisisInsumos = [
   // { title: "id_insumo", field: "id_insumo"},
   { title: "Insumo", field: "insumo"},
   { title: "#Diseño", field: "cantidad_diseno"},
-  { title: "#Produccion", field: "cantidad_produccion" },
+  { title: "#Estimada", field: "cantidad_produccion" },
   { title: "#Asignada", field: "cantidad_asignada"},
+  { title: "Unidad", field: "unidad"},
   { title: "Precio Unitario", field: "costo"},
   { title: "Costo Actual Diseño", field: "costo_actual_diseno"}
 ];

@@ -4,6 +4,7 @@ import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
 import moment from 'moment';
+import ExportXLS from 'components/ExportXLS/ExportXLS';
 
 import DetalleStock from './components/DetalleStock';
 import { Event } from 'react-socket-io';
@@ -297,6 +298,7 @@ class Stock extends Component {
                       </p>
               </CardHeader>
               <CardBody>
+              <ExportXLS csvData={this.state.insumos} fileName={"Stock - " +  moment(Date.now()).format("DD_MM_YYYY")} header={ColumnsListado} />
                 <MaterialTable
                   isLoading={this.state.isLoading}
                   columns={ColumnsListado}

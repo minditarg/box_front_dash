@@ -1,6 +1,5 @@
 
 import moment from 'moment';
-
 export const StateListado = {
   costos: [],
 
@@ -52,7 +51,7 @@ export const StateNewCategoria =
         label: 'Descripcion',
         fullWidth: true
       },
-      value: '',
+      value: "",
       validation: {
         required: true
       },

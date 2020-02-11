@@ -204,6 +204,9 @@ class MovimientosInsumos extends Component {
               options={{
                 pageSize:10,
                 exportButton: true,
+                exportAllData:true,
+                exportFileName:"Insumos Auditoria " + moment().format("DD-MM-YYYY"),
+                exportDelimiter:";",
                 headerStyle: {
                   backgroundColor: lightGreen[700],
                   color: '#FFF'

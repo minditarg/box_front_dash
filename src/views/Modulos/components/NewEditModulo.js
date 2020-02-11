@@ -5,6 +5,7 @@ import moment from "moment";
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import CsvDownloader from 'react-csv-downloader';
 import { CSVLink, CSVDownload } from "react-csv";
+import ExportXLS from 'components/ExportXLS/ExportXLS';
 
 
 import { CardActions } from "@material-ui/core";
@@ -90,10 +91,10 @@ const columnsCsv = [
 
 
 const headers = [
-    { label: "Codigo", key: "codigo" },
-    { label: "Descripcion", key: "descripcion" },
-    { label: "Cantidad", key: "cantidad" },
-    { label: "Asignada", key: "cantidad_asignada" }
+    { title: "Identificador", field: "identificador" },
+    { title: "Descripcion", field: "descripcion" },
+    { title: "Cantidad Requerida", field: "cantidad_requerida" },
+    { title: "Cantidad Asignada", field: "cantidad_asignada" }
 ];
 
 const styles = {
@@ -459,7 +460,7 @@ class NewEditModulo extends Component {
             resultado.cantidadAnterior = resultado.cantidad_requerida
             resultado.modificado = true;
           }
-          resultado.cantidad_requerida = cantidad;
+          resultado.cantidad_requerida = parseFloat(cantidad);
             let indexEncontrado = this.detalleModulos.indexOf(rowInsumo);
             if (indexEncontrado >= 0) {
                 this.detalleModulos[indexEncontrado] = resultado
@@ -475,7 +476,7 @@ class NewEditModulo extends Component {
             if (indexInsumo > -1) {
                 toast.error("El Insumo se encuentra en el Módulo");
             } else {
-                resultado.cantidad_requerida = cantidad;
+                resultado.cantidad_requerida = parseFloat(cantidad);
                 resultado.insertado = true;
                 this.detalleModulos = this.detalleModulos.concat(resultado);
             }
@@ -773,10 +774,13 @@ class NewEditModulo extends Component {
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="info" disabled={this.state.disableAllButtons} onClick={this.openPlantilla.bind(this)} ><AssignmentIcon /> Plantilla</Button>
-
+                                { /*
                                 <CSVLink data={this.detalleModulos} headers={headers}>
                                     <Button color="info" >Descargar csv</Button>
                                 </CSVLink>
+                                */
+                                }
+                                <ExportXLS csvData={this.state.detalleModulos} fileName={"Modulo Detalle- " + this.state.orderForm.chasis.value + " " +  moment(Date.now()).format("DD_MM_YYYY")} header={headers} />
                                 <div style={{ padding: 20 }} >
                                     <Grid container alignItems="flex-end" justify="flex-end" spacing={2}>
                                         <Grid item>

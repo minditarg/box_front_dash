@@ -10,6 +10,7 @@ import { CardActions } from "@material-ui/core";
 import { toast } from 'react-toastify';
 import ModalDelete from "./ModalDelete";
 import Button from "components/CustomButtons/Button.js";
+import moment from 'moment';
 
 import { ColumnsListado, StateListado } from "./VariablesState";
 import { localization } from "variables/general.js";
@@ -172,6 +173,9 @@ class Modulos extends Component {
                   }]}
                   options={{
                     exportButton: true,
+                    exportAllData:true,
+                    exportFileName:"Modulos " + moment().format("DD-MM-YYYY"),
+                    exportDelimiter:";",
                     headerStyle: {
                       backgroundColor: lightGreen[700],
                       color: '#FFF'
