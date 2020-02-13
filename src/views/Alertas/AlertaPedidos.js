@@ -5,7 +5,8 @@ import moment from 'moment';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
-import MaterialTable from "material-table";
+//import MaterialTable from "material-table";
+import MaterialTable, { MTableCell, MTableBodyRow } from "material-table";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import { CardActions } from "@material-ui/core";
 import { toast } from 'react-toastify';
@@ -15,6 +16,8 @@ import Button from "components/CustomButtons/Button.js";
 import { ColumnsListado, StateListado } from "./VariablesState";
 import { localization } from "variables/general.js";
 import lightGreen from '@material-ui/core/colors/lightGreen';
+import red from '@material-ui/core/colors/red';
+import yellow from '@material-ui/core/colors/yellow';
 import AddIcon from '@material-ui/icons/Add';
 
 import CardHeader from "components/Card/CardHeader.js";
@@ -148,6 +151,34 @@ class AlertaPedidos extends Component {
                   //   tooltip: 'Editar Pedido',
                   //   onClick: (event, rowData) => this.props.history.push('/admin/costos/editarcosto/' + rowData.id)
                   // }]}
+                  components={{
+                    Cell: props => {
+                      let styles = null
+                      if (props.columnDef.field == 'cantidad') {
+                        //if (props.rowData.cantidad - props.rowData.minimo < 0) {
+                          if (props.rowData.cantidad + props.rowData.pedido - props.rowData.requerido < props.rowData.minimo) {
+                          styles = { backgroundColor: red[700], color: 'white' }
+                        } else {
+                          styles = { backgroundColor: yellow[500], color: 'white' }
+                        }
+                      }
+                      return (
+
+                        <MTableCell style={styles} {...props} />
+
+                      )
+                    },
+                    Row: props => {
+                      return (
+                        <MTableBodyRow className={this.props.classes.rowTable} {...props} />
+
+                      )
+
+                    },
+                    Container: props => (
+                      <Paper elevation={0} {...props} />
+                    )
+                  }}
                   options={{
                     exportButton: true,
                     exportAllData:true,
