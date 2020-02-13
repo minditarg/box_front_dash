@@ -62,6 +62,7 @@ import Pedidos from "views/Pedidos/Pedidos";
 import PedidosEstados from "views/Pedidos/PedidosEstados";
 import Costos from "views/Costos/Costos";
 import AlertaCostos from "views/Alertas/AlertaCostos";
+import AlertaPedidos from "views/Alertas/AlertaPedidos";
 import NewInsumo from "views/Insumos/NewInsumo";
 import Categorias from "views/Insumos/Categorias";
 import NewCategoria from "views/Insumos/NewCategoria";
@@ -272,6 +273,16 @@ const dashboardRoutes = [
         rtlName: "ALC",
         icon: AttachMoneyIcon,
         component: AlertaCostos,
+        layout: "/admin"
+      },
+      {
+        show:false,
+        accesos: [32],
+        path: "/alertaPedidos",
+        name: "Pedidos",
+        rtlName: "ALP",
+        icon: AssignmentIcon,
+        component: AlertaPedidos,
         layout: "/admin"
       }
      ]

@@ -16,8 +16,10 @@ export const ColumnsListado = [
   { title: "Identificador", field: "identificador", editable: 'never',sort:(a,b) => { if(a.identificador.localeCompare(b.identificador) == 0) { return a.numero - b.numero } else { return a.identificador.localeCompare(b.identificador) } } },
   { title: "Descripcion", field: "descripcion" },
   { title: "Unidad", field: "unidad" },
-  { title: "Costo", field: "costo" },
-  { title: "Fecha", field: "fecha_actualizacion_costo", customSort: (a, b) => moment(a.fecha_actualizacion_costo,"DD/MM/YYYY").format("YYYYMMDD") - moment(b.fecha_actualizacion_costo,"DD/MM/YYYY").format("YYYYMMDD") }
+  { title: "Minimo", field: "minimo"},
+  { title: "Cantidad", field: "cantidad" },
+  { title: "Requerido", field: "requerido"},
+  { title: "Pedido", field: "pedido"}
 ];
 
 export const ColumnsListadoCategorias = [
