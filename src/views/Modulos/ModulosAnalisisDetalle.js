@@ -116,7 +116,7 @@ class ModulosAnalisisDetalle extends Component {
           insumos:res.insumos,
           modulo:res.modulo[0]
         })
-          console.log(res);
+          
       }, err => {
         this.setState({
           isLoading:false
@@ -173,7 +173,7 @@ class ModulosAnalisisDetalle extends Component {
                 <ListItemText primary={"$ " + this.state.montoproduccion} secondary="Producción" />
               </ListItem>
             </List>
-            
+            <ExportXLS csvData={this.state.insumos} fileName={"Modulo Analisis- M" + (this.state.modulo ? this.state.modulo.id : null)  +  " " + moment(Date.now()).format("DD_MM_YYYY")} header={ColumnsListadoAnalisisInsumos} />
 
                 <MaterialTable
                   isLoading={this.state.isLoading}

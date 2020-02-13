@@ -64,13 +64,6 @@ import { localization } from "variables/general";
 
 
 
-// const columns = [{ title: "id", field: "id" },
-// { title: "Usuario", field: "username" },
-// { title: "Identificador", field: "identificador" },
-// { title: "Proveedor", field: "proveedor" },
-// { title: "Fecha", field: "fecha" }
-// ];
-
 const columnsInsumos = [
     { title: "Codigo", field: "codigo", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },
@@ -87,9 +80,9 @@ const columnsCsv = [
 
 
 const headers = [
-    { label: "Identificador", key: "identificador" },
-    { label: "Descripcion", key: "descripcion" },
-    { label: "Cantidad Requerida", key: "cantidad" }
+    { title: "Identificador", field: "identificador" },
+    { title: "Descripcion", field: "descripcion" },
+    { title: "Cantidad Requerida", field: "cantidad" }
 ];
 
 const styles = {
@@ -430,7 +423,7 @@ class EditPlantilla extends Component {
 
         if (this.state.rowEditInsumo) {
             resultado.cantidadAnterior = resultado.cantidad
-            resultado.cantidad = cantidad;
+            resultado.cantidad = parseFloat(cantidad);
             resultado.modificado = true;
 
             let indexEncontrado = this.detallePlantillas.indexOf(rowInsumo);
@@ -448,7 +441,7 @@ class EditPlantilla extends Component {
             if (indexInsumo > -1) {
                 toast.error("El Insumo se encuentra en la Plantilla");
             } else {
-                resultado.cantidad = cantidad;
+                resultado.cantidad = parseFloat(cantidad);
                 resultado.insertado = true;
                 this.detallePlantillas = this.detallePlantillas.concat(resultado);
             }

@@ -7,12 +7,20 @@ import { withStyles } from '@material-ui/styles';
 import Database from "variables/Database.js";
 import { toast,ToastContainer } from 'react-toastify';
 
+
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
 import Button from '@material-ui/core/Button';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
+
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { StateEditUser } from "../VariablesState";
 
@@ -52,6 +60,17 @@ const styles = {
 class EditUser extends Component {
   state = JSON.parse(JSON.stringify(StateEditUser));
 
+  handleClickOpen = () => {
+    this.setState({
+      openChangePass:true
+    })
+  };
+
+  handleClose = () => {
+    this.setState({
+      openChangePass:false
+    })
+  };
 
   getUsersType = () => {
     Database.get('/list-users_type',this)
@@ -131,6 +150,21 @@ class EditUser extends Component {
           }
 
       })
+  }
+
+  handleChangePass = (event) => {
+    event.preventDefault();
+    this.setState({
+      openChangePass:false
+    })
+    
+    Database.post(`/update-pass`,{id: this.props.match.params.iduser,newpass:event.target.contrasenia.value})
+      .then(res => {
+        toast.success("El Usuario se ha modificado con exito!");
+      },err =>{
+        toast.error(err.message);
+
+    })
   }
 
   handleSubmitEditUser = (event) => {
@@ -220,9 +254,10 @@ class EditUser extends Component {
       });
     }
 
-    return (
+    return ([
 
       <form onSubmit={(event) => {
+        
         this.handleSubmitEditUser(event)
 
       } }>
@@ -239,6 +274,9 @@ class EditUser extends Component {
       </p>
           </CardHeader>
           <CardBody>
+          <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+        Cambiar Contraseña
+      </Button>
 
             <div className="mt-3 mb-3">
               {formElementsArray.map(formElement => (
@@ -263,10 +301,45 @@ class EditUser extends Component {
         </Card>
 
 
-      </ form>
+      </ form>,
+      
+      <Dialog open={this.state.openChangePass} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+      <DialogTitle id="form-dialog-title">Cambio de Contraseña</DialogTitle>
+      <form onSubmit={(event) => {
+        this.handleChangePass(event)
+
+      } }>
+      { this.state.openChangePass &&
+      <DialogContent>
+      
+        <DialogContentText>
+          Ingrese una nueva contraseña para el Usuario
+        </DialogContentText>
+        <TextField
+          autoFocus
+          margin="dense"
+          id="contrasenia"
+          name="contrasenia"
+          label="nueva contraseña"
+          type="password"
+          fullWidth
+        />
+      </DialogContent>
+      }
+      <DialogActions>
+        <Button onClick={this.handleClose} color="primary">
+          Cancelar
+        </Button>
+        <Button type="submit" color="primary">
+          Aceptar
+        </Button>
+      </DialogActions>
+      </form>
+    </Dialog>
+      
 
 
-    )
+              ])
   }
 
 };

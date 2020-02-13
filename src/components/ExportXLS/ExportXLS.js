@@ -5,11 +5,11 @@ import * as XLSX from 'xlsx';
 
  const ExportXLS = ({csvData, fileName,header}) => {
      const valores = header.map(elem => {
-         return elem.label
+         return elem.title
      })
 
      const keys = header.map(elem => {
-         return elem.key
+         return elem.field
      })
 
 

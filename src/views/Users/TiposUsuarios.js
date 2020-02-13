@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
+import moment from 'moment';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -186,6 +187,9 @@ state = {
                   }]}
                   options={{
                     exportButton: true,
+                    exportAllData:true,
+                    exportFileName:"Tipos Usuarios " + moment().format("DD-MM-YYYY"),
+                    exportDelimiter:";",
                     headerStyle: {
                       backgroundColor: lightGreen[700],
                       color: '#FFF'

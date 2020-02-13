@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
+import moment from 'moment';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -85,6 +86,7 @@ const ColumnsListado = [
 const ColumnsListadoDetalle = [
   { title: "Identificador", field: "identificador", customSort: (a, b) => a.id - b.id },
   { title: "Descripcion", field: "descripcion" },
+  { title: "Unidad", field: "unidad" },
   { title: "Requerido", field: "cantidad_requerida", editable: 'never' },
   { title: "Asignada", field: "cantidad_asignada", editable: 'never' },
   { title: "Stock", field: "cantidad_stock", editable: 'never' },
@@ -251,7 +253,10 @@ class ModulosPaniol extends Component {
               }
               ]}
               options={{
-                exportButton: true,
+                exportButton: true, exportButton: true,
+                exportAllData:true,
+                exportFileName:"Modulos Pañol " + moment().format("DD-MM-YYYY"),
+                exportDelimiter:";",
                 headerStyle: {
                   backgroundColor: lightGreen[700],
                   color: '#FFF'

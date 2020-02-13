@@ -240,6 +240,9 @@ class MovimientosModulos extends Component {
               ]}
               options={{
                 exportButton: true,
+                exportAllData:true,
+                exportFileName:"Modulos Auditoria " + moment().format("DD-MM-YYYY"),
+                exportDelimiter:";",
                 headerStyle: {
                   backgroundColor: lightGreen[700],
                   color: '#FFF'

@@ -14,6 +14,7 @@ import ModalDelete from "./ModalDelete";
 import EditPlantilla from "./components/EditPlantilla";
 import Button from "components/CustomButtons/Button.js";
 import { CSVLink, CSVDownload } from "react-csv";
+import ExportXLS from 'components/ExportXLS/ExportXLS';
 
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -76,9 +77,9 @@ const styles = {
 };
 
 const headers = [
-    { label: "Identificador", key: "identificador" },
-    { label: "Descripcion", key: "descripcion" },
-    { label: "Cantidad", key: "cantidad" }
+    { title: "Identificador", field: "identificador" },
+    { title: "Descripcion", field: "descripcion" },
+    { title: "Cantidad", field: "cantidad" }
 ];
 
 class Plantillas extends Component {
@@ -245,7 +246,7 @@ class Plantillas extends Component {
                   },
                   {
                     icon: 'file_copy',
-                    tooltip: 'Descargar CSV',
+                    tooltip: 'Descargar XLS',
                     onClick: (event, rowData) => this.clickDownloadCSV(rowData)
                   },
 
@@ -255,6 +256,9 @@ class Plantillas extends Component {
                 ]}
                   options={{
                     exportButton: true,
+                    exportAllData:true,
+                    exportFileName:"Plantillas - " + moment().format("DD-MM-YYYY"),
+                    exportDelimiter:";",
                     headerStyle: {
                       backgroundColor: lightGreen[700],
                       color: '#FFF'
@@ -314,20 +318,19 @@ class Plantillas extends Component {
 
             <div style={{ marginTop:'25px',textAlign:'right'}}>
             <Button onClick={this.closeCSVDialog.bind(this)} style={{marginRight:'10px'}}>Cerrar</Button>
+           { /*
             <CSVLink
             data={this.state.detallePlantillas}
             asyncOnClick={true}
     filename={"Plantilla " + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(new Date()).format("DD-MM-YYYY") + ".csv" }
             headers={headers}
             separator={";"}
-
-
-
-
              >
               <Button variant="contained" color="primary">DESCARGAR CSV</Button>
             </CSVLink>
-
+            */
+            }
+            <ExportXLS csvData={this.state.detallePlantillas} fileName={"Plantilla-" + (this.state.plantilla ? this.state.plantilla.codigo : null) + " " + moment(Date.now()).format("DD_MM_YYYY")} header={headers} />
 
               </ div>
 

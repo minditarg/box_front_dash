@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
 import moment from 'moment';
+import ExportXLS from 'components/ExportXLS/ExportXLS';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -138,6 +139,7 @@ class AlertaCostos extends Component {
                       </p>
               </CardHeader>
               <CardBody>
+              <ExportXLS csvData={this.state.costos} fileName={"Alerta Costos- " +  moment(Date.now()).format("DD_MM_YYYY")} header={ColumnsListado} />
                 <MaterialTable
                 isLoading={this.state.isLoading}
                   columns={ColumnsListado}

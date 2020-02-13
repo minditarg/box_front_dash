@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
+import moment from 'moment';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -166,6 +167,9 @@ class Categorias extends Component {
                   }]}
                   options={{
                     exportButton: true,
+                    exportAllData:true,
+                    exportFileName:"Categorias " + moment().format("DD-MM-YYYY"),
+                    exportDelimiter:";",
                     headerStyle: {
                       backgroundColor: lightGreen[700],
                       color: '#FFF'

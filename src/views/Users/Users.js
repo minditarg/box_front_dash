@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Database from "variables/Database.js";
+import moment from 'moment';
 
 import { Route, Switch, Link } from 'react-router-dom';
 // core components
@@ -277,6 +278,9 @@ class Users extends Component {
 
                 options={{
                   exportButton: true,
+                  exportAllData:true,
+                  exportFileName:"Usuarios " + moment().format("DD-MM-YYYY"),
+                  exportDelimiter:";",
                   headerStyle: {
                     backgroundColor: lightGreen[700],
                     color: '#FFF'
