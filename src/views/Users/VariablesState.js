@@ -100,7 +100,8 @@ export const StateEditUser = {
     userEdit: null,
     editFormIsValid: false,
     successSubmitEdit: null,
-    disableAllButtons:false
+    disableAllButtons:false,
+    openChangePass: false
 
 }
 
