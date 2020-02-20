@@ -12,6 +12,9 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import AddIcon from '@material-ui/icons/Add';
+
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
@@ -280,7 +283,7 @@ class AjusteStock extends Component {
                                 />
                         ))}
 
-                        <Button style={{ marginTop: '25px' }} color="primary" onClick={this.openDialog.bind(this)} > Seleccionar Insumo</Button>
+                        <Button style={{ marginTop: '25px' }} color="success" onClick={this.openDialog.bind(this)} ><AddIcon /> Seleccionar Insumo</Button>
 
                         <Dialog open={this.state.open} onEnter={console.log('Dialogo')}>
                             <DialogTitle>Seleccionar Insumo</DialogTitle>
