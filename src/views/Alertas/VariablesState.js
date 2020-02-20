@@ -21,6 +21,13 @@ export const ColumnsListado = [
   { title: "Pedido", field: "pedido"}
 ];
 
+export const ColumnsListadoCostos = [
+  { title: "Identificador", field: "identificador", editable: 'never',sort:(a,b) => { if(a.identificador.localeCompare(b.identificador) == 0) { return a.numero - b.numero } else { return a.identificador.localeCompare(b.identificador) } } },
+  { title: "Descripcion", field: "descripcion" },
+  { title: "Unidad", field: "unidad" },
+  { title: "Costo", field: "costo"}
+];
+
 export const ColumnsListadoCategorias = [
   { title: "Codigo", field: "codigo" },
   { title: "Descripcion", field: "descripcion" }

@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 //import EditCosto from "./components/EditCosto";
 import Button from "components/CustomButtons/Button.js";
 
-import { ColumnsListado, StateListado } from "./VariablesState";
+import { ColumnsListadoCostos, StateListado } from "./VariablesState";
 import { localization } from "variables/general.js";
 import lightGreen from '@material-ui/core/colors/lightGreen';
 import AddIcon from '@material-ui/icons/Add';
@@ -139,10 +139,10 @@ class AlertaCostos extends Component {
                       </p>
               </CardHeader>
               <CardBody>
-              <ExportXLS csvData={this.state.costos} fileName={"Alerta Costos- " +  moment(Date.now()).format("DD_MM_YYYY")} header={ColumnsListado} />
+              <ExportXLS csvData={this.state.costos} fileName={"Alerta Costos- " +  moment(Date.now()).format("DD_MM_YYYY")} header={ColumnsListadoCostos} />
                 <MaterialTable
                 isLoading={this.state.isLoading}
-                  columns={ColumnsListado}
+                  columns={ColumnsListadoCostos}
                   data={this.state.costos}
                   title=""
                   localization={localization}
