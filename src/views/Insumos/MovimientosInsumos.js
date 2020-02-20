@@ -176,9 +176,9 @@ class MovimientosInsumos extends Component {
       <div key={"movimientos-list"} style={style}>
         <Card>
           <CardHeader color="primary">
-            <h4 className={this.props.classes.cardTitleWhite} >MOVIMIENTOS STOCK</h4>
+            <h4 className={this.props.classes.cardTitleWhite} >MOVIMIENTOS DE INSUMOS</h4>
             <p className={this.props.classes.cardCategoryWhite} >
-              Listado de movimientos de insumos en Stock
+              Listado de movimientos de insumos
                       </p>
           </CardHeader>
           <CardBody>

@@ -205,7 +205,7 @@ class Configuracion extends Component {
           <CardHeader color="primary">
             <h4 className={this.props.classes.cardTitleWhite}>Configuracion</h4>
             <p className={this.props.classes.cardCategoryWhite}>
-              Configuracion de la Aplicación
+              
       </p>
           </CardHeader>
           <CardBody>
