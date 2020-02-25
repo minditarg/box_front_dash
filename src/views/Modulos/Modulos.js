@@ -165,12 +165,14 @@ class Modulos extends Component {
                     icon: 'edit',
                     tooltip: 'Editar Módulo',
                     onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarmodulo/' + rowData.id)
-                  },
-                  {
-                    icon: 'delete',
-                    tooltip: 'Borrar Módulo',
-                    onClick: (event, rowData) => this.deleteMaterial(rowData)
-                  }]}
+                  }
+                  // ,
+                  // {
+                  //   icon: 'delete',
+                  //   tooltip: 'Borrar Módulo',
+                  //   onClick: (event, rowData) => this.deleteMaterial(rowData)
+                  // }
+                ]}
                   options={{
                     exportButton: true,
                     exportAllData:true,

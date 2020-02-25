@@ -18,7 +18,7 @@ import ModalDisenoaProducir from "./ModalDisenoaProducir";
 
 import Button from "components/CustomButtons/Button.js";
 
-import { ColumnsListado, StateListado } from "./VariablesState";
+import { ColumnsListado, ColumnsListadoDiseno, StateListado } from "./VariablesState";
 import { localization } from "variables/general.js";
 import lightGreen from '@material-ui/core/colors/lightGreen';
 import AddIcon from '@material-ui/icons/Add';
@@ -429,7 +429,7 @@ class ModulosEstados extends Component {
         .then(res => {
 
             this.handleClose();
-            this.getModulos();
+            this.getModulosDiseno();
             toast.success("Modulo eliminado");
 
         }, err => {
@@ -473,13 +473,13 @@ class ModulosEstados extends Component {
             headerColor="primary"
             tabs={[
               {
-                tabName: "Diseño",
+                tabName: "Cotización",
                 tabIcon: Description,
                 tabContent: (
 
                 <MaterialTable
                 isLoading={this.state.isLoading}
-                  columns={ColumnsListado}
+                  columns={ColumnsListadoDiseno}
                   data={this.state.modulosdiseno}
                   title=""
                   localization={localization}
@@ -487,6 +487,12 @@ class ModulosEstados extends Component {
                     icon: 'edit',
                     tooltip: 'Editar Módulo',
                     onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarmodulo/' + rowData.id)
+                  },
+                  {
+                    icon: 'delete',
+                    tooltip: 'Borrar Módulo',
+                    onClick: (event, rowData) => 
+                    this.deleteMaterial(rowData)
                   },
                   {
                     icon: 'category',

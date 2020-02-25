@@ -154,16 +154,7 @@ const dashboardRoutes = [
   //   layout: "/rtl"
   // },
 
-  {
-    show:false,
-    accesos: [1,2,3,4,5,6,7,8,9],
-    path: "/configuracion",
-    name: "Configuracion",
-    rtlName: "Co",
-    icon: SettingsIcon,
-    component: Configuracion,
-    layout: "/admin"
-  },
+  
 
 
   {
@@ -252,7 +243,17 @@ const dashboardRoutes = [
         icon: AttachMoneyIcon,
         component: Costos,
         layout: "/admin"
-      }
+      },
+      {
+        show:false,
+        accesos: [1,2,3,4,5,6,7,8,9],
+        path: "/configuracion",
+        name: "Alerta Costos",
+        rtlName: "Co",
+        icon: SettingsIcon,
+        component: Configuracion,
+        layout: "/admin"
+      },
      ]
   },
 
@@ -458,7 +459,7 @@ const dashboardRoutes = [
         show:false,
         accesos: [71],
         path: "/pedidos",
-        name: "Pedidos",
+        name: "Pedidos Internos",
         rtlName: "Ped",
         icon: AssignmentIcon,
         component: Pedidos,

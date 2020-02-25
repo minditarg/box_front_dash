@@ -75,15 +75,16 @@ const styles = {
 const ColumnsListado = [
   { title: "Fecha", field: "fecha" , customSort: (a, b) => moment(a.fecha,"DD/MM/YYYY HH:mm").format("YYYYMMDDHHmm") - moment(b.fecha,"DD/MM/YYYY HH:mm").format("YYYYMMDDHHmm"), cellStyle:{ minWidth:'120px' } },
 /*  { title: "Identificador", field: "identificador", customSort: (a, b) => a.id - b.id }, */
-  { title: "Movimiento", field: "descripcion_movimientos" },
+{ title: "Usuario", field: "nombre",cellStyle:{ minWidth:'100px' } },  
+{ title: "Movimiento", field: "descripcion_movimientos" },
 
   { title: "Ident. Insumo", field: "identificador_insumo" },
   { title: "Descripción", field: "descripcion",cellStyle:{ minWidth:'300px' } },
   { title: "Mínimo", field: "minimo" },
     { title: "Unidad", field: "unidad" },
     { title: "Alertar", field: "alertar" },
-    { title: "Autorizar", field: "autorizar" },
-    { title: "Usuario", field: "nombre",cellStyle:{ minWidth:'100px' } },
+    { title: "Autorizar", field: "autorizar" }
+    
 
 
 ];
@@ -176,9 +177,9 @@ class MovimientosInsumos extends Component {
       <div key={"movimientos-list"} style={style}>
         <Card>
           <CardHeader color="primary">
-            <h4 className={this.props.classes.cardTitleWhite} >MOVIMIENTOS STOCK</h4>
+            <h4 className={this.props.classes.cardTitleWhite} >MOVIMIENTOS DE INSUMOS</h4>
             <p className={this.props.classes.cardCategoryWhite} >
-              Listado de movimientos de insumos en Stock
+              Listado de movimientos de insumos
                       </p>
           </CardHeader>
           <CardBody>
