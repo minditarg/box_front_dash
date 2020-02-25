@@ -459,7 +459,7 @@ const dashboardRoutes = [
         show:false,
         accesos: [71],
         path: "/pedidos",
-        name: "Pedidos",
+        name: "Pedidos Internos",
         rtlName: "Ped",
         icon: AssignmentIcon,
         component: Pedidos,

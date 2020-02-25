@@ -28,6 +28,12 @@ export const ColumnsListadoAnalisisInsumos = [
   { title: "Costo Actual Diseño", field: "costo_actual_diseno"}
 ];
 
+export const ColumnsListadoDiseno = [
+  { title: "Identificador", field: "identificador",customSort: (a, b) => a.id - b.id},
+  { title: "Num Presupuesto", field: "chasis", editable: 'never' },
+  { title: "Descripcion", field: "descripcion" }
+];
+
 export const ColumnsListado = [
   { title: "Identificador", field: "identificador",customSort: (a, b) => a.id - b.id},
   { title: "Chasis", field: "chasis", editable: 'never' },

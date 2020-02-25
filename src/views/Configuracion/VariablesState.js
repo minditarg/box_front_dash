@@ -17,8 +17,8 @@ export const StateEditConfiguracion =
     alertaCosto: {
       elementType: 'input',
       elementConfig: {
-        type: 'text',
-        label: 'Alerta Costo',
+        type: 'number',
+        label: 'Alerta Costo (en días)',
         fullWidth: true
       },
       value: '',

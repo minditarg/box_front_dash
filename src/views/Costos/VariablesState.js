@@ -236,7 +236,7 @@ export const StateEditCosto =
     costo: {
       elementType: 'input',
       elementConfig: {
-        type: 'text',
+        type: 'number',
         label: 'Costo actual',
         fullWidth: true
       },

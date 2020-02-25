@@ -75,15 +75,16 @@ const styles = {
 const ColumnsListado = [
   { title: "Fecha", field: "fecha" , customSort: (a, b) => moment(a.fecha,"DD/MM/YYYY HH:mm").format("YYYYMMDDHHmm") - moment(b.fecha,"DD/MM/YYYY HH:mm").format("YYYYMMDDHHmm"), cellStyle:{ minWidth:'120px' } },
 /*  { title: "Identificador", field: "identificador", customSort: (a, b) => a.id - b.id }, */
-  { title: "Movimiento", field: "descripcion_movimientos" },
+{ title: "Usuario", field: "nombre",cellStyle:{ minWidth:'100px' } },  
+{ title: "Movimiento", field: "descripcion_movimientos" },
 
   { title: "Ident. Insumo", field: "identificador_insumo" },
   { title: "Descripción", field: "descripcion",cellStyle:{ minWidth:'300px' } },
   { title: "Mínimo", field: "minimo" },
     { title: "Unidad", field: "unidad" },
     { title: "Alertar", field: "alertar" },
-    { title: "Autorizar", field: "autorizar" },
-    { title: "Usuario", field: "nombre",cellStyle:{ minWidth:'100px' } },
+    { title: "Autorizar", field: "autorizar" }
+    
 
 
 ];

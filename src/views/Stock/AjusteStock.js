@@ -131,6 +131,14 @@ class AjusteStock extends Component {
             .then(res => {
 
                     let resultado = [...res.result];
+                    resultado = resultado.map(elem=>{
+                        return {
+                          ...elem,
+                          codigo: elem.codigo + elem.numero
+                        }
+            
+                      })
+
                     this.setState({
                         insumos: resultado
                     })

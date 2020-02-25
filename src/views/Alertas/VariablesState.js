@@ -15,7 +15,7 @@ export const ColumnsListado = [
   { title: "Identificador", field: "identificador", editable: 'never',sort:(a,b) => { if(a.identificador.localeCompare(b.identificador) == 0) { return a.numero - b.numero } else { return a.identificador.localeCompare(b.identificador) } } },
   { title: "Descripcion", field: "descripcion" },
   { title: "Unidad", field: "unidad" },
-  { title: "Minimo", field: "minimo"},
+  { title: "Stock Minimo", field: "minimo"},
   { title: "Cantidad", field: "cantidad" },
   { title: "Requerido", field: "requerido"},
   { title: "Pedido", field: "pedido"}
@@ -25,7 +25,8 @@ export const ColumnsListadoCostos = [
   { title: "Identificador", field: "identificador", editable: 'never',sort:(a,b) => { if(a.identificador.localeCompare(b.identificador) == 0) { return a.numero - b.numero } else { return a.identificador.localeCompare(b.identificador) } } },
   { title: "Descripcion", field: "descripcion" },
   { title: "Unidad", field: "unidad" },
-  { title: "Costo", field: "costo"}
+  { title: "Costo", field: "costo"},
+  { title: "Fecha ultima actualización", field: "fecha_actualizacion_costo" }
 ];
 
 export const ColumnsListadoCategorias = [
