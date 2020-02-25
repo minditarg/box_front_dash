@@ -467,7 +467,7 @@ const dashboardRoutes = [
       {
         show:false,
         accesos: [72],
-        path: "/pedidosestados",
+        path: "/pedestados",
         name: "Estados",
         rtlName: "PES",
         icon: DeviceHubIcon,
