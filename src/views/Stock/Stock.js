@@ -299,12 +299,19 @@ class Stock extends Component {
               </CardHeader>
               <CardBody>
               <ExportXLS csvData={this.state.insumos} fileName={"Stock - " +  moment(Date.now()).format("DD_MM_YYYY")} header={ColumnsListado} />
+              
+              
                 <MaterialTable
                   isLoading={this.state.isLoading}
                   columns={ColumnsListado}
                   data={this.state.insumos}
                   title=""
                   localization={localization}
+                  actions={[{
+                    icon: 'print',
+                    tooltip: 'Imprimir Detalle'//,
+                    //onClick: (event, rowData) => <ExportXLS csvData={this.state.insumos} fileName={"Stock - " +  moment(Date.now()).format("DD_MM_YYYY")} header={ColumnsListado} />
+                  }]}
                   components={{
                     Cell: props => {
                       let styles = null
@@ -332,7 +339,7 @@ class Stock extends Component {
                       <Paper elevation={0} {...props} />
                     )
                   }}
-
+                  
                   options={{
                     exportButton: true,
                     exportAllData:true,

@@ -20,6 +20,7 @@ import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
 import AddIcon from '@material-ui/icons/Add';
 
+import DetalleInsumos from './components/DetalleInsumos';
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
@@ -189,6 +190,11 @@ class AlertaPedidos extends Component {
                       color: '#FFF'
                     },
                   }}
+                  detailPanel={rowData => {
+                    return (
+                      <DetalleInsumos idInsumo={rowData.id} />
+                    )
+                  } }
                 />
               </CardBody>
             </Card>

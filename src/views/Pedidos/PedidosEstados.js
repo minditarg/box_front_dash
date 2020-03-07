@@ -493,11 +493,11 @@ class PedidosEstados extends Component {
                   title=""
                   localization={localization}
                   actions={[
-                  //   {
-                  //   icon: 'edit',
-                  //   tooltip: 'Editar Módulo',
-                  //   onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarpedido/' + rowData.id)
-                  // },
+                    {
+                    icon: 'edit',
+                    tooltip: 'Editar Pedido',
+                    onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarpedido/' + rowData.id)
+                  },
                   {
                     icon: 'category',
                     tooltip: 'Solicitado',
@@ -525,11 +525,11 @@ class PedidosEstados extends Component {
                   title=""
                   localization={localization}
                   actions={[
-                  //   {
-                  //   icon: 'edit',
-                  //   tooltip: 'Editar Módulo',
-                  //   onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarpedido/' + rowData.id)
-                  // },
+                    {
+                      icon: 'edit',
+                      tooltip: 'Editar Pedido',
+                      onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarpedido/' + rowData.id)
+                    },
                   {
                     icon: 'done',
                     tooltip: 'confirmar Ingreso de pedido',
