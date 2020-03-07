@@ -381,24 +381,31 @@ class ModulosEstados extends Component {
 
   }
 
-  handleDisenoaProducir(rowData) {
-    if (rowData.id) {
-      Database.post('/disenoaproducir-modulo', {
-        id: rowData.id
-      },this)
-        .then(res => {
-          if (res.success == 1) {
-            this.handleCloseProducir();
-            this.getModulosDiseno();
-            this.getModulosPausados();
-            this.getModulos();
-            toast.success("Modulo enviado a Producción");
-          }
-        }, err => {
-          toast.error(err.message);
-        })
-    }
+  // handleDisenoaProducir(rowData) {
+  //   if (rowData.id) {
+  //     Database.post('/disenoaproducir-modulo', {
+  //       id: rowData.id
+  //     },this)
+  //       .then(res => {
+  //         if (res.success == 1) {
+  //           this.handleCloseProducir();
+  //           this.getModulosDiseno();
+  //           this.getModulosPausados();
+  //           this.getModulos();
+  //           toast.success("Modulo enviado a Producción");
+  //         }
+  //       }, err => {
+  //         toast.error(err.message);
+  //       })
+  //   }
 
+  // }
+
+  handleDisenoaProducir(rowData) {
+    this.setState({
+        openProducirDialog : true,
+        producirRowData : rowData
+      })
   }
 
   handleProducir(rowData) {
@@ -674,16 +681,16 @@ class ModulosEstados extends Component {
         producirRowData={this.state.producirRowData}
 
         handleCloseProducir={() => this.handleCloseProducir()}
-        handleDisenoaProducir={(rowData) => this.handleDisenoaProducir(rowData)}
-      />,
-      <ModalProducir
-      key={"modulos-modalProducir"}
-        openProducirDialog={this.state.openProducirDialog}
-        producirRowData={this.state.producirRowData}
-
-        handleCloseProducir={() => this.handleCloseProducir()}
         handleProducir={(rowData) => this.handleProducir(rowData)}
       />,
+      // <ModalProducir
+      // key={"modulos-modalProducir"}
+      //   openProducirDialog={this.state.openProducirDialog}
+      //   producirRowData={this.state.producirRowData}
+
+      //   handleCloseProducir={() => this.handleCloseProducir()}
+      //   handleProducir={(rowData) => this.handleProducir(rowData)}
+      // />,
       <ModalFinalizarProduccion
       key={"modulos-modalFinalizarProduccion"}
         openFinalizarProduccionDialog={this.state.openFinalizarProduccionDialog}

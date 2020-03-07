@@ -71,6 +71,11 @@ export const StateListado = {
   
   
   }
+
+  export const ColumnsDetalleListado = [
+    { title: "Id", field: "id"}
+    ];
+
   export const ColumnsListado = [
   { title: "Identificador", field: "identificador",sort:(a,b) => { if(a.identificador.localeCompare(b.identificador) == 0) { return a.numero - b.numero } else { return a.identificador.localeCompare(b.identificador) } } },
   { title: "Descripcion", field: "descripcion" },

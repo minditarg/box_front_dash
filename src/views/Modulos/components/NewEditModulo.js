@@ -248,6 +248,20 @@ class NewEditModulo extends Component {
 
         insumoSeleccionado: 0,
         orderForm: {
+            cotizacion: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    label: 'Cotizacion',
+                    fullWidth: true
+                },
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
+            },
             chasis: {
                 elementType: 'input',
                 elementConfig: {
@@ -257,9 +271,9 @@ class NewEditModulo extends Component {
                 },
                 value: '',
                 validation: {
-                    required: true
+                    required: false
                 },
-                valid: false,
+                valid: true,
                 touched: false
             },
             descripcion: {
@@ -360,6 +374,7 @@ class NewEditModulo extends Component {
             Database.post('/update-modulo', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 chasis: this.state.orderForm.chasis.value,
+                cotizacion: this.state.orderForm.cotizacion.value,
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: this.detalleModulos,
                 id: this.props.match.params.idModulo
@@ -387,6 +402,7 @@ class NewEditModulo extends Component {
             Database.post('/insert-modulo', {
                 //fechaIdentificador: moment(event.target[0].value, "MM/DD/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 chasis: this.state.orderForm.chasis.value,
+                cotizacion: this.state.orderForm.cotizacion.value,
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: this.state.detalleModulos
             },this)

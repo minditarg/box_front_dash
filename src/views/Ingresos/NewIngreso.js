@@ -516,7 +516,7 @@ class NewIngreso extends Component {
                                         />
                                 ))}
 
-                                <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumos</Button>
+                                {/* <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumos</Button> */}
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons} color="success" onClick={this.openPedido.bind(this)} ><AddIcon /> Pedido</Button>
 
                                 <MaterialTable
