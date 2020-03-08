@@ -151,13 +151,13 @@ class MovimientosModulos extends Component {
   }
 
   handleClickOpen(rowData) {
-
+    
     this.setState({ isLoadingDetalle: true, modulosDetalle: [], chasisDetalle: rowData.chasis,descripcionDetalle:rowData.descripcion, open: true });
-    Database.get('/list-modulos-insumos/' + rowData.id,this)
+    Database.get('/list-modulos-movimientos-insumos/' + rowData.id,this)
       .then(res => {
-
+        console.log(res);
           let disponible;
-          res.insumos = res.insumos.map(elem => {
+          res.insumos = res.result.map(elem => {
             if (elem.cantidad_requerida - elem.cantidad_asignada <= elem.cantidad_stock)
               disponible = elem.cantidad_requerida - elem.cantidad_asignada
             else
