@@ -11,6 +11,12 @@ export const StateListado = {
 }
 export const ColumnsListado = [
   { title: "Identificador", field: "identificador" },
+  { title: "Referencia", field: "referencia" },
+  { title: "Precio", field: "precio" }
+];
+
+export const ColumnsListadoSolicitados = [
+  { title: "Identificador", field: "identificador" },
   { title: "Referencia", field: "referencia" }
 ];
 

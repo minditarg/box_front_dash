@@ -17,7 +17,7 @@ import ModalDisenoaSolicitar from "./ModalDisenoaSolicitar";
 
 import Button from "components/CustomButtons/Button.js";
 
-import { ColumnsListado, StateListado } from "./VariablesState";
+import { ColumnsListado, ColumnsListadoSolicitados, StateListado } from "./VariablesState";
 import { localization } from "variables/general.js";
 import lightGreen from '@material-ui/core/colors/lightGreen';
 import AddIcon from '@material-ui/icons/Add';
@@ -520,7 +520,7 @@ class PedidosEstados extends Component {
                 tabContent: (
                   <MaterialTable
                 isLoading={this.state.isLoading}
-                  columns={ColumnsListado}
+                  columns={ColumnsListadoSolicitados}
                   data={this.state.pedidos}
                   title=""
                   localization={localization}
@@ -562,7 +562,7 @@ class PedidosEstados extends Component {
                 tabContent: (
                   <MaterialTable
                 isLoading={this.state.isLoading}
-                  columns={ColumnsListado}
+                  columns={ColumnsListadoSolicitados}
                   data={this.state.pedidosPausados}
                   title=""
                   localization={localization}
@@ -594,7 +594,7 @@ class PedidosEstados extends Component {
                 tabContent: (
                   <MaterialTable
                 isLoading={this.state.isLoading}
-                  columns={ColumnsListado}
+                  columns={ColumnsListadoSolicitados}
                   data={this.state.pedidosFinalizados}
                   title=""
                   localization={localization}
@@ -617,7 +617,7 @@ class PedidosEstados extends Component {
                 tabContent: (
                   <MaterialTable
                 isLoading={this.state.isLoading}
-                  columns={ColumnsListado}
+                  columns={ColumnsListadoSolicitados}
                   data={this.state.pedidosCancelados}
                   title=""
                   localization={localization}

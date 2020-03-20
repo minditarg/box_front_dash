@@ -88,7 +88,7 @@ import RTLPage from "views/RTLPage/RTLPage.js";
 import ModulosEstados from "views/Modulos/ModulosEstados";
 
 const dashboardRoutes = [
-  /* {
+   {
      accesos: [],
      path: "/dashboard",
      name: "Dashboard",
@@ -96,7 +96,7 @@ const dashboardRoutes = [
      icon: Dashboard,
      component: DashboardPage,
      layout: "/admin"
-   }, */
+   }, 
   // {
   //   path: "/user",
   //   name: "User Profile",
