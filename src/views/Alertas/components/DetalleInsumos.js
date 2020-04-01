@@ -42,7 +42,7 @@ class DetalleInsumos extends Component {
                         <TableCell>Tipo</TableCell>
                         <TableCell>Descripcion</TableCell>
                         <TableCell align="right">Cantidad</TableCell>
-                        <TableCell align="right">Cantidad Asignada</TableCell>
+                        <TableCell align="right">Cantidad Requerida</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -65,7 +65,7 @@ class DetalleInsumos extends Component {
                                     <TableCell style={color}>{elem.tipo}</TableCell>
                                     <TableCell style={color} align="right">{elem.descripcion}</TableCell>
                                     <TableCell style={color} align="right">{elem.cantidad}</TableCell>
-                                    <TableCell style={color} align="right">{elem.cantidad_asignada}</TableCell>                                   
+                                    <TableCell style={color} align="right">{elem.cantidad_requerida}</TableCell>                                   
                                 </TableRow>
 
                     })
