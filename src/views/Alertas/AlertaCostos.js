@@ -3,6 +3,7 @@ import Database from "variables/Database.js";
 import { Route, Switch, Link } from 'react-router-dom';
 import moment from 'moment';
 import ExportXLS from 'components/ExportXLS/ExportXLS';
+import EditCosto from "../Costos/components/EditCosto";
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -149,7 +150,7 @@ class AlertaCostos extends Component {
                   actions={[{
                     icon: 'edit',
                     tooltip: 'Editar Costo',
-                    onClick: (event, rowData) => this.props.history.push('/admin/costos/editarcosto/' + rowData.id)
+                    onClick: (event, rowData) => this.props.history.push(this.props.match.url + "/editarcosto/" + rowData.id)
                   }]}
                   options={{
                     exportButton: true,
@@ -165,7 +166,17 @@ class AlertaCostos extends Component {
               </CardBody>
             </Card>
 
-          </div>
+          </div>,
+      <Switch  key={"costos-switch"}>
+
+        <Route path={this.props.match.url + "/editarcosto/:idcosto"} exact render={() =>
+
+          <EditCosto
+          getCostos={()=>this.getInsumos()}
+          />
+        } />
+
+      </Switch>
     ]);
   }
 }

@@ -111,8 +111,8 @@ const styles = {
         }
     },
     formControl: {
-    minWidth: 300,
-  },
+        minWidth: 300,
+    },
     cardTitleWhite: {
         color: "#FFFFFF",
         marginTop: "0px",
@@ -136,7 +136,7 @@ const styles = {
     }
 };
 
-const SortableItem = sortableElement(({value, deleteInsumo, editInsumo, undoDelete, undoInsertado, undoModificado}) => {
+const SortableItem = sortableElement(({ value, deleteInsumo, editInsumo, undoDelete, undoInsertado, undoModificado }) => {
     let style = null;
     let iconos = null
     if (value.eliminado) {
@@ -158,7 +158,7 @@ const SortableItem = sortableElement(({value, deleteInsumo, editInsumo, undoDele
             </IconButton>
         </TableCell>
     }
-     else if (value.modificado) {
+    else if (value.modificado) {
         style = { backgroundColor: 'lightblue' };
         iconos = <TableCell>
             <IconButton size="small" onClick={() => undoModificado(value)}>
@@ -166,7 +166,7 @@ const SortableItem = sortableElement(({value, deleteInsumo, editInsumo, undoDele
             </IconButton>
         </TableCell>
 
-    }  else {
+    } else {
         iconos = <TableCell>
             <IconButton size="small" onClick={() => deleteInsumo(value)}>
                 <DeleteIcon />
@@ -203,7 +203,7 @@ const SortableItem = sortableElement(({value, deleteInsumo, editInsumo, undoDele
 
 const DragHandle = sortableHandle(() => <span><ControlCamera /></span>);
 
-const SortableContainer = sortableContainer(({children}) => {
+const SortableContainer = sortableContainer(({ children }) => {
     return <Table style={{ backgroundColor: '#F9F9F9' }} size="small">
         <TableHead>
             <TableRow>
@@ -237,12 +237,12 @@ class NewEditModulo extends Component {
 
         plantillas: [],
         openPlantillaDialog: false,
-        idPlantilla:'',
-        rowSelectPlantilla:null,
-        detalleSelectPlantilla:[],
-
-
-
+        idPlantilla: '',
+        rowSelectPlantilla: null,
+        detalleSelectPlantilla: [],
+        
+        openDuplicadoDialog: false,
+        detalleDuplicados: [],
 
         selectedDate: new Date(),
 
@@ -368,7 +368,7 @@ class NewEditModulo extends Component {
                 if (elem.modificado || elem.eliminado || elem.insertado)
                     return true;
 
-                    return false;
+                return false;
             })
 
             Database.post('/update-modulo', {
@@ -378,14 +378,15 @@ class NewEditModulo extends Component {
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: this.detalleModulos,
                 id: this.props.match.params.idModulo
-            },this)
+            }, this)
                 .then(res => {
 
-                        // this.setState({pedidoInsertado: true});
-                        // this.props.getIngresos();
-                        // toast.success("Nueva plantilla creada");
-                        this.props.getModulos();
-                        this.props.history.push("/admin/modulos");
+                    
+                    toast.success("El modulo ha sido guardado con exito");
+                    this.getInsumosParcial(this.props.match.params.idModulo);
+                    this.props.getModulos();
+                    
+                   // this.props.history.push("/admin/modulos");
 
                 }, err => {
                     toast.error(err.message);
@@ -405,52 +406,51 @@ class NewEditModulo extends Component {
                 cotizacion: this.state.orderForm.cotizacion.value,
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: this.state.detalleModulos
-            },this)
+            }, this)
                 .then(res => {
-                        // this.setState({pedidoInsertado: true});
-                        // this.props.getIngresos();
+                    // this.setState({pedidoInsertado: true});
+                    // this.props.getIngresos();
 
-                        toast.success("Nuevo módulo creado");
-                        this.props.getModulos();
-                        this.props.history.push("/admin/modulos");
+                    toast.success("Nuevo módulo creado");
+                    this.props.getModulos();
+                    this.props.history.push("/admin/modulos");
 
-                },err => {
-                  this.setState({ disableAllButtons: false });
-                  toast.error(err.message);
+                }, err => {
+                    this.setState({ disableAllButtons: false });
+                    toast.error(err.message);
                 })
         }
     }
 
-    handleSelectPlantilla = (event)=> {
-      event.preventDefault();
-      let idPlantilla = parseInt(event.target.value);
-      let indexSeleccionado = this.state.plantillas.findIndex(elem =>{
-        return (elem.id == idPlantilla);
-      })
-      if(indexSeleccionado > -1)
-      {
-        this.setState({
-          idPlantilla: event.target.value,
-          rowSelectPlantilla: this.state.plantillas[indexSeleccionado],
-          detalleSelectPlantilla: [],
+    handleSelectPlantilla = (event) => {
+        event.preventDefault();
+        let idPlantilla = parseInt(event.target.value);
+        let indexSeleccionado = this.state.plantillas.findIndex(elem => {
+            return (elem.id == idPlantilla);
         })
-        Database.get('/list-plantillas-insumos/' + idPlantilla,this )
-          .then(res => {
+        if (indexSeleccionado > -1) {
+            this.setState({
+                idPlantilla: event.target.value,
+                rowSelectPlantilla: this.state.plantillas[indexSeleccionado],
+                detalleSelectPlantilla: [],
+            })
+            Database.get('/list-plantillas-insumos/' + idPlantilla, this)
+                .then(res => {
 
-              this.setState({
-                detalleSelectPlantilla: res.insumos
-              })
-
-
-
-          },err => {
-            toast.error(err.message);
-          })
-
-
+                    this.setState({
+                        detalleSelectPlantilla: res.insumos
+                    })
 
 
-      }
+
+                }, err => {
+                    toast.error(err.message);
+                })
+
+
+
+
+        }
 
 
     }
@@ -461,7 +461,7 @@ class NewEditModulo extends Component {
     }
 
     closeDialog() {
-        this.setState({ open: false,openPlantillaDialog:false });
+        this.setState({ open: false, openPlantillaDialog: false,openDuplicadoDialog: false });
     }
 
     onClickInsumo = (rowInsumo, cantidad) => {
@@ -472,11 +472,11 @@ class NewEditModulo extends Component {
 
 
         if (this.state.rowEditInsumo) {
-          if(!resultado.insertado){
-            resultado.cantidadAnterior = resultado.cantidad_requerida
-            resultado.modificado = true;
-          }
-          resultado.cantidad_requerida = parseFloat(cantidad);
+            if (!resultado.insertado) {
+                resultado.cantidadAnterior = resultado.cantidad_requerida
+                resultado.modificado = true;
+            }
+            resultado.cantidad_requerida = parseFloat(cantidad);
             let indexEncontrado = this.detalleModulos.indexOf(rowInsumo);
             if (indexEncontrado >= 0) {
                 this.detalleModulos[indexEncontrado] = resultado
@@ -515,107 +515,129 @@ class NewEditModulo extends Component {
 
     getInsumosParcial = (idModulo) => {
         this.setState({ isLoading: true });
-        Database.get('/list-modulos-insumos/' + idModulo,this)
+        Database.get('/list-modulos-insumos/' + idModulo, this)
             .then(res => {
                 this.setState({ isLoading: false });
 
-                    let orderForm = { ...this.state.orderForm };
-                    let objModulo = null;
-                    if (res.modulo.length == 1) {
-                        objModulo = res.modulo[0];
+                let orderForm = { ...this.state.orderForm };
+                let objModulo = null;
+                if (res.modulo.length == 1) {
+                    objModulo = res.modulo[0];
 
-                        for (let key in orderForm) {
-                            if (objModulo[key]) {
-                                orderForm[key]['value'] = objModulo[key];
-                                orderForm[key]['touched'] = false;
-                                orderForm[key]['valid'] = true;
-                            }
+                    for (let key in orderForm) {
+                        if (objModulo[key]) {
+                            orderForm[key]['value'] = objModulo[key];
+                            orderForm[key]['touched'] = false;
+                            orderForm[key]['valid'] = true;
                         }
-
                     }
-                    res.insumos = res.insumos.map(elem => {
-                      return {
+
+                }
+                res.insumos = res.insumos.map(elem => {
+                    return {
                         ...elem,
                         identificador: elem.codigo + elem.numero
-                      }
-                    })
+                    }
+                })
 
-                    this.detalleModulos = [...res.insumos];
-                    this.copiaDetalleModulos = JSON.parse(JSON.stringify(res.insumos));
+                this.detalleModulos = [...res.insumos];
+                this.copiaDetalleModulos = JSON.parse(JSON.stringify(res.insumos));
 
-                    this.setState({
-                        orderForm: orderForm,
-                        detalleModulos: res.insumos
-                    }, () => {
-                        this.inputChangedHandler();
-                    })
+                this.setState({
+                    orderForm: orderForm,
+                    detalleModulos: res.insumos
+                }, () => {
+                    this.inputChangedHandler();
+                })
 
-            },err => {
-              toast.error(err.message);
+            }, err => {
+                toast.error(err.message);
             })
     }
 
 
     getPlantillas = () => {
 
-        Database.get('/list-plantillas',this )
+        Database.get('/list-plantillas', this)
             .then(res => {
 
-                    let plantillas = [ ...res.result ];
-                    this.setState({
-                        plantillas: plantillas,
+                let plantillas = [...res.result];
+                this.setState({
+                    plantillas: plantillas,
 
-                    })
+                })
 
-            },err => {
-              toast.error(err.message);
+            }, err => {
+                toast.error(err.message);
             })
     }
 
     openPlantilla = () => {
 
-      this.setState({
-        idPlantilla :'',
-        openPlantillaDialog:true,
-        rowSelectPlantilla:null,
-        detalleSelectPlantilla:[]
-      });
+        this.setState({
+            idPlantilla: '',
+            openPlantillaDialog: true,
+            rowSelectPlantilla: null,
+            detalleSelectPlantilla: []
+        });
     }
 
     handleSubmitPlantillas = event => {
-      event.preventDefault();
-      this.closeDialog();
-      let insumos =this.state.detalleSelectPlantilla.filter(elem => {
-        let findIndex = this.detalleModulos.findIndex(elemFind =>{
-          return (elem.id == elemFind.id)
+        event.preventDefault();
+        this.closeDialog();
+        let insumosInsertar = this.state.detalleSelectPlantilla.filter(elem => {
+            let findIndex = this.detalleModulos.findIndex(elemFind => {
+                return (elem.id == elemFind.id)
+            })
+            if (findIndex > -1)
+                return false
+            else
+                return true;
+
+
         })
-        if(findIndex > -1)
-          return false
-          else
-          return true;
 
 
-      })
+        let insumosModificar = this.state.detalleSelectPlantilla.filter(elem => {
+            let findIndex = this.detalleModulos.findIndex(elemFind => {
+                return (elem.id == elemFind.id)
+            })
+            if (findIndex > -1)
+                return true
+            else
+                return false;
 
 
-               insumos = insumos.map(elem => {
-                let cantidad = elem.cantidad;
-                delete elem.cantidad;
-                return {
-                  ...elem,
-                  identificador: elem.codigo + elem.numero,
-                  insertado:true,
-                  cantidad_requerida:cantidad
-                }
-              })
+        })
 
 
-              if(insumos.length < this.state.detalleSelectPlantilla.length)
-                toast.info("Insumos duplicados no se agregaron");
+        insumosInsertar = insumosInsertar.map(elem => {
+            let cantidad = elem.cantidad;
+            delete elem.cantidad;
+            return {
+                ...elem,
+                identificador: elem.codigo + elem.numero,
+                insertado: true,
+                cantidad_requerida: cantidad
+            }
+        })
 
-              this.detalleModulos = insumos.concat(this.detalleModulos);
-              this.buscarInsumo(this.buscarRef.current.value);
-              this.inputChangedHandler(null,null);
+
+     if(insumosModificar.length > 0)
+     {  
+        setTimeout(() => {
+            this.setState({
+                openDuplicadoDialog:true,
+                detalleDuplicados:insumosModificar
+            })
+
+        },500)
+    }  
+        
+
+        this.detalleModulos = insumosInsertar.concat(this.detalleModulos);
+        this.buscarInsumo(this.buscarRef.current.value);
+        this.inputChangedHandler(null, null);
 
 
 
@@ -623,17 +645,63 @@ class NewEditModulo extends Component {
 
     }
 
+    handleSubmitDuplicados = event => {
+        event.preventDefault();
+        this.state.detalleDuplicados.forEach(elem => {
+            let indexPos = this.detalleModulos.findIndex(elemPos => {
+                return elemPos.id == elem.id
+            })
+
+            if (indexPos > -1) {
+                if (this.detalleModulos[indexPos].insertado) {
+                    this.detalleModulos[indexPos].cantidad_requerida = this.detalleModulos[indexPos].cantidad_requerida + elem.cantidad
+                } else {
+                    delete this.detalleModulos[indexPos].insertado;
+                    delete this.detalleModulos[indexPos].eliminado;
+                    this.detalleModulos[indexPos].modificado = true;
+                    if (!this.detalleModulos[indexPos].cantidadAnterior)
+                        this.detalleModulos[indexPos].cantidadAnterior = this.detalleModulos[indexPos].cantidad_requerida;
+
+                        this.detalleModulos[indexPos].cantidad_requerida = this.detalleModulos[indexPos].cantidad_requerida + elem.cantidad;
+                }
+
+            }
+
+        })
+
+        this.closeDialog();
+
+        this.buscarInsumo(this.buscarRef.current.value);
+        this.inputChangedHandler(null, null);
+
+
+    }
+
+
     RowPlantilla(props) {
-      const { index, style } = props;
+        const { index, style } = props;
 
-      return (
-        <ListItem button style={style} key={index}>
-          <ListItemText primary={this.state.detalleSelectPlantilla[index].descripcion} secondary={this.state.detalleSelectPlantilla[index].codigo + this.state.detalleSelectPlantilla[index].numero} />
+        return (
+            <ListItem button style={style} key={index}>
+                <ListItemText primary={this.state.detalleSelectPlantilla[index].descripcion} secondary={this.state.detalleSelectPlantilla[index].codigo + this.state.detalleSelectPlantilla[index].numero} />
 
-          <span>{ this.state.detalleSelectPlantilla[index].cantidad }</span>
+                <span>{this.state.detalleSelectPlantilla[index].cantidad}</span>
 
-        </ListItem>
-      );
+            </ListItem>
+        );
+    }
+
+    RowDuplicados(props) {
+        const { index, style } = props;
+
+        return (
+            <ListItem button style={style} key={index}>
+                <ListItemText primary={this.state.detalleDuplicados[index].descripcion} secondary={this.state.detalleDuplicados[index].codigo + this.state.detalleDuplicados[index].numero} />
+
+                <span>{this.state.detalleDuplicados[index].cantidad}</span>
+
+            </ListItem>
+        );
     }
 
     deleteInsumo = (rowData) => {
@@ -646,8 +714,8 @@ class NewEditModulo extends Component {
         // this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
 
 
-            this.inputChangedHandler()
-            this.buscarInsumo(this.buscarRef.current.value);
+        this.inputChangedHandler()
+        this.buscarInsumo(this.buscarRef.current.value);
 
 
     }
@@ -667,8 +735,8 @@ class NewEditModulo extends Component {
         let indexEliminado = this.detalleModulos.indexOf(rowData);
         this.detalleModulos[indexEliminado] = resultado;
 
-            this.inputChangedHandler()
-            this.buscarInsumo(this.buscarRef.current.value);
+        this.inputChangedHandler()
+        this.buscarInsumo(this.buscarRef.current.value);
 
 
     }
@@ -681,8 +749,8 @@ class NewEditModulo extends Component {
         let indexEliminado = this.detalleModulos.indexOf(rowData);
         this.detalleModulos[indexEliminado] = resultado;
 
-            this.inputChangedHandler()
-            this.buscarInsumo(this.buscarRef.current.value);
+        this.inputChangedHandler()
+        this.buscarInsumo(this.buscarRef.current.value);
 
 
     }
@@ -691,16 +759,16 @@ class NewEditModulo extends Component {
         let indexEliminado = this.detalleModulos.indexOf(rowData);
         this.detalleModulos.splice(indexEliminado, 1);
 
-            this.inputChangedHandler()
-            this.buscarInsumo(this.buscarRef.current.value);
+        this.inputChangedHandler()
+        this.buscarInsumo(this.buscarRef.current.value);
 
 
     }
 
-    onSortEnd = ({oldIndex, newIndex}) => {
+    onSortEnd = ({ oldIndex, newIndex }) => {
         if (this.detalleModulos.length == this.state.detalleModulos.length) {
             this.detalleModulos = arrayMove(this.detalleModulos, oldIndex, newIndex);
-            this.setState(({detalleModulos}) => ({
+            this.setState(({ detalleModulos }) => ({
                 detalleModulos: arrayMove(detalleModulos, oldIndex, newIndex),
             }));
         }
@@ -735,7 +803,7 @@ class NewEditModulo extends Component {
             this.getInsumosParcial(this.props.match.params.idModulo)
 
 
-            this.getPlantillas();
+        this.getPlantillas();
 
     }
 
@@ -753,7 +821,7 @@ class NewEditModulo extends Component {
                     this.handleSubmitEditModulo(event);
                 else
                     this.handleSubmitNewModulo(event);
-            } }>
+            }}>
                 <GridContainer>
 
 
@@ -761,7 +829,7 @@ class NewEditModulo extends Component {
                         <Card>
                             {this.props.match.params.idModulo ?
                                 <CardHeader color="primary">
-                                    <h4 className={this.props.classes.cardTitleWhite} >Modificar Módulo '{ this.state.orderForm.chasis.value }'</h4>
+                                    <h4 className={this.props.classes.cardTitleWhite} >Modificar Módulo '{this.state.orderForm.chasis.value}'</h4>
                                     <p className={this.props.classes.cardCategoryWhite} >
                                         Modificación de módulo
                                   </p>
@@ -785,7 +853,7 @@ class NewEditModulo extends Component {
                                         shouldValidate={formElement.config.validation}
                                         touched={formElement.config.touched}
                                         changed={(event) => this.inputChangedHandler(event, formElement.id)}
-                                        />
+                                    />
                                 ))}
 
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
@@ -796,7 +864,7 @@ class NewEditModulo extends Component {
                                 </CSVLink>
                                 */
                                 }
-                                <ExportXLS csvData={this.state.detalleModulos} fileName={"Modulo Detalle- " + this.state.orderForm.chasis.value + " " +  moment(Date.now()).format("DD_MM_YYYY")} header={headers} />
+                                <ExportXLS csvData={this.state.detalleModulos} fileName={"Modulo Detalle- " + this.state.orderForm.chasis.value + " " + moment(Date.now()).format("DD_MM_YYYY")} header={headers} />
                                 <div style={{ padding: 20 }} >
                                     <Grid container alignItems="flex-end" justify="flex-end" spacing={2}>
                                         <Grid item>
@@ -815,92 +883,122 @@ class NewEditModulo extends Component {
 
 
                                 </SortableContainer>
-                                {this.state.isLoading  &&
+                                {this.state.isLoading &&
                                     <div style={{ textAlign: 'center' }}>
                                         <CircularProgress />
                                     </div>
 
                                 }
-                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/modulos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.goBack()} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
                             </CardBody>
                         </Card>
                     </GridItem>
 
                 </GridContainer>
-                  </ form >,
-                <Dialog
-                    open={this.state.open}
-                    onClose={this.closeDialog.bind(this)}
-                    fullWidth={true}
-                    maxWidth={"sm"}
-                    >
-                    <DialogTitle>Seleccionar Insumo
+            </ form >,
+            <Dialog
+                open={this.state.open}
+                onClose={this.closeDialog.bind(this)}
+                fullWidth={true}
+                maxWidth={"sm"}
+            >
+                <DialogTitle>Seleccionar Insumo
                             <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
-                            <CloseIcon />
-                        </IconButton>
-                    </DialogTitle>
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
 
 
-                    <DialogContent>
-                        {this.state.open &&
-                            <StepAgregarInsumo
-                                rowEditInsumo={this.state.rowEditInsumo}
-                                columnsInsumos={columnsInsumos}
-                                onClickInsumo={(id, cantidad) => this.onClickInsumo(id, cantidad)}
-                                />
-                        }
-                    </DialogContent>
-                </Dialog>,
-                <Dialog
-                    open={this.state.openPlantillaDialog}
-                    onClose={this.closeDialog.bind(this)}
-                    fullWidth={true}
-                    maxWidth={"md"}
-                    >
-                    <DialogTitle>Seleccionar Plantilla
+                <DialogContent>
+                    {this.state.open &&
+                        <StepAgregarInsumo
+                            rowEditInsumo={this.state.rowEditInsumo}
+                            columnsInsumos={columnsInsumos}
+                            onClickInsumo={(id, cantidad) => this.onClickInsumo(id, cantidad)}
+                        />
+                    }
+                </DialogContent>
+            </Dialog>,
+            <Dialog
+                open={this.state.openPlantillaDialog}
+                onClose={this.closeDialog.bind(this)}
+                fullWidth={true}
+                maxWidth={"md"}
+            >
+                <DialogTitle>Seleccionar Plantilla
                             <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
-                            <CloseIcon />
-                        </IconButton>
-                    </DialogTitle>
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
 
 
-                    <DialogContent>
-                    <form onSubmit={ this.handleSubmitPlantillas }>
-                    <FormControl className={this.props.classes.formControl} >
-                      <InputLabel id="plantillas-label">Plantillas</InputLabel>
-                        <Select
-                          labelId="plantillas-label"
-                          id="plantillas-select"
-                          value={this.state.idPlantilla}
-                          onChange={this.handleSelectPlantilla}
-                          >
-                          { this.state.plantillas.map(elem =>{
+                <DialogContent>
+                    <form onSubmit={this.handleSubmitPlantillas}>
+                        <FormControl className={this.props.classes.formControl} >
+                            <InputLabel id="plantillas-label">Plantillas</InputLabel>
+                            <Select
+                                labelId="plantillas-label"
+                                id="plantillas-select"
+                                value={this.state.idPlantilla}
+                                onChange={this.handleSelectPlantilla}
+                            >
+                                {this.state.plantillas.map(elem => {
 
-                            return (
-                              <MenuItem key={elem.id} value={elem.id}>{elem.codigo}</MenuItem>
-                            )
+                                    return (
+                                        <MenuItem key={elem.id} value={elem.id}>{elem.codigo}</MenuItem>
+                                    )
 
-                          })}
+                                })}
 
-                          </Select>
-                      </FormControl>
+                            </Select>
+                        </FormControl>
 
-                      { this.state.rowSelectPlantilla && <div><p>Descripción: {this.state.rowSelectPlantilla.descripcion} </p>
+                        {this.state.rowSelectPlantilla && <div><p>Descripción: {this.state.rowSelectPlantilla.descripcion} </p>
 
-                      <FixedSizeList height={200} width={900} itemSize={65} itemCount={this.state.detalleSelectPlantilla.length}>
-                          {this.RowPlantilla.bind(this)}
-                      </FixedSizeList> </div>}
+                            <FixedSizeList height={200} width={900} itemSize={65} itemCount={this.state.detalleSelectPlantilla.length}>
+                                {this.RowPlantilla.bind(this)}
+                            </FixedSizeList> </div>}
 
-                      <div style={{ marginTop:'25px',textAlign:'right'}}>
-                      <Button onClick={this.closeDialog.bind(this)} style={{marginRight:'10px'}}>Cancelar</Button>
-                      <Button type="submit" disabled={this.state.detalleSelectPlantilla.length <= 0} variant="contained" color="primary"  >
-                          Seleccionar
+                        <div style={{ marginTop: '25px', textAlign: 'right' }}>
+                            <Button onClick={this.closeDialog.bind(this)} style={{ marginRight: '10px' }}>Cancelar</Button>
+                            <Button type="submit" disabled={this.state.detalleSelectPlantilla.length <= 0} variant="contained" color="primary"  >
+                                Seleccionar
                         </Button>
                         </ div>
-                        </form>
-                    </DialogContent>
-                </Dialog>
+                    </form>
+                </DialogContent>
+            </Dialog>,
+
+<Dialog
+open={this.state.openDuplicadoDialog}
+onClose={this.closeDialog.bind(this)}
+fullWidth={true}
+maxWidth={"md"}
+>
+<DialogTitle>Insumos Duplicados
+            <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
+        <CloseIcon />
+    </IconButton>
+</DialogTitle>
+
+
+<DialogContent>
+    <form onSubmit={this.handleSubmitDuplicados}>
+       
+            <FixedSizeList height={200} width={900} itemSize={65} itemCount={this.state.detalleDuplicados.length}>
+                {this.RowDuplicados.bind(this)}
+            </FixedSizeList> 
+
+        <div style={{ marginTop: '25px', textAlign: 'right' }}>
+            <Button onClick={this.closeDialog.bind(this)} style={{ marginRight: '10px' }}>Cancelar</Button>
+            <Button type="submit" disabled={this.state.detalleDuplicados.length <= 0} variant="contained" color="primary"  >
+                Sumar Cantidades
+        </Button>
+        </ div>
+    </form>
+</DialogContent>
+</Dialog>
 
         ]);
     }

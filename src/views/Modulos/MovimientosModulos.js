@@ -89,11 +89,12 @@ const ColumnsListado = [
 
 const ColumnsListadoDetalle = [
   { title: "Identificador", field: "identificador", customSort: (a, b) => a.id - b.id },
+  { title: "Requerido", field: "cantidad_insumo" },
+  { title: "Asignada", field: "cantidad_asignada" },
+  { title: "cantidad", field: "cantidad"},
   { title: "Descripcion", field: "descripcion" },
-  { title: "Requerido", field: "cantidad_requerida", editable: 'never' },
-  { title: "Asignada", field: "cantidad_asignada", editable: 'never' },
-  { title: "Stock", field: "cantidad_stock", editable: 'never' },
-  { title: "Disponible Entrega", field: "disponible", editable: 'never' },
+  { title: "Movimiento", field: "descripcion_tipo" },
+  { title: "Fecha", field: "fecha" , customSort: (a, b) => moment(a.fecha,"DD/MM/YYYY HH:mm").format("YYYYMMDDHHmm") - moment(b.fecha,"DD/MM/YYYY HH:mm").format("YYYYMMDDHHmm"), cellStyle:{ minWidth:'120px' } }
 ];
 
 class MovimientosModulos extends Component {
@@ -156,21 +157,17 @@ class MovimientosModulos extends Component {
     Database.get('/list-modulos-movimientos-insumos/' + rowData.id,this)
       .then(res => {
         console.log(res);
-          let disponible;
-          res.insumos = res.result.map(elem => {
-            if (elem.cantidad_requerida - elem.cantidad_asignada <= elem.cantidad_stock)
-              disponible = elem.cantidad_requerida - elem.cantidad_asignada
-            else
-              disponible = elem.cantidad_stock;
+         let resultado = res.result.map(elem => {
+           
             return {
               ...elem,
+              fecha: moment(elem.fecha).format("DD/MM/YYYY HH:mm"),
               identificador: elem.codigo + elem.numero,
-              disponible: disponible
             }
           })
           this.setState({
             isLoadingDetalle: false,
-            modulosDetalle: res.insumos
+            modulosDetalle: resultado
           })
 
 

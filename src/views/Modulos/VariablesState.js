@@ -30,7 +30,7 @@ export const ColumnsListadoAnalisisInsumos = [
 
 export const ColumnsListadoDiseno = [
   { title: "Identificador", field: "identificador",customSort: (a, b) => a.id - b.id},
-  { title: "Num Presupuesto", field: "chasis", editable: 'never' },
+  { title: "Num Presupuesto", field: "cotizacion", editable: 'never' },
   { title: "Descripcion", field: "descripcion" }
 ];
 

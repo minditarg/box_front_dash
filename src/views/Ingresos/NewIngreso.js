@@ -66,8 +66,8 @@ import { localization } from "variables/general";
 const columnsInsumos = [
     { title: "Identificador", field: "identificador", editable: 'never' },
     { title: "Descripcion", field: "descripcion", editable: 'never' },
-    { title: "Cantidad", field: "cantidad", type: 'numeric' },
-    { title: "Unidades", field: "unidad", editable: 'never'},
+    { title: "Cantidad", field: "cantidad", editable: 'never', type: 'numeric' },
+    { title: "Unidades", field: "unidad", editable: 'never' },
     //{ title: 'Cantidad', field: 'cantidad', render: rowData => <input type="text"/>}
 ];
 
@@ -114,12 +114,13 @@ class NewIngreso extends Component {
         detalleingresos: [],
         actions: [],
         actionsInsumos: [],
+        rowEditInsumo: null,
 
         pedidos: [],
         openPedidoDialog: false,
-        idPedido:'',
-        rowSelectPedido:null,
-        detalleSelectPedido:[],
+        idPedido: '',
+        rowSelectPedido: null,
+        detalleSelectPedido: [],
 
         selectedDate: new Date(),
 
@@ -171,22 +172,22 @@ class NewIngreso extends Component {
 
     // }
 
-    handleDateChange = (date,value) => {
+    handleDateChange = (date, value) => {
 
-      let dateState = null;
-      let dateFormIsValid = false;
-      if(date == "Invalid date") {
+        let dateState = null;
+        let dateFormIsValid = false;
+        if (date == "Invalid date") {
 
-      } else {
-        dateState = date;
-        dateFormIsValid = true
-      }
-      this.setState({
-          selectedDate: date,
-          dateFormIsValid:dateFormIsValid
-      },()=>{
-        this.inputChangedHandler(null,null)
-      })
+        } else {
+            dateState = date;
+            dateFormIsValid = true
+        }
+        this.setState({
+            selectedDate: date,
+            dateFormIsValid: dateFormIsValid
+        }, () => {
+            this.inputChangedHandler(null, null)
+        })
 
 
     };
@@ -219,26 +220,26 @@ class NewIngreso extends Component {
         const updatedOrderForm = {
             ...this.state.orderForm
         };
-        if(inputIdentifier) {
-        let checkValid;
+        if (inputIdentifier) {
+            let checkValid;
 
-        const updatedFormElement = {
-            ...updatedOrderForm[inputIdentifier]
-        };
-        updatedFormElement.value = event.target.value;
-        checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
-        updatedFormElement.valid = checkValid.isValid;
-        updatedFormElement.textValid = checkValid.textValid;
-        updatedFormElement.touched = true;
-        updatedOrderForm[inputIdentifier] = updatedFormElement;
+            const updatedFormElement = {
+                ...updatedOrderForm[inputIdentifier]
+            };
+            updatedFormElement.value = event.target.value;
+            checkValid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+            updatedFormElement.valid = checkValid.isValid;
+            updatedFormElement.textValid = checkValid.textValid;
+            updatedFormElement.touched = true;
+            updatedOrderForm[inputIdentifier] = updatedFormElement;
         }
         let formIsValidAlt = true;
         for (let inputIdentifier in updatedOrderForm) {
             formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
         }
 
-      formIsValidAlt = this.state.dateFormIsValid && formIsValidAlt;
-      formIsValidAlt = (this.state.detalleingresos.length > 0) && formIsValidAlt;
+        formIsValidAlt = this.state.dateFormIsValid && formIsValidAlt;
+        formIsValidAlt = (this.state.detalleingresos.length > 0) && formIsValidAlt;
 
         this.setState({
             orderForm: updatedOrderForm,
@@ -254,88 +255,87 @@ class NewIngreso extends Component {
 
         // alert("1: " + event.target[0].value + " 2: " + event.target[1].value  + " 3: " + event.target[2].value  + " 4: " + event.target[3].value);
         if (this.state.formIsValid) {
-          this.setState({
-            disableAllButtons:true
-          })
+            this.setState({
+                disableAllButtons: true
+            })
             Database.post('/insert-ingresos', {
                 fechaReferencia: moment(event.target[0].value, "DD/MM/YYYY").format("YYYY-MM-DD"), //var date = Date.parse(this.props.date.toString());
                 referencia: event.target[2].value,
                 proveedor: event.target[3].value,
                 detalle: this.state.detalleingresos
-            },this)
+            }, this)
                 .then(res => {
 
 
-                        // this.setState({pedidoInsertado: true});
-                        this.props.getIngresos();
-                        toast.success("Nuevo ingreso creado");
+                    // this.setState({pedidoInsertado: true});
+                    this.props.getIngresos();
+                    toast.success("Nuevo ingreso creado");
 
-                        setTimeout(()=>{
-                          this.props.history.push("/admin/ingresos");
-                        },1000)
+                    setTimeout(() => {
+                        this.props.history.push("/admin/ingresos");
+                    }, 100);
 
 
-                },err => {
-                  this.setState({
-                    disableAllButtons:false
-                  })
-                  toast.error(err.message);
+                }, err => {
+                    this.setState({
+                        disableAllButtons: false
+                    })
+                    toast.error(err.message);
                 })
         }
     }
 
-    handleSelectPedido = (event)=> {
+    handleSelectPedido = (event) => {
         event.preventDefault();
         let idPedido = parseInt(event.target.value);
-        let indexSeleccionado = this.state.pedidos.findIndex(elem =>{
-          return (elem.id == idPedido);
+        let indexSeleccionado = this.state.pedidos.findIndex(elem => {
+            return (elem.id == idPedido);
         })
-        if(indexSeleccionado > -1)
-        {
-          this.setState({
-            idPedido: event.target.value,
-            rowSelectPedido: this.state.pedidos[indexSeleccionado],
-            detalleSelectPedido: [],
-          })
+        if (indexSeleccionado > -1) {
+            this.setState({
+                idPedido: event.target.value,
+                rowSelectPedido: this.state.pedidos[indexSeleccionado],
+                detalleSelectPedido: [],
+            })
 
-          Database.get('/list-pedidos-insumos/' + idPedido,this )
-            .then(res => {
-  
-                this.setState({
-                  detalleSelectPedido: res.insumos
+            Database.get('/list-pedidos-insumos/' + idPedido, this)
+                .then(res => {
+
+                    this.setState({
+                        detalleSelectPedido: res.insumos
+                    })
+
+
+
+                }, err => {
+                    toast.error(err.message);
                 })
-  
-  
-  
-            },err => {
-              toast.error(err.message);
-            })  
-  
+
         }
-      }  
+    }
 
     openDialog() {
         this.setState({ open: true });
     }
 
     closeDialog() {
-        this.setState({ open: false, openPedidoDialog:false });
+        this.setState({ open: false, openPedidoDialog: false });
     }
 
 
     getPedidos = () => {
 
-        Database.get('/list-pedidos',this )
+        Database.get('/list-pedidos', this)
             .then(res => {
 
-                    let pedidos = [ ...res.result ];
-                    this.setState({
-                        pedidos: pedidos,
+                let pedidos = [...res.result];
+                this.setState({
+                    pedidos: pedidos,
 
-                    })
+                })
 
-            },err => {
-              toast.error(err.message);
+            }, err => {
+                toast.error(err.message);
             })
     }
 
@@ -343,83 +343,96 @@ class NewIngreso extends Component {
     openPedido = () => {
 
         this.setState({
-          idPedido :'',
-          openPedidoDialog:true,
-          rowSelectPedido:null,
-          detalleSelectPedido:[]
+            idPedido: '',
+            openPedidoDialog: true,
+            rowSelectPedido: null,
+            detalleSelectPedido: []
         });
-      } 
+    }
 
-    
-      handleSubmitPedidos = event => {
 
-       // alert("handleSubmitPlantillas");
+    handleSubmitPedidos = event => {
+
+        // alert("handleSubmitPlantillas");
         event.preventDefault();
         this.closeDialog();
 
         console.log("detalleingresos");
         console.log(this.state.detalleingresos);
-        
-        let insumos =this.state.detalleSelectPedido.filter(elem => {
-          let findIndex = this.state.detalleingresos.findIndex(elemFind =>{
-            return (elem.id == elemFind.id)
-          })
-          if(findIndex > -1)
-            return false
-            else
-            return true;
-        })
-     //   alert("sigue");
-                 insumos = insumos.map(elem => {
-                  let cantidad = elem.cantidad;
-                  delete elem.cantidad;
-                  return {
-                    ...elem,
-                    identificador: elem.codigo + elem.numero,
-                    insertado:true,
-                    cantidad:cantidad
-                  }
-                })
-                console.log(insumos);
-  
-                if(insumos.length < this.state.detalleSelectPedido.length)
-                  toast.info("Insumos duplicados no se agregaron");
-  
-                this.state.detalleingresos = insumos.concat(this.state.detalleingresos);
-                //this.buscarInsumo(this.buscarRef.current.value);
-                this.inputChangedHandler(null,null);
-      }
 
-      RowPedido(props) {
+        let insumos = this.state.detalleSelectPedido.filter(elem => {
+            let findIndex = this.state.detalleingresos.findIndex(elemFind => {
+                return (elem.id == elemFind.id)
+            })
+            if (findIndex > -1)
+                return false
+            else
+                return true;
+        })
+        //   alert("sigue");
+        insumos = insumos.map(elem => {
+            let cantidad = elem.cantidad;
+            delete elem.cantidad;
+            return {
+                ...elem,
+                identificador: elem.codigo + elem.numero,
+                insertado: true,
+                cantidad: cantidad
+            }
+        })
+        console.log(insumos);
+
+        if (insumos.length < this.state.detalleSelectPedido.length)
+            toast.info("Insumos duplicados no se agregaron");
+
+        this.state.detalleingresos = insumos.concat(this.state.detalleingresos);
+        //this.buscarInsumo(this.buscarRef.current.value);
+        this.inputChangedHandler(null, null);
+    }
+
+    RowPedido(props) {
         const { index, style } = props;
-  
+
         return (
-          <ListItem button style={style} key={index}>
-            <ListItemText primary={this.state.detalleSelectPedido[index].descripcion} secondary={this.state.detalleSelectPedido[index].referencia} />
-  
-            <span>{ this.state.detalleSelectPedido[index].cantidad }</span>
-  
-          </ListItem>
+            <ListItem button style={style} key={index}>
+                <ListItemText primary={this.state.detalleSelectPedido[index].descripcion} secondary={this.state.detalleSelectPedido[index].referencia} />
+
+                <span>{this.state.detalleSelectPedido[index].cantidad}</span>
+
+            </ListItem>
         );
-      }
+    }
 
 
     onClickInsumo = (rowInsumo, cantidad) => {
-        //alert("hola");
-        this.closeDialog();
         
-
-        let resultado = {...rowInsumo};
-        resultado.cantidad = parseFloat(cantidad);
         let detalleingresoant = [...this.state.detalleingresos];
 
-        detalleingresoant.push(resultado);
+
+        if(this.state.rowEditInsumo) {
+            let indexPos = detalleingresoant.indexOf(rowInsumo);
+            if(indexPos > -1)
+            {
+                detalleingresoant[indexPos].cantidad = cantidad
+            }
+
+        } else {
+
+            let resultado = { ...rowInsumo };
+            resultado.cantidad = parseFloat(cantidad);
+            detalleingresoant.push(resultado);
+            
+        }
+
         this.setState({
+            open:false,
+            rowEditInsumo:null,
             detalleingresos: [...detalleingresoant]
-        },()=>{
-           // this.buscarInsumo(this.buscarRef.current.value);
-            this.inputChangedHandler(null,null);
+        }, () => {
+            // this.buscarInsumo(this.buscarRef.current.value);
+            this.inputChangedHandler(null, null);
         })
+       
 
 
     }
@@ -433,29 +446,26 @@ class NewIngreso extends Component {
         detalleingresosant.splice(detalleingresosant.indexOf(rowData), 1);
         this.setState({
             detalleingresos: detalleingresosant
-        },()=>{
-          this.inputChangedHandler(null,null);
+        }, () => {
+            this.inputChangedHandler(null, null);
         });
         //this.state.detallepedidos.splice(this.state.detallepedidos.indexOf(rowData), 1);
     }
 
 
+    editCantidad = (rowData) => {
+
+        
+            this.setState({
+                rowEditInsumo: rowData,
+                open: true
+            })
+        
+        
+    }
+
+
     componentDidMount() {
-
-        this.state.actions = [
-            {
-                icon: 'delete',
-                tooltip: 'Eliminar Insumo',
-                onClick: (event, rowData) => this.deleteInsumo(rowData)
-            }
-        ];
-        this.state.actionsInsumos = [
-            {
-                icon: 'save',
-                tooltip: 'Seleccionar Insumo',
-                onClick: (event, rowData) => this.insumoSelectHandler(rowData.id)
-
-            }];
 
         this.getPedidos();
     }
@@ -472,7 +482,7 @@ class NewIngreso extends Component {
             <form onSubmit={(event) => {
                 this.handleSubmitNewPedido(event);
 
-            } }>
+            }}>
                 <GridContainer>
 
 
@@ -499,7 +509,7 @@ class NewIngreso extends Component {
                                         KeyboardButtonProps={{
                                             'aria-label': 'change date',
                                         }}
-                                        />
+                                    />
                                 </MuiPickersUtilsProvider>
 
                                 {formElementsArray.map(formElement => (
@@ -513,7 +523,7 @@ class NewIngreso extends Component {
                                         shouldValidate={formElement.config.validation}
                                         touched={formElement.config.touched}
                                         changed={(event) => this.inputChangedHandler(event, formElement.id)}
-                                        />
+                                    />
                                 ))}
 
                                 {/* <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumos</Button> */}
@@ -523,35 +533,47 @@ class NewIngreso extends Component {
                                     columns={columnsInsumos}
                                     data={this.state.detalleingresos}
                                     title="Listado de Insumos"
-                                    actions={this.state.actions}
+                                    actions={[
+                                        {
+                                            icon: 'delete',
+                                            tooltip: 'Eliminar Insumo',
+                                            onClick: (event, rowData) => this.deleteInsumo(rowData)
+                                        },
+                                        {
+                                            icon: 'edit',
+                                            tooltip: 'Editar Cantidad',
+                                            onClick: (event, rowData) => this.editCantidad(rowData)
+                                        }
+                                    ]}
                                     localization={localization}
-                                    editable={{
+                                    /* editable={{
 
                                         onRowUpdate: (newData, oldData) =>
                                             new Promise((resolve, reject) => {
                                                 setTimeout(() => {
                                                     {
-                                                        
-                                                        
-                                                        const data = [ ...this.state.detalleingresos ];
+
+
+                                                        const data = [...this.state.detalleingresos];
                                                         const index = data.indexOf(oldData);
-                                                        data[index] = newData;
-                                                        this.setState({ detalleingresos:data }, () => resolve());
+                                                        data[index].cantidad = parseInt(newData.cantidad);
+                                                        this.setState({ detalleingresos: data }, () => resolve());
                                                     }
 
-                                                }, 200)
+                                                }, 100)
                                             }),
 
                                     }}
+                                    */
                                     components={{
                                         Container: props => (
                                             <Paper elevation={0} {...props} />
                                         )
                                     }}
-                                    />
+                                />
 
 
-                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/ingresos')} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+                                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.goBack()} ><ArrowBack />Volver</Button> <Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
                             </CardBody>
                         </Card>
@@ -563,7 +585,7 @@ class NewIngreso extends Component {
                     onClose={this.closeDialog.bind(this)}
                     fullWidth={true}
                     maxWidth={"sm"}
-                    >
+                >
                     <DialogTitle>Seleccionar Insumo
                             <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
                             <CloseIcon />
@@ -574,18 +596,19 @@ class NewIngreso extends Component {
                     <DialogContent>
                         {this.state.open &&
                             <StepAgregarInsumo
+                                rowEditInsumo={this.state.rowEditInsumo}
                                 columnsInsumos={columnsInsumos}
                                 onClickInsumo={(id, cantidad) => this.onClickInsumo(id, cantidad)}
-                                />
+                            />
                         }
                     </DialogContent>
-                </Dialog>,
+                </Dialog>
                 <Dialog
                     open={this.state.openPedidoDialog}
                     onClose={this.closeDialog.bind(this)}
                     fullWidth={true}
                     maxWidth={"md"}
-                    >
+                >
                     <DialogTitle>Seleccionar Pedido
                             <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
                             <CloseIcon />
@@ -594,41 +617,42 @@ class NewIngreso extends Component {
 
 
                     <DialogContent>
-                    <form onSubmit={ this.handleSubmitPedidos }>
-                    <FormControl className={this.props.classes.formControl} >
-                      <InputLabel id="plantillas-label">Pedidos</InputLabel>
-                        <Select
-                          labelId="plantillas-label"
-                          id="plantillas-select"
-                          value={this.state.idPedido}
-                          onChange={this.handleSelectPedido}
-                          >
-                          { this.state.pedidos.map(elem =>{
+                        <form onSubmit={this.handleSubmitPedidos}>
+                            <FormControl className={this.props.classes.formControl} >
+                                <InputLabel id="plantillas-label">Pedidos</InputLabel>
+                                <Select
+                                    labelId="plantillas-label"
+                                    id="plantillas-select"
+                                    value={this.state.idPedido}
+                                    onChange={this.handleSelectPedido}
+                                >
+                                    {this.state.pedidos.map(elem => {
 
-                            return (
-                              <MenuItem key={elem.id} value={elem.id}>{elem.referencia}</MenuItem>
-                            )
+                                        return (
+                                            <MenuItem key={elem.id} value={elem.id}>{elem.referencia}</MenuItem>
+                                        )
 
-                          })}
+                                    })}
 
-                          </Select>
-                      </FormControl>
+                                </Select>
+                            </FormControl>
 
-                      { this.state.rowSelectPedido && <div><p>Descripción: {this.state.rowSelectPedido.descripcion} </p>
+                            {this.state.rowSelectPedido && <div><p>Descripción: {this.state.rowSelectPedido.descripcion} </p>
 
-                      <FixedSizeList height={200} width={900} itemSize={65} itemCount={this.state.detalleSelectPedido.length}>
-                          {this.RowPedido.bind(this)}
-                      </FixedSizeList> </div>}
+                                <FixedSizeList height={200} width={900} itemSize={65} itemCount={this.state.detalleSelectPedido.length}>
+                                    {this.RowPedido.bind(this)}
+                                </FixedSizeList> </div>}
 
-                      <div style={{ marginTop:'25px',textAlign:'right'}}>
-                      <Button onClick={this.closeDialog.bind(this)} style={{marginRight:'10px'}}>Cancelar</Button>
-                      <Button type="submit" disabled={this.state.detalleSelectPedido.length <= 0} variant="contained" color="primary"  >
-                          Seleccionar
+                            <div style={{ marginTop: '25px', textAlign: 'right' }}>
+                                <Button onClick={this.closeDialog.bind(this)} style={{ marginRight: '10px' }}>Cancelar</Button>
+                                <Button type="submit" disabled={this.state.detalleSelectPedido.length <= 0} variant="contained" color="primary"  >
+                                    Seleccionar
                         </Button>
-                        </ div>
+                            </ div>
                         </form>
                     </DialogContent>
                 </Dialog>
+
             </ form>
         );
     }

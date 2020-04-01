@@ -83,7 +83,7 @@ class ModulosEstados extends Component {
   }
 
   disenoaProducirModulo = (rowData) => {
-    this.handleDisenoaProducir(rowData);
+    this.handleClickOpenDisenoProducir(rowData);
   }
 
   pausarProduccion = (rowData) => {
@@ -273,6 +273,13 @@ class ModulosEstados extends Component {
     })
   }
 
+  handleClickOpenDisenoProducir(rowData) {
+    this.setState({
+      openDisenoaProducirDialog: true,
+      producirRowData: rowData
+    })
+  }
+
   handleClickOpenProducir(rowData) {
     this.setState({
       openProducirDialog: true,
@@ -305,6 +312,13 @@ class ModulosEstados extends Component {
   handleCloseProducir() {
     this.setState({
       openProducirDialog: false,
+      producirRowData: null
+    })
+  }
+
+  handleCloseDisenoaProducir() {
+    this.setState({
+      openDisenoaProducirDialog: false,
       producirRowData: null
     })
   }
@@ -381,32 +395,27 @@ class ModulosEstados extends Component {
 
   }
 
-  // handleDisenoaProducir(rowData) {
-  //   if (rowData.id) {
-  //     Database.post('/disenoaproducir-modulo', {
-  //       id: rowData.id
-  //     },this)
-  //       .then(res => {
-  //         if (res.success == 1) {
-  //           this.handleCloseProducir();
-  //           this.getModulosDiseno();
-  //           this.getModulosPausados();
-  //           this.getModulos();
-  //           toast.success("Modulo enviado a Producción");
-  //         }
-  //       }, err => {
-  //         toast.error(err.message);
-  //       })
-  //   }
+   handleDisenoaProducir(rowData,chasis) {
+     if (rowData.id) {
+       Database.post('/disenoaproducir-modulo', {
+         id: rowData.id,
+         chasis: chasis
+       },this)
+         .then(res => {
+           if (res.success == 1) {
+             this.handleCloseDisenoaProducir();
+             this.getModulosDiseno();
+             this.getModulosPausados();
+             this.getModulos();
+             toast.success("Modulo enviado a Producción");
+           }
+         }, err => {
+           toast.error(err.message);
+         })
+     }
 
-  // }
+   }
 
-  handleDisenoaProducir(rowData) {
-    this.setState({
-        openProducirDialog : true,
-        producirRowData : rowData
-      })
-  }
 
   handleProducir(rowData) {
     if (rowData.id) {
@@ -675,22 +684,26 @@ class ModulosEstados extends Component {
         handleClose={() => this.handleClose()}
         handleDelete={(rowData) => this.handleDelete(rowData)}
       />,
+      <div>
+      { this.state.openDisenoaProducirDialog &&
       <ModalDisenoaProducir
       key={"modulos-modalDisenoaProducir"}
-        openProducirDialog={this.state.openProducirDialog}
+        openDisenoaProducirDialog={this.state.openDisenoaProducirDialog}
         producirRowData={this.state.producirRowData}
 
-        handleCloseProducir={() => this.handleCloseProducir()}
-        handleProducir={(rowData) => this.handleProducir(rowData)}
-      />,
-      // <ModalProducir
-      // key={"modulos-modalProducir"}
-      //   openProducirDialog={this.state.openProducirDialog}
-      //   producirRowData={this.state.producirRowData}
+        handleCloseDisenoaProducir={() => this.handleCloseDisenoaProducir()}
+        handleDisenoaProducir={(rowData,chasis) => this.handleDisenoaProducir(rowData,chasis)}
+      /> }
+      </div>
+      ,
+      <ModalProducir
+       key={"modulos-modalProducir"}
+         openProducirDialog={this.state.openProducirDialog}
+         producirRowData={this.state.producirRowData}
 
-      //   handleCloseProducir={() => this.handleCloseProducir()}
-      //   handleProducir={(rowData) => this.handleProducir(rowData)}
-      // />,
+         handleCloseProducir={() => this.handleCloseProducir()}
+         handleProducir={(rowData) => this.handleProducir(rowData)}
+       />,
       <ModalFinalizarProduccion
       key={"modulos-modalFinalizarProduccion"}
         openFinalizarProduccionDialog={this.state.openFinalizarProduccionDialog}

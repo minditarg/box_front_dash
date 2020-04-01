@@ -5,7 +5,8 @@ import Database from "variables/Database.js";
 //COMPONENTES LOCALES
 import Input from "components/Input/Input";
 import {localization} from "variables/general.js";
-import { toast } from 'react-toastify';
+import {toast } from 'react-toastify';
+import $ from 'jquery';
 
 //ESTILOS Y COLORES
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,7 +14,6 @@ import { makeStyles } from '@material-ui/core/styles';
 //CONTENEDORES
 import MaterialTable, { MTableBodyRow } from "material-table";
 import Paper from '@material-ui/core/Paper';
-import $ from 'jquery';
 
 //BOTONES Y VARIOS
 import Button from '@material-ui/core/Button';
@@ -64,9 +64,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
             value: '',
             validation: {
                 required: true,
-                mayor0: true,
-                menorCantidad:true
-
+                mayor0: true
             },
             valid: false,
             touched: false
@@ -84,17 +82,6 @@ export default function HorizontalLabelPositionBelowStepper(props) {
      React.useEffect(() => {
 
         getInsumos();
-        if(props.rowEditInsumo)
-        {
-          setRowInsumo(props.rowEditInsumo);
-          handleNext();
-          let orderFormAlt = {...orderForm};
-
-          orderFormAlt.cantidad.value = props.rowEditInsumo.cantidad;
-          orderFormAlt.cantidad.validation.asignada = true;
-          setOrderForm(orderFormAlt);
-
-        }
 
     }, []);
 
@@ -103,7 +90,6 @@ export default function HorizontalLabelPositionBelowStepper(props) {
         Database.get('/list-insumos',this)
             .then(res => {
                 setIsLoading(false);
-
                     let resultado = [...res.result];
                     resultado = resultado.map(elem=>{
                         return {
@@ -112,10 +98,6 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                         }
                     })
                     setInsumos(resultado);
-                    $(".MuiDialog-root input").each(function(index,element){
-                      if(index == 0)
-                      element.focus();
-                    })
 
             },err => {
               setIsLoading(false);
@@ -160,19 +142,6 @@ export default function HorizontalLabelPositionBelowStepper(props) {
             isValid = value >= 0;
             textValid = 'La cantidad debe ser mayor a 0'
         }
-
-        if(rules.menorCantidad && props.rowEditInsumo)
-        {
-            isValid = value <= props.rowEditInsumo.cantidad;
-            textValid = 'La cantidad debe ser menor o igual a ' + props.rowEditInsumo.cantidad
-        }
-
-        if (rules.asignada && isValid) {
-          let asignada = rowInsumo.cantidad_asignada || 0;
-            isValid = value >= asignada;
-            textValid = 'La cantidad debe ser mayor a la asignada'
-        }
-
 
         if (rules.minLength && isValid) {
             isValid = value.length >= rules.minLength;
@@ -242,7 +211,8 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                       {rowInsumo.descripcion}</p>
                       <p><span style={{ fontWeight:'300'}}>Unidad: </span>
                       {rowInsumo.unidad}</p>
-
+                      <p><span style={{ fontWeight:'300'}}>Cantidad actual: </span>
+                      {rowInsumo.cantidad + " " + rowInsumo.unidad }</p>
 
                     {
                         formElementsArray.map(formElement => (
@@ -280,17 +250,17 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                     </Step>
                 ))}
             </Stepper>
-
-                    {getStepContent(activeStep)}
+            <div>
+                <div >
+                    <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
                     <div style={{ marginTop:'2em'}}>
-                  { !props.rowEditInsumo &&   <Button
+                        <Button
                             disabled={activeStep === 0}
                             onClick={handleBack}
                             className={classes.backButton}
                             >
                             Atras
               </Button>
-            }
                         {activeStep === steps.length - 1 ? (
                             <Button variant="contained" color="primary" disabled={!formIsValid } onClick={handleFinish}>
                                 Agregar
@@ -298,7 +268,9 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                         ) : null}
 
                     </div>
+                </div>
 
+            </div>
         </div>
     );
 }
