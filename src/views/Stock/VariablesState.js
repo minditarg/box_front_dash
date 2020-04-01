@@ -2,6 +2,9 @@ import indigo from '@material-ui/core/colors/indigo';
 import lightGreen from '@material-ui/core/colors/lightGreen';
 
 export const StateListado = {
+    openMovimientos:false,
+    insumoDetalle: [],
+
     insumos: [],
     editFormIsValid: false,
     isLoading:false,

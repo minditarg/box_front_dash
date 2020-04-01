@@ -71,7 +71,7 @@ class DetalleStock extends Component {
                           identificador = elem.descripcion_id + elem.id_ingreso;
                         } else if(elem.id_devolucion) {
                             identificador = elem.descripcion_id + elem.id_devolucion;
-                        }
+                        } 
 
                         return <TableRow  key={"detalle-" + key}>
                             <TableCell style={color} >

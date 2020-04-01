@@ -6,6 +6,13 @@ import { withStyles } from '@material-ui/styles';
 import moment from 'moment';
 import ExportXLS from 'components/ExportXLS/ExportXLS';
 
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+
 import DetalleStock from './components/DetalleStock';
 import { Event } from 'react-socket-io';
 
@@ -62,9 +69,31 @@ const styles = {
       fontWeight: "400",
       lineHeight: "1"
     }
+  },
+  closeButton: {
+    position: 'absolute',
+    right: '0.5em',
+    top: '0.5em',
+    color: 'grey',
   }
 
 };
+
+
+
+const ColumnsListadoDetalle = [
+  { title: "Descripcion", field: "descripcion" },
+  { title: "Cantidad", field: "cantidad" },
+  { title: "Identificador", field: "identificador" },
+ 
+  { title: "Usuario", field: "username" },
+  { title: "Minimo", field: "minimo" },
+  { title: "Stock Parc", field: "parcial" },
+  { title: "Fecha", field: "fecha" , customSort: (a, b) => moment(a.fecha,"DD/MM/YYYY HH:mm").format("YYYYMMDDHHmm") - moment(b.fecha,"DD/MM/YYYY HH:mm").format("YYYYMMDDHHmm"), cellStyle:{ minWidth:'120px' } },
+
+];
+
+
 
 
 class Stock extends Component {
@@ -73,6 +102,13 @@ class Stock extends Component {
 
   deleteMaterial = (rowData) => {
     this.handleClickOpen(rowData);
+
+  }
+
+  closeDialog() {
+    this.setState({
+      openMovimientos: false,
+    })
 
   }
 
@@ -283,6 +319,46 @@ class Stock extends Component {
     this.getInsumos();
   }
 
+  openClickDetalleMovimientos(rowData) {
+    console.log(rowData);
+    this.setState({
+      openMovimientos:true,
+      insumoMovimientos:[],
+      detalleInsumoMoviento:rowData
+    })
+
+    Database.get('/detalle-stock/' + rowData.id ,this).then(res => {
+      console.log(res.result)
+      let resultado = res.result;
+
+      resultado = resultado.map(elem => {
+        let identificador;
+        if(elem.id_entrega) {
+          identificador = elem.descripcion_id + elem.id_entrega;
+        } else if(elem.id_ingreso) {
+          identificador = elem.descripcion_id + elem.id_ingreso;
+        } else if(elem.id_devolucion) {
+            identificador = elem.descripcion_id + elem.id_devolucion;
+        }
+        
+        return {
+          ...elem,
+          identificador:identificador,
+          fecha: moment(elem.fecha).format("DD/MM/YYYY HH:mm")
+        }
+      })
+
+      console.log(resultado)
+      this.setState({
+        insumoMovimientos: resultado
+      })
+  },err => {
+    toast.error(err.message);
+  })
+   
+
+  }
+
 
   render() {
 
@@ -308,9 +384,10 @@ class Stock extends Component {
                   title=""
                   localization={localization}
                   actions={[{
-                    icon: 'print',
-                    tooltip: 'Imprimir Detalle'//,
+                    icon: 'description',
+                    tooltip: 'Detalle Movimientos de insumo',
                     //onClick: (event, rowData) => <ExportXLS csvData={this.state.insumos} fileName={"Stock - " +  moment(Date.now()).format("DD_MM_YYYY")} header={ColumnsListado} />
+                    onClick: (event, rowData) => this.openClickDetalleMovimientos(rowData)
                   }]}
                   components={{
                     Cell: props => {
@@ -372,7 +449,45 @@ class Stock extends Component {
           </div>} />
 
       </Switch>,
-       <Event event='actualizar_stock' handler={() => console.log("actualizo stock")} />
+       <Event event='actualizar_stock' handler={() => console.log("actualizo stock")} />,
+       <Dialog
+       open={this.state.openMovimientos}
+       onClose={this.closeDialog.bind(this)}
+       fullWidth={true}
+       maxWidth={"xl"}
+       >
+       <DialogTitle>Detalle de Movimientos Insumo 
+                           <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
+           <CloseIcon />
+         </IconButton>
+       </DialogTitle>
+
+
+       <DialogContent>
+                <p>Identificador: <b>{this.state.detalleInsumoMoviento && this.state.detalleInsumoMoviento.identificador}</b><br/>
+           Descripcion: <b>{this.state.detalleInsumoMoviento && this.state.detalleInsumoMoviento.descripcion}</b><br/>
+           Unidad: <b>{this.state.detalleInsumoMoviento && this.state.detalleInsumoMoviento.unidad}</b></p>
+         
+           <ExportXLS csvData={this.state.insumoMovimientos} fileName={"Movimientos Insumo - " +  (this.state.detalleInsumoMoviento ? this.state.detalleInsumoMoviento.identificador : null )  + " - " + moment(Date.now()).format("DD_MM_YYYY")} header={ColumnsListadoDetalle} />
+         <MaterialTable
+           isLoading={this.state.isLoadingDetalle}
+           columns={ColumnsListadoDetalle}
+           data={this.state.insumoMovimientos}
+           title=""
+           localization={localization}
+          
+           options={{
+             exportButton: false,
+             headerStyle: {
+               backgroundColor: lightGreen[700],
+               color: '#FFF'
+             },
+           }}
+           />
+       </DialogContent>
+     </Dialog>
+
+
 
     ]);
   }
