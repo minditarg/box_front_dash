@@ -69,6 +69,9 @@ import {
 
 import { localization } from "variables/general";
 
+import ExportXLS from 'components/ExportXLS/ExportXLS';
+import { ColumnsListado } from "views/Costos/VariablesState";
+import { ColumnsPedido } from "../VariablesState";
 
 
 // const columns = [{ title: "id", field: "id" },
@@ -785,6 +788,7 @@ class EditPedidos extends Component {
                             </CardHeader>
                         }
                             <CardBody>
+
                                 {formElementsArray.map(formElement => (
                                     <Input
                                         key={formElement.id}
@@ -802,6 +806,7 @@ class EditPedidos extends Component {
                                 <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} color="success" disabled={this.state.disableAllButtons} onClick={this.openDialog.bind(this)} ><AddIcon /> Insumo</Button>
                                 {/* <Button style={{ marginTop: '3.5em', marginBottom: '3.5em' }} disabled={this.state.disableAllButtons} color="success" onClick={this.openPlantilla.bind(this)} ><AddIcon /> Pedido</Button> */}
 
+                                <ExportXLS csvData={this.state.detallePedidos} fileName={"Pedido " + this.state.orderForm.referencia.value + " - " + moment(Date.now()).format("DD_MM_YYYY")} header={ColumnsPedido} />
                                 
                                 <div style={{ padding: 20 }} >
                                     <Grid container alignItems="flex-end" justify="flex-end" spacing={2}>

@@ -21,6 +21,14 @@ export const ColumnsListadoSolicitados = [
 ];
 
 
+export const ColumnsPedido = [
+  { title: "Codigo", field: "codigo" },
+  { title: "Número", field: "numero" },
+  { title: "Descripcion", field: "descripcion" },
+  { title: "Unidad", field: "unidad" },
+  { title: "Cantidad", field: "cantidad" }
+];
+
 
 export const StateNewCategoria =
 {
