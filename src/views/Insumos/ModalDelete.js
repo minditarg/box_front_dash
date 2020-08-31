@@ -16,7 +16,7 @@ onClose={props.handleClose}
 aria-labelledby="alert-dialog-title"
 aria-describedby="alert-dialog-description"
 >
-<DialogTitle id="alert-dialog-title">{props.deleteRowData && (`Eliminar el Insumo "${props.deleteRowData.codigo}"?` )}</DialogTitle>
+<DialogTitle id="alert-dialog-title">{props.deleteRowData && (`Eliminar el Insumo "${props.deleteRowData.descripcion}"?` )}</DialogTitle>
 <DialogContent>
  <DialogContentText id="alert-dialog-description">
  Se eliminará el insumo seleccionado.Realmente desea eliminarlo?
