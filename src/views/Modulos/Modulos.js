@@ -77,6 +77,7 @@ class Modulos extends Component {
         })
 
           let resultado = [...res.result];
+         // console.log(resultado);
           resultado = resultado.map(elem => {
             return {
               ...elem,
@@ -86,6 +87,7 @@ class Modulos extends Component {
           this.setState({
             modulos: resultado
           })
+       //   console.log(resultado);
 
       }, err => {
         this.setState({

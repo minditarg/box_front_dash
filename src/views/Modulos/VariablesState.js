@@ -45,3 +45,6 @@ export const ColumnsListadoCategorias = [
   { title: "Codigo", field: "codigo" },
   { title: "Descripcion", field: "descripcion" }
 ];
+
+
+

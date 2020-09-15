@@ -67,6 +67,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList } from 'react-window';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
+import MaterialTable from "material-table";
+import lightGreen from '@material-ui/core/colors/lightGreen';
+
 
 // const columns = [{ title: "id", field: "id" },
 // { title: "Usuario", field: "username" },
@@ -74,6 +77,11 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 // { title: "Proveedor", field: "proveedor" },
 // { title: "Fecha", field: "fecha" }
 // ];
+
+const columnsListadoPlantillas = [
+    { title: "Codigo", field: "codigo" },
+    { title: "Descripcion", field: "descripcion" }
+];
 
 const columnsInsumos = [
     { title: "Codigo", field: "codigo", editable: 'never' },
@@ -236,11 +244,13 @@ class NewEditModulo extends Component {
         actionsInsumos: [],
 
         plantillas: [],
+        plantillasAsignadas: [],
         openPlantillaDialog: false,
         idPlantilla: '',
         rowSelectPlantilla: null,
         detalleSelectPlantilla: [],
-        
+        detalleSelectPlantillaBorrar: [],
+
         openDuplicadoDialog: false,
         detalleDuplicados: [],
 
@@ -381,12 +391,12 @@ class NewEditModulo extends Component {
             }, this)
                 .then(res => {
 
-                    
+
                     toast.success("El modulo ha sido guardado con exito");
                     this.getInsumosParcial(this.props.match.params.idModulo);
                     this.props.getModulos();
-                    
-                   // this.props.history.push("/admin/modulos");
+
+                    // this.props.history.push("/admin/modulos");
 
                 }, err => {
                     toast.error(err.message);
@@ -461,7 +471,7 @@ class NewEditModulo extends Component {
     }
 
     closeDialog() {
-        this.setState({ open: false, openPlantillaDialog: false,openDuplicadoDialog: false });
+        this.setState({ open: false, openPlantillaDialog: false, openDuplicadoDialog: false });
     }
 
     onClickInsumo = (rowInsumo, cantidad) => {
@@ -585,6 +595,24 @@ class NewEditModulo extends Component {
     handleSubmitPlantillas = event => {
         event.preventDefault();
         this.closeDialog();
+        console.log(this.state);
+
+        // console.log(this.state.plantillasAsignadas);
+        let plantillasAsignadasList = [...this.state.plantillasAsignadas];
+        // console.log(plantillasAsignadasList);
+       // this.state.rowSelectPlantilla.key = plantillasAsignadasList.length+1;
+        let newRow =  this.state.rowSelectPlantilla;
+        newRow.key = "lista" + plantillasAsignadasList.length.toString();
+        plantillasAsignadasList.push(newRow);
+
+        this.setState({
+            plantillasAsignadas: plantillasAsignadasList
+
+        })
+
+        console.log(plantillasAsignadasList);
+        console.log(this.state.plantillasAsignadas);
+
         let insumosInsertar = this.state.detalleSelectPlantilla.filter(elem => {
             let findIndex = this.detalleModulos.findIndex(elemFind => {
                 return (elem.id == elemFind.id)
@@ -623,17 +651,16 @@ class NewEditModulo extends Component {
         })
 
 
-     if(insumosModificar.length > 0)
-     {  
-        setTimeout(() => {
-            this.setState({
-                openDuplicadoDialog:true,
-                detalleDuplicados:insumosModificar
-            })
+        if (insumosModificar.length > 0) {
+            setTimeout(() => {
+                this.setState({
+                    openDuplicadoDialog: true,
+                    detalleDuplicados: insumosModificar
+                })
 
-        },500)
-    }  
-        
+            }, 500)
+        }
+
 
         this.detalleModulos = insumosInsertar.concat(this.detalleModulos);
         this.buscarInsumo(this.buscarRef.current.value);
@@ -646,7 +673,9 @@ class NewEditModulo extends Component {
     }
 
     handleSubmitDuplicados = event => {
+      //  alert("handleSubmitDuplicados");
         event.preventDefault();
+        console.log(this.state.detalleDuplicados);
         this.state.detalleDuplicados.forEach(elem => {
             let indexPos = this.detalleModulos.findIndex(elemPos => {
                 return elemPos.id == elem.id
@@ -662,7 +691,7 @@ class NewEditModulo extends Component {
                     if (!this.detalleModulos[indexPos].cantidadAnterior)
                         this.detalleModulos[indexPos].cantidadAnterior = this.detalleModulos[indexPos].cantidad_requerida;
 
-                        this.detalleModulos[indexPos].cantidad_requerida = this.detalleModulos[indexPos].cantidad_requerida + elem.cantidad;
+                    this.detalleModulos[indexPos].cantidad_requerida = this.detalleModulos[indexPos].cantidad_requerida + elem.cantidad;
                 }
 
             }
@@ -670,6 +699,7 @@ class NewEditModulo extends Component {
         })
 
         this.closeDialog();
+        console.log(this.state.detalleDuplicados);
 
         this.buscarInsumo(this.buscarRef.current.value);
         this.inputChangedHandler(null, null);
@@ -791,7 +821,82 @@ class NewEditModulo extends Component {
         this.setState({
             detalleModulos: detalle
         })
+    }
 
+    auditoriaPlantillas(idPlantilla, idTipoMovimiento)
+    {}
+
+
+    deletePlantilla(rowData) {
+        if (rowData.id) {
+
+            console.log(this.state);
+
+            let plantillasAsignadasList = [...this.state.plantillasAsignadas];
+            let idPlantilla = parseInt(rowData.id);
+            let indexSeleccionado = plantillasAsignadasList.findIndex(elem => {
+                return (elem.id == idPlantilla);
+            })
+            if (indexSeleccionado > -1) {
+                console.log("encontro " + indexSeleccionado);
+
+
+                Database.get('/list-plantillas-insumos/' + idPlantilla, this)
+                    .then(res => {
+
+
+                        res.insumos.forEach(elem => {
+                            let indexPos = this.detalleModulos.findIndex(elemPos => {
+                                return elemPos.id == elem.id
+                            })
+
+                            if (indexPos > -1) { //encontro
+                                // if (this.detalleModulos[indexPos].insertado) {
+                                console.log("previo: " + this.detalleModulos[indexPos]);
+                                this.detalleModulos[indexPos].cantidad_requerida = this.detalleModulos[indexPos].cantidad_requerida - elem.cantidad;
+
+                                if(this.detalleModulos[indexPos].cantidad_requerida <= 0) // si llego a 0 unidades entonces lo saco de la tabla
+                                {
+                                    this.detalleModulos.splice(indexPos, 1);
+                                }
+                                console.log("posterior: " + this.detalleModulos[indexPos]);
+
+
+                                //  } 
+                                /*else {
+                                    delete this.detalleModulos[indexPos].insertado;
+                                    delete this.detalleModulos[indexPos].eliminado;
+                                    this.detalleModulos[indexPos].modificado = true;
+                                    if (!this.detalleModulos[indexPos].cantidadAnterior)
+                                        this.detalleModulos[indexPos].cantidadAnterior = this.detalleModulos[indexPos].cantidad_requerida;
+                
+                                    this.detalleModulos[indexPos].cantidad_requerida = this.detalleModulos[indexPos].cantidad_requerida + elem.cantidad;
+                                }*/
+                            }
+                        })
+
+                        plantillasAsignadasList.splice(indexSeleccionado, 1);
+
+                        console.log(plantillasAsignadasList);
+
+                        this.setState({
+                            plantillasAsignadas: plantillasAsignadasList
+                        });
+                        /*
+                        this.setState({
+                            detalleSelectPlantillaBorrar: res.insumos
+                        })
+                        */
+
+
+                    }, err => {
+                        toast.error(err.message);
+                    })
+            }
+            else {
+                console.log("no encontro");
+            }
+        }
 
     }
 
@@ -865,6 +970,30 @@ class NewEditModulo extends Component {
                                 */
                                 }
                                 <ExportXLS csvData={this.state.detalleModulos} fileName={"Modulo Detalle- " + this.state.orderForm.chasis.value + " " + moment(Date.now()).format("DD_MM_YYYY")} header={headers} />
+
+
+                                <MaterialTable
+                                    isLoading={this.state.isLoading}
+                                    columns={columnsListadoPlantillas}
+                                    data={this.state.plantillasAsignadas}
+                                    title=""
+                                    localization={localization}
+                                    actions={[
+                                        {
+                                            icon: 'delete',
+                                            tooltip: 'Borrar Plantilla',
+                                            onClick: (event, rowData) => this.deletePlantilla(rowData)
+                                        }
+                                    ]}
+                                    options={{
+                                        headerStyle: {
+                                            backgroundColor: lightGreen[700],
+                                            color: '#FFF'
+                                        },
+                                    }}
+                                />
+
+
                                 <div style={{ padding: 20 }} >
                                     <Grid container alignItems="flex-end" justify="flex-end" spacing={2}>
                                         <Grid item>
@@ -970,35 +1099,35 @@ class NewEditModulo extends Component {
                 </DialogContent>
             </Dialog>,
 
-<Dialog
-open={this.state.openDuplicadoDialog}
-onClose={this.closeDialog.bind(this)}
-fullWidth={true}
-maxWidth={"md"}
->
-<DialogTitle>Insumos Duplicados
+            <Dialog
+                open={this.state.openDuplicadoDialog}
+                onClose={this.closeDialog.bind(this)}
+                fullWidth={true}
+                maxWidth={"md"}
+            >
+                <DialogTitle>Insumos Duplicados
             <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
-        <CloseIcon />
-    </IconButton>
-</DialogTitle>
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
 
 
-<DialogContent>
-    <form onSubmit={this.handleSubmitDuplicados}>
-       
-            <FixedSizeList height={200} width={900} itemSize={65} itemCount={this.state.detalleDuplicados.length}>
-                {this.RowDuplicados.bind(this)}
-            </FixedSizeList> 
+                <DialogContent>
+                    <form onSubmit={this.handleSubmitDuplicados}>
 
-        <div style={{ marginTop: '25px', textAlign: 'right' }}>
-            <Button onClick={this.closeDialog.bind(this)} style={{ marginRight: '10px' }}>Cancelar</Button>
-            <Button type="submit" disabled={this.state.detalleDuplicados.length <= 0} variant="contained" color="primary"  >
-                Sumar Cantidades
+                        <FixedSizeList height={200} width={900} itemSize={65} itemCount={this.state.detalleDuplicados.length}>
+                            {this.RowDuplicados.bind(this)}
+                        </FixedSizeList>
+
+                        <div style={{ marginTop: '25px', textAlign: 'right' }}>
+                            <Button onClick={this.closeDialog.bind(this)} style={{ marginRight: '10px' }}>Cancelar</Button>
+                            <Button type="submit" disabled={this.state.detalleDuplicados.length <= 0} variant="contained" color="primary"  >
+                                Sumar Cantidades
         </Button>
-        </ div>
-    </form>
-</DialogContent>
-</Dialog>
+                        </ div>
+                    </form>
+                </DialogContent>
+            </Dialog>
 
         ]);
     }
