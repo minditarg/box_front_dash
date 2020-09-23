@@ -387,7 +387,8 @@ class NewEditModulo extends Component {
                 cotizacion: this.state.orderForm.cotizacion.value,
                 descripcion: this.state.orderForm.descripcion.value,
                 detalle: this.detalleModulos,
-                id: this.props.match.params.idModulo
+                id: this.props.match.params.idModulo,
+                plantillas: this.state.plantillasAsignadas
             }, this)
                 .then(res => {
 
@@ -415,7 +416,8 @@ class NewEditModulo extends Component {
                 chasis: this.state.orderForm.chasis.value,
                 cotizacion: this.state.orderForm.cotizacion.value,
                 descripcion: this.state.orderForm.descripcion.value,
-                detalle: this.state.detalleModulos
+                detalle: this.state.detalleModulos,
+                plantillas: this.state.plantillasAsignadas
             }, this)
                 .then(res => {
                     // this.setState({pedidoInsertado: true});
@@ -522,6 +524,34 @@ class NewEditModulo extends Component {
 
 
 
+    getPlantillasAsociadas = (idModulo) => {
+        this.setState({ isLoading: true });
+        Database.get('/list-modulos-plantillas/' + idModulo, this)
+            .then(res => {
+                this.setState({ isLoading: false });
+
+               // let orderForm = { ...this.state.orderForm };
+                
+               
+                // res.plantillas = res.plantillas.map(elem => {
+                //     return {
+                //         ...elem,
+                //         //identificador: elem.codigo + elem.numero
+                //     }
+                // })
+
+                console.log( res.result);
+                console.log( res.result[0]);
+
+                this.setState({
+                    plantillasAsignadas: res.result
+                //    detalleModulos: res.insumos
+                });
+
+            }, err => {
+                toast.error(err.message);
+            })
+    }
 
     getInsumosParcial = (idModulo) => {
         this.setState({ isLoading: true });
@@ -828,6 +858,8 @@ class NewEditModulo extends Component {
 
 
     deletePlantilla(rowData) {
+        //alert("entroooo");
+        console.log(rowData);
         if (rowData.id) {
 
             console.log(this.state);
@@ -851,27 +883,16 @@ class NewEditModulo extends Component {
                             })
 
                             if (indexPos > -1) { //encontro
-                                // if (this.detalleModulos[indexPos].insertado) {
                                 console.log("previo: " + this.detalleModulos[indexPos]);
                                 this.detalleModulos[indexPos].cantidad_requerida = this.detalleModulos[indexPos].cantidad_requerida - elem.cantidad;
 
                                 if(this.detalleModulos[indexPos].cantidad_requerida <= 0) // si llego a 0 unidades entonces lo saco de la tabla
                                 {
+                                    console.log("llego aaaaa " + this.detalleModulos[indexPos].cantidad_requerida);
                                     this.detalleModulos.splice(indexPos, 1);
                                 }
                                 console.log("posterior: " + this.detalleModulos[indexPos]);
 
-
-                                //  } 
-                                /*else {
-                                    delete this.detalleModulos[indexPos].insertado;
-                                    delete this.detalleModulos[indexPos].eliminado;
-                                    this.detalleModulos[indexPos].modificado = true;
-                                    if (!this.detalleModulos[indexPos].cantidadAnterior)
-                                        this.detalleModulos[indexPos].cantidadAnterior = this.detalleModulos[indexPos].cantidad_requerida;
-                
-                                    this.detalleModulos[indexPos].cantidad_requerida = this.detalleModulos[indexPos].cantidad_requerida + elem.cantidad;
-                                }*/
                             }
                         })
 
@@ -880,7 +901,8 @@ class NewEditModulo extends Component {
                         console.log(plantillasAsignadasList);
 
                         this.setState({
-                            plantillasAsignadas: plantillasAsignadasList
+                            plantillasAsignadas: plantillasAsignadasList,
+                            detalleModulos: [...this.detalleModulos]
                         });
                         /*
                         this.setState({
@@ -905,7 +927,11 @@ class NewEditModulo extends Component {
 
 
         if (this.props.match.params.idModulo)
-            this.getInsumosParcial(this.props.match.params.idModulo)
+        {
+            this.getInsumosParcial(this.props.match.params.idModulo);
+            this.getPlantillasAsociadas(this.props.match.params.idModulo);
+        }
+            
 
 
         this.getPlantillas();
