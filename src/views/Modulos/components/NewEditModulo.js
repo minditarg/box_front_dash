@@ -102,6 +102,7 @@ const columnsCsv = [
 const headers = [
     { title: "Identificador", field: "identificador" },
     { title: "Descripcion", field: "descripcion" },
+    { title: "Unidad", field: "unidad" },
     { title: "Cantidad Requerida", field: "cantidad_requerida" },
     { title: "Cantidad Asignada", field: "cantidad_asignada" }
 ];
@@ -201,6 +202,9 @@ const SortableItem = sortableElement(({ value, deleteInsumo, editInsumo, undoDel
             {value.descripcion}
         </TableCell>
         <TableCell>
+            {value.unidad}
+        </TableCell>
+        <TableCell>
             {value.cantidad_requerida}
         </TableCell>
         <TableCell>
@@ -220,6 +224,7 @@ const SortableContainer = sortableContainer(({ children }) => {
                 <TableCell>Acciones</TableCell>
                 <TableCell>Identificador</TableCell>
                 <TableCell>Descripcion</TableCell>
+                <TableCell>Unidad</TableCell>
                 <TableCell>Requerida</TableCell>
                 <TableCell>Asignada</TableCell>
 
@@ -584,7 +589,8 @@ class NewEditModulo extends Component {
                         identificador: elem.codigo + elem.numero,
                         cantidad_asignada: parseFloat(elem.cantidad_asignada),
                         cantidad_requerida: parseFloat(elem.cantidad_requerida),
-                        cantidad_stock: parseFloat(elem.cantidad_requerida)
+                        cantidad_stock: parseFloat(elem.cantidad_requerida),
+                        unidad: elem.unidad
                     }
                 })
 
@@ -1095,8 +1101,8 @@ class NewEditModulo extends Component {
                                         <SortableItem key={`item-${index}`} index={index} value={elem} deleteInsumo={this.deleteInsumo} editInsumo={this.editInsumo} undoDelete={this.undoDelete} undoInsertado={this.undoInsertado} undoModificado={this.undoModificado} />
                                     ))}
 
-
                                 </SortableContainer>
+                                
                                 {this.state.isLoading &&
                                     <div style={{ textAlign: 'center' }}>
                                         <CircularProgress />
