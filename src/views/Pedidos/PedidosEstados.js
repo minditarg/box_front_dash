@@ -478,11 +478,11 @@ class PedidosEstados extends Component {
 
 
           <CustomTabs
-            title="Pedidos:"
+            title=""
             headerColor="primary"
             tabs={[
               {
-                tabName: "Diseño",
+                tabName: "Pedidos",
                 tabIcon: Description,
                 tabContent: (
 
@@ -515,7 +515,7 @@ class PedidosEstados extends Component {
                 )
               },
               {
-                tabName: "Solicitado",
+                tabName: "Solicitados",
                 tabIcon: Category,
                 tabContent: (
                   <MaterialTable

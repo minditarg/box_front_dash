@@ -595,7 +595,7 @@ class EditPlantilla extends Component {
         let detalle;
         if (value && value != '') {
             detalle = this.detallePlantillas.filter(elem => {
-                if (elem.descripcion.toLowerCase().indexOf(value.toLowerCase()) >= 0)
+                if ((elem.descripcion.toLowerCase().indexOf(value.toLowerCase()) >= 0) || (elem.identificador.toLowerCase().indexOf(value.toLowerCase()) >= 0) )
                     return true;
 
                 return false;
