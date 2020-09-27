@@ -28,7 +28,7 @@ import {localization} from "variables/general.js";
 
 
 const columnsInsumos = [
-{ title: "Codigo", field: "codigo", editable: 'never' },
+{ title: "Codigo", field: "codigo_listado", editable: 'never' },
 { title: "Descripcion", field: "descripcion", editable: 'never' },
 { title: "Activo", field: "activo", editable: 'never' },
 { title: "Cantidad", field: "cantidad", type: 'numeric' }
@@ -134,7 +134,8 @@ class AjusteStock extends Component {
                     resultado = resultado.map(elem=>{
                         return {
                           ...elem,
-                          codigo: elem.codigo + elem.numero
+                          codigo_listado:elem.codigo + elem.numero,
+                          
                         }
             
                       })
@@ -225,7 +226,7 @@ class AjusteStock extends Component {
 
     insumoSelectHandler = (rowData) => {
         this.closeDialog();
-
+                    console.log(rowData);
                     let resultado = {...rowData};
                     let ordenformNuevo = { ...this.state.orderForm };
                     ordenformNuevo.codigo.value = resultado.codigo + resultado.numero ;

@@ -69,6 +69,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import MaterialTable from "material-table";
 import lightGreen from '@material-ui/core/colors/lightGreen';
+import { id } from "date-fns/locale";
 
 
 // const columns = [{ title: "id", field: "id" },
@@ -448,7 +449,13 @@ class NewEditModulo extends Component {
             })
             Database.get('/list-plantillas-insumos/' + idPlantilla, this)
                 .then(res => {
-
+                    res.insumos = res.insumos.map(elem => {
+                        return {
+                            ...elem,
+                            cantidad: parseFloat(elem.cantidad),
+                            costo: parseFloat(elem.costo)
+                        }
+                    })
                     this.setState({
                         detalleSelectPlantilla: res.insumos
                     })
@@ -530,9 +537,9 @@ class NewEditModulo extends Component {
             .then(res => {
                 this.setState({ isLoading: false });
 
-               // let orderForm = { ...this.state.orderForm };
-                
-               
+                // let orderForm = { ...this.state.orderForm };
+
+
                 // res.plantillas = res.plantillas.map(elem => {
                 //     return {
                 //         ...elem,
@@ -540,12 +547,10 @@ class NewEditModulo extends Component {
                 //     }
                 // })
 
-                console.log( res.result);
-                console.log( res.result[0]);
 
                 this.setState({
                     plantillasAsignadas: res.result
-                //    detalleModulos: res.insumos
+                    //    detalleModulos: res.insumos
                 });
 
             }, err => {
@@ -576,9 +581,14 @@ class NewEditModulo extends Component {
                 res.insumos = res.insumos.map(elem => {
                     return {
                         ...elem,
-                        identificador: elem.codigo + elem.numero
+                        identificador: elem.codigo + elem.numero,
+                        cantidad_asignada: parseFloat(elem.cantidad_asignada),
+                        cantidad_requerida: parseFloat(elem.cantidad_requerida),
+                        cantidad_stock: parseFloat(elem.cantidad_requerida)
                     }
                 })
+
+                console.log(res.insumos);
 
                 this.detalleModulos = [...res.insumos];
                 this.copiaDetalleModulos = JSON.parse(JSON.stringify(res.insumos));
@@ -625,14 +635,12 @@ class NewEditModulo extends Component {
     handleSubmitPlantillas = event => {
         event.preventDefault();
         this.closeDialog();
-        console.log(this.state);
 
-        // console.log(this.state.plantillasAsignadas);
+
+
         let plantillasAsignadasList = [...this.state.plantillasAsignadas];
-        // console.log(plantillasAsignadasList);
-       // this.state.rowSelectPlantilla.key = plantillasAsignadasList.length+1;
-        let newRow =  this.state.rowSelectPlantilla;
-        newRow.key = "lista" + plantillasAsignadasList.length.toString();
+
+        let newRow = { ...this.state.rowSelectPlantilla };
         plantillasAsignadasList.push(newRow);
 
         this.setState({
@@ -640,8 +648,6 @@ class NewEditModulo extends Component {
 
         })
 
-        console.log(plantillasAsignadasList);
-        console.log(this.state.plantillasAsignadas);
 
         let insumosInsertar = this.state.detalleSelectPlantilla.filter(elem => {
             let findIndex = this.detalleModulos.findIndex(elemFind => {
@@ -703,9 +709,8 @@ class NewEditModulo extends Component {
     }
 
     handleSubmitDuplicados = event => {
-      //  alert("handleSubmitDuplicados");
+        //  alert("handleSubmitDuplicados");
         event.preventDefault();
-        console.log(this.state.detalleDuplicados);
         this.state.detalleDuplicados.forEach(elem => {
             let indexPos = this.detalleModulos.findIndex(elemPos => {
                 return elemPos.id == elem.id
@@ -713,15 +718,15 @@ class NewEditModulo extends Component {
 
             if (indexPos > -1) {
                 if (this.detalleModulos[indexPos].insertado) {
-                    this.detalleModulos[indexPos].cantidad_requerida = this.detalleModulos[indexPos].cantidad_requerida + elem.cantidad
+                    this.detalleModulos[indexPos].cantidad_requerida = parseFloat(this.detalleModulos[indexPos].cantidad_requerida) + parseFloat(elem.cantidad)
                 } else {
                     delete this.detalleModulos[indexPos].insertado;
                     delete this.detalleModulos[indexPos].eliminado;
                     this.detalleModulos[indexPos].modificado = true;
                     if (!this.detalleModulos[indexPos].cantidadAnterior)
-                        this.detalleModulos[indexPos].cantidadAnterior = this.detalleModulos[indexPos].cantidad_requerida;
+                        this.detalleModulos[indexPos].cantidadAnterior = parseFloat(this.detalleModulos[indexPos].cantidad_requerida);
 
-                    this.detalleModulos[indexPos].cantidad_requerida = this.detalleModulos[indexPos].cantidad_requerida + elem.cantidad;
+                    this.detalleModulos[indexPos].cantidad_requerida = parseFloat(this.detalleModulos[indexPos].cantidad_requerida) + parseFloat(elem.cantidad);
                 }
 
             }
@@ -729,7 +734,7 @@ class NewEditModulo extends Component {
         })
 
         this.closeDialog();
-        console.log(this.state.detalleDuplicados);
+
 
         this.buscarInsumo(this.buscarRef.current.value);
         this.inputChangedHandler(null, null);
@@ -767,16 +772,18 @@ class NewEditModulo extends Component {
     deleteInsumo = (rowData) => {
         let resultado = { ...rowData };
         let indexDelete = this.detalleModulos.indexOf(rowData);
-        resultado.eliminado = true;
-        this.detalleModulos[indexDelete] = resultado;
+        if (!parseFloat(rowData.cantidad_asignada)) {
 
-        // detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
-        // this.detallePlantillas.splice(detallePlantillas.indexOf(rowData), 1);
+            resultado.eliminado = true;
+            if (!resultado.cantidadAnterior)
+                resultado.cantidadAnterior = rowData.cantidad_requerida;
 
+            resultado.cantidad_requerida = 0;
 
-        this.inputChangedHandler()
-        this.buscarInsumo(this.buscarRef.current.value);
-
+            this.detalleModulos[indexDelete] = resultado;
+            this.inputChangedHandler()
+            this.buscarInsumo(this.buscarRef.current.value);
+        }
 
     }
 
@@ -791,7 +798,9 @@ class NewEditModulo extends Component {
 
     undoDelete = (rowData) => {
         let resultado = { ...rowData };
-        resultado.eliminado = null;
+        delete resultado.eliminado;
+        resultado.cantidad_requerida = resultado.cantidadAnterior;
+        delete resultado.cantidadAnterior;
         let indexEliminado = this.detalleModulos.indexOf(rowData);
         this.detalleModulos[indexEliminado] = resultado;
 
@@ -803,9 +812,9 @@ class NewEditModulo extends Component {
 
     undoModificado = (rowData) => {
         let resultado = { ...rowData };
-        resultado.modificado = null;
+        delete resultado.modificado;
         resultado.cantidad_requerida = resultado.cantidadAnterior;
-        resultado.cantidadAnterior = null;
+        delete resultado.cantidadAnterior;
         let indexEliminado = this.detalleModulos.indexOf(rowData);
         this.detalleModulos[indexEliminado] = resultado;
 
@@ -853,71 +862,122 @@ class NewEditModulo extends Component {
         })
     }
 
-    auditoriaPlantillas(idPlantilla, idTipoMovimiento)
-    {}
+    auditoriaPlantillas(idPlantilla, idTipoMovimiento) { }
 
 
     deletePlantilla(rowData) {
-        //alert("entroooo");
-        console.log(rowData);
+        
         if (rowData.id) {
 
-            console.log(this.state);
+
 
             let plantillasAsignadasList = [...this.state.plantillasAsignadas];
+            let detalleModulos = [...this.detalleModulos]
             let idPlantilla = parseInt(rowData.id);
-            let indexSeleccionado = plantillasAsignadasList.findIndex(elem => {
-                return (elem.id == idPlantilla);
-            })
-            if (indexSeleccionado > -1) {
-                console.log("encontro " + indexSeleccionado);
+
+            let indexSeleccionado = plantillasAsignadasList.indexOf(rowData);
+            Database.get('/list-plantillas-insumos/' + idPlantilla, this)
+                .then(res => {
+                    res.insumos = res.insumos.map(elem => {
+                        return {
+                            ...elem,
+                            cantidad: parseFloat(elem.cantidad)
+                        }
+                    })
+
+                    res.insumos.forEach(elem => {
+                        let indexPos = detalleModulos.findIndex(elemPos => {
+                            return elemPos.id == elem.id
+                        })
+
+                        if (indexPos > -1) { //encontro
+
+                            if (parseFloat(detalleModulos[indexPos].cantidad_asignada)) {
+
+                                if (parseFloat(detalleModulos[indexPos].cantidad_requerida) - parseFloat(elem.cantidad) >= parseFloat(detalleModulos[indexPos].cantidad_asignada)) {
 
 
-                Database.get('/list-plantillas-insumos/' + idPlantilla, this)
-                    .then(res => {
+                                    delete detalleModulos[indexPos].insertado;
+                                    delete detalleModulos[indexPos].eliminado;
+                                    detalleModulos[indexPos].modificado = true;
+                                    if (!detalleModulos[indexPos].cantidadAnterior)
+                                        detalleModulos[indexPos].cantidadAnterior = detalleModulos[indexPos].cantidad_requerida
+                                    detalleModulos[indexPos].cantidad_requerida = parseFloat(detalleModulos[indexPos].cantidad_requerida) - parseFloat(elem.cantidad);
+
+                                } else {
+
+                                    delete detalleModulos[indexPos].insertado;
+                                    delete detalleModulos[indexPos].eliminado;
+                                    detalleModulos[indexPos].modificado = true;
+                                    if (!detalleModulos[indexPos].cantidadAnterior)
+                                        detalleModulos[indexPos].cantidadAnterior = detalleModulos[indexPos].cantidad_requerida;
+                                    detalleModulos[indexPos].cantidad_requerida = detalleModulos[indexPos].cantidad_asignada
 
 
-                        res.insumos.forEach(elem => {
-                            let indexPos = this.detalleModulos.findIndex(elemPos => {
-                                return elemPos.id == elem.id
-                            })
-
-                            if (indexPos > -1) { //encontro
-                                console.log("previo: " + this.detalleModulos[indexPos]);
-                                this.detalleModulos[indexPos].cantidad_requerida = this.detalleModulos[indexPos].cantidad_requerida - elem.cantidad;
-
-                                if(this.detalleModulos[indexPos].cantidad_requerida <= 0) // si llego a 0 unidades entonces lo saco de la tabla
-                                {
-                                    console.log("llego aaaaa " + this.detalleModulos[indexPos].cantidad_requerida);
-                                    this.detalleModulos.splice(indexPos, 1);
                                 }
-                                console.log("posterior: " + this.detalleModulos[indexPos]);
+
+
+                            } else {
+                                if (parseFloat(detalleModulos[indexPos].cantidad_requerida) - parseFloat(elem.cantidad) > 0) {
+
+                                    if (!detalleModulos[indexPos].insertado) {
+                                        delete detalleModulos[indexPos].insertado;
+                                        delete detalleModulos[indexPos].eliminado;
+                                        detalleModulos[indexPos].modificado = true;
+                                        if (!detalleModulos[indexPos].cantidadAnterior)
+                                            detalleModulos[indexPos].cantidadAnterior = detalleModulos[indexPos].cantidad_requerida
+                                        detalleModulos[indexPos].cantidad_requerida = parseFloat((parseFloat(detalleModulos[indexPos].cantidad_requerida) - parseFloat(elem.cantidad)).toFixed(2));
+                
+                                    } else {
+                                        detalleModulos[indexPos].cantidad_requerida = parseFloat((parseFloat(detalleModulos[indexPos].cantidad_requerida) - parseFloat(elem.cantidad)).toFixed(2));
+                                    }
+                                } else {
+
+                                    if (!detalleModulos[indexPos].insertado) {
+                                        delete detalleModulos[indexPos].modificado;
+                                        detalleModulos[indexPos].eliminado = true;
+                                        if (!detalleModulos[indexPos].cantidadAnterior)
+                                            detalleModulos[indexPos].cantidadAnterior = detalleModulos[indexPos].cantidad_requerida
+                                        detalleModulos[indexPos].cantidad_requerida = 0
+
+                                    } else {
+                                        detalleModulos.splice(indexPos, 1);
+                                    }
+                                }
 
                             }
-                        })
 
-                        plantillasAsignadasList.splice(indexSeleccionado, 1);
+                            /*
+                            this.detalleModulos[indexPos].cantidad_requerida = this.detalleModulos[indexPos].cantidad_requerida - elem.cantidad;
 
-                        console.log(plantillasAsignadasList);
-
-                        this.setState({
-                            plantillasAsignadas: plantillasAsignadasList,
-                            detalleModulos: [...this.detalleModulos]
-                        });
-                        /*
-                        this.setState({
-                            detalleSelectPlantillaBorrar: res.insumos
-                        })
-                        */
-
-
-                    }, err => {
-                        toast.error(err.message);
+                            if (this.detalleModulos[indexPos].cantidad_requerida <= 0) // si llego a 0 unidades entonces lo saco de la tabla
+                            {
+                                console.log("llego aaaaa " + this.detalleModulos[indexPos].cantidad_requerida);
+                                this.detalleModulos.splice(indexPos, 1);
+                            }
+                            console.log("posterior: " + this.detalleModulos[indexPos]);
+                            */
+                        }
                     })
-            }
-            else {
-                console.log("no encontro");
-            }
+                   
+                    plantillasAsignadasList.splice(indexSeleccionado, 1);
+                    this.detalleModulos = [...detalleModulos];
+
+                    this.setState({
+                        plantillasAsignadas: plantillasAsignadasList,
+                        detalleModulos: detalleModulos
+                    });
+                    /*
+                    this.setState({
+                        detalleSelectPlantillaBorrar: res.insumos
+                    })
+                    */
+
+
+                }, err => {
+                    toast.error(err.message);
+                })
+
         }
 
     }
@@ -926,12 +986,11 @@ class NewEditModulo extends Component {
     componentDidMount() {
 
 
-        if (this.props.match.params.idModulo)
-        {
+        if (this.props.match.params.idModulo) {
             this.getInsumosParcial(this.props.match.params.idModulo);
             this.getPlantillasAsociadas(this.props.match.params.idModulo);
         }
-            
+
 
 
         this.getPlantillas();

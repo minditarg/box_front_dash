@@ -14,7 +14,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 
 import DetalleStock from './components/DetalleStock';
-import { Event } from 'react-socket-io';
+//import { Event } from 'react-socket-io';
 
 // import { AddBox, ArrowUpward } from "@material-ui/icons";
 // import ReactDOM from "react-dom";
@@ -447,9 +447,9 @@ class Stock extends Component {
               </CardBody>
             </Card>
           </div>} />
-
+          { /* <Event event='actualizar_stock' handler={() => console.log("actualizo stock")} />, */ }
       </Switch>,
-       <Event event='actualizar_stock' handler={() => console.log("actualizo stock")} />,
+       
        <Dialog
        open={this.state.openMovimientos}
        onClose={this.closeDialog.bind(this)}

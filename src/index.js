@@ -39,13 +39,13 @@ import resultReducer from './store/reducers/result';
 import Admin from "layouts/Admin.js";
 import Root from "layouts/Root.js";
 
-import registerServiceWorker from './registerServiceWorker';
+//import registerServiceWorker from './registerServiceWorker';
 
 
 import "assets/css/material-dashboard-react.css?v=1.8.0";
 
-const uri = '/';
-const options = { transports: ['websocket'] };
+//const uri = '/';
+//const options = { transports: ['websocket'] };
 
 
 const hist = createBrowserHistory();
@@ -82,15 +82,15 @@ ReactDOM.render(
   <Provider store={store}>
   <Router history={hist}>
    <ThemeProvider theme={theme}>
-   <Socket uri={uri} options={options}>
+   { /*<Socket uri={uri} options={options}>*/ }
     <Switch>
       <Route path="/admin" component={Admin} />
       <Route from="/" component={Root}  />
     </Switch>
-    </Socket>
+   { /* </Socket> */ }
     </ThemeProvider>
   </Router>
   </Provider>,
   document.getElementById("root")
 );
-registerServiceWorker();
+//registerServiceWorker();
