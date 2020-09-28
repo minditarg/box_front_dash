@@ -17,7 +17,7 @@
 */
 import React from "react";
 import ReactDOM from "react-dom";
-import { Socket } from 'react-socket-io';
+//import { Socket } from 'react-socket-io';
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 import { Provider } from 'react-redux';

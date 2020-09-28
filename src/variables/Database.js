@@ -12,15 +12,15 @@ class Database {
       storeDefault.dispatch({ type: "INCREMENT" });
 
     return new Promise((resolve, reject) => {
-      axios.get(url, { timeout: 10000 }).then(res => {
+      axios.get(url).then(res => {
         if (res.data.success == 1) {
           resolve(res.data);
         }
         else if (res.data.success == 0) {
           if (res.data.error_msj)
-            reject({ message: "Error en consulta SQL. " + res.data.error_msj })
+            reject({ message: "Error en consulta SQL. " + JSON.stringify(res.data.error_msj) })
           else
-            reject({ message: "Error en consulta SQL" });
+            reject({ message: "Error en consulta SQL"  });
         } else {
 
           reject({ message: "Error desconocido" });

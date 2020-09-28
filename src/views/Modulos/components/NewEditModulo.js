@@ -789,6 +789,8 @@ class NewEditModulo extends Component {
             this.detalleModulos[indexDelete] = resultado;
             this.inputChangedHandler()
             this.buscarInsumo(this.buscarRef.current.value);
+        } else {
+            toast.error("No se puede elimnar un insumo con una cantidad asignada");
         }
 
     }
