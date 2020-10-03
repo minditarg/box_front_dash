@@ -25,7 +25,9 @@ export const ColumnsListadoAnalisisInsumos = [
   { title: "#Asignada", field: "cantidad_asignada"},
   { title: "Unidad", field: "unidad"},
   { title: "Precio Unitario", field: "costo"},
-  { title: "Costo Actual Diseño", field: "costo_actual_diseno"}
+  { title: "Costo Actual Diseño", field: "costo_actual_diseno"},
+  { title: "Costo Actual Proyecto", field: "costo_actual"}
+  
 ];
 
 export const ColumnsListadoDiseno = [

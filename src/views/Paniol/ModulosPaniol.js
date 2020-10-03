@@ -29,6 +29,8 @@ import Dialog from '@material-ui/core/Dialog';
 import NewEntrega from './NewEntrega';
 
 
+import ExportXLS from 'components/ExportXLS/ExportXLS';
+
 import { withStyles } from '@material-ui/styles';
 
 const styles = {
@@ -222,7 +224,7 @@ class ModulosPaniol extends Component {
                       </p>
           </CardHeader>
           <CardBody>
-
+          
             <MaterialTable
               isLoading={this.state.isLoading}
               columns={ColumnsListado}
@@ -282,6 +284,7 @@ class ModulosPaniol extends Component {
         <DialogContent>
         <p>Chasis: <b>{this.state.chasisDetalle}</b><br/>
             Descripcion: <b>{this.state.descripcionDetalle}</b></p>
+            <ExportXLS csvData={this.state.modulosDetalle} fileName={"Detalle_Modulo-" + this.state.chasisDetalle +  moment(Date.now()).format("DD_MM_YYYY")} header={ColumnsListadoDetalle} />
           <MaterialTable
             isLoading={this.state.isLoadingDetalle}
             columns={ColumnsListadoDetalle}
