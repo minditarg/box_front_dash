@@ -6,7 +6,7 @@ import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import CsvDownloader from 'react-csv-downloader';
 import { CSVLink, CSVDownload } from "react-csv";
 import ExportXLS from 'components/ExportXLS/ExportXLS';
-
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import { CardActions } from "@material-ui/core";
 import { withStyles } from '@material-ui/styles';
@@ -440,15 +440,16 @@ class NewEditModulo extends Component {
         }
     }
 
-    handleSelectPlantilla = (event) => {
-        event.preventDefault();
-        let idPlantilla = parseInt(event.target.value);
+    handleSelectPlantilla = (newValue) => {
+
+        // event.preventDefault();
+        let idPlantilla = parseInt(newValue.id);
         let indexSeleccionado = this.state.plantillas.findIndex(elem => {
             return (elem.id == idPlantilla);
         })
         if (indexSeleccionado > -1) {
             this.setState({
-                idPlantilla: event.target.value,
+                idPlantilla: idPlantilla,
                 rowSelectPlantilla: this.state.plantillas[indexSeleccionado],
                 detalleSelectPlantilla: [],
             })
@@ -874,7 +875,7 @@ class NewEditModulo extends Component {
 
 
     deletePlantilla(rowData) {
-        
+
         if (rowData.id) {
 
 
@@ -935,7 +936,7 @@ class NewEditModulo extends Component {
                                         if (!detalleModulos[indexPos].cantidadAnterior)
                                             detalleModulos[indexPos].cantidadAnterior = detalleModulos[indexPos].cantidad_requerida
                                         detalleModulos[indexPos].cantidad_requerida = parseFloat((parseFloat(detalleModulos[indexPos].cantidad_requerida) - parseFloat(elem.cantidad)).toFixed(2));
-                
+
                                     } else {
                                         detalleModulos[indexPos].cantidad_requerida = parseFloat((parseFloat(detalleModulos[indexPos].cantidad_requerida) - parseFloat(elem.cantidad)).toFixed(2));
                                     }
@@ -967,7 +968,7 @@ class NewEditModulo extends Component {
                             */
                         }
                     })
-                   
+
                     plantillasAsignadasList.splice(indexSeleccionado, 1);
                     this.detalleModulos = [...detalleModulos];
 
@@ -1104,7 +1105,7 @@ class NewEditModulo extends Component {
                                     ))}
 
                                 </SortableContainer>
-                                
+
                                 {this.state.isLoading &&
                                     <div style={{ textAlign: 'center' }}>
                                         <CircularProgress />
@@ -1158,22 +1159,48 @@ class NewEditModulo extends Component {
                 <DialogContent>
                     <form onSubmit={this.handleSubmitPlantillas}>
                         <FormControl className={this.props.classes.formControl} >
+                        { /*
                             <InputLabel id="plantillas-label">Plantillas</InputLabel>
-                            <Select
-                                labelId="plantillas-label"
-                                id="plantillas-select"
-                                value={this.state.idPlantilla}
-                                onChange={this.handleSelectPlantilla}
+                            
+                                <Select
+                                    labelId="plantillas-label"
+                                    id="plantillas-select"
+                                    value={this.state.idPlantilla}
+                                    onChange={this.handleSelectPlantilla}
+                                >
+
+                                    {this.state.plantillas.map(elem => {
+
+                                        return (
+                                            <MenuItem key={elem.id} value={elem.id}>{elem.codigo}</MenuItem>
+                                        )
+
+                                    })}
+
+                                </Select>
+                                */
+                            }
+
+                            <Autocomplete
+                                id="combo-box-plantillas"
+                                options={this.state.plantillas}
+                                getOptionLabel={(c) => `${c.codigo}`}
+                                onChange={(event, newValue) => {
+                                    if (newValue)
+                                        this.handleSelectPlantilla(newValue);
+
+                                }}
+
+                                style={{ width: 300 }}
+                                renderInput={(params) => <TextField {...params}
+                                    label="Seleccionar una plantilla"
+                                    variant="outlined" />}
                             >
-                                {this.state.plantillas.map(elem => {
+                            </Autocomplete>
 
-                                    return (
-                                        <MenuItem key={elem.id} value={elem.id}>{elem.codigo}</MenuItem>
-                                    )
 
-                                })}
 
-                            </Select>
+
                         </FormControl>
 
                         {this.state.rowSelectPlantilla && <div><p>Descripción: {this.state.rowSelectPlantilla.descripcion} </p>
