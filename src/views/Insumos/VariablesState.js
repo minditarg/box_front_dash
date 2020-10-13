@@ -101,6 +101,7 @@ export const StateNewInsumo =
       elementConfig: {
         type: 'text',
         label: 'Número',
+        disabled: true,
         fullWidth: true
       },
       value: '',

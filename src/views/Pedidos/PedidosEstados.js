@@ -515,7 +515,7 @@ class PedidosEstados extends Component {
                 )
               },
               {
-                tabName: "Solicitados",
+                tabName: "Aprobados",
                 tabIcon: Category,
                 tabContent: (
                   <MaterialTable
@@ -589,7 +589,7 @@ class PedidosEstados extends Component {
                 )
               },
               {
-                tabName: "Finalizados",
+                tabName: "Recepción Completa",
                 tabIcon: Done,
                 tabContent: (
                   <MaterialTable

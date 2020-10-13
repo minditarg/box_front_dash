@@ -163,7 +163,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
         if(rules.menorCantidad && props.rowEditInsumo)
         {
-            isValid = value <= props.rowEditInsumo.cantidad;
+            isValid = parseFloat(value) <= parseFloat(props.rowEditInsumo.cantidad);
             textValid = 'La cantidad debe ser menor o igual a ' + props.rowEditInsumo.cantidad
         }
 

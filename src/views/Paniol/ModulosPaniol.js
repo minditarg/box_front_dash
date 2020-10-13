@@ -79,7 +79,8 @@ const ColumnsListado = [
   { title: "Identificador", field: "identificador", customSort: (a, b) => a.id - b.id },
   { title: "Chasis", field: "chasis" },
   { title: "Descripcion", field: "descripcion" },
-  { title: "Insumos Entrega", field: "cantidadInsumosDisponibles" }
+  { title: "Insumos Entrega", field: "cantidadInsumosDisponibles" },
+  { title: "Avance %", field: "avance" }
 
 
 ];
