@@ -91,7 +91,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
           let orderFormAlt = {...orderForm};
 
           orderFormAlt.cantidad.value = props.rowEditInsumo.cantidad;
-          orderFormAlt.cantidad.validation.asignada = true;
+          //orderFormAlt.cantidad.validation.asignada = true;
           setOrderForm(orderFormAlt);
 
         }
@@ -157,14 +157,14 @@ export default function HorizontalLabelPositionBelowStepper(props) {
         }
 
         if (rules.mayor0 && isValid) {
-            isValid = value >= 0;
+            isValid = parseFloat(value) > 0;
             textValid = 'La cantidad debe ser mayor a 0'
         }
 
-        if(rules.menorCantidad && props.rowEditInsumo)
+        if(rules.menorCantidad && props.rowEditInsumo && isValid)
         {
-            isValid = value <= props.rowEditInsumo.cantidad;
-            textValid = 'La cantidad debe ser menor o igual a ' + props.rowEditInsumo.cantidad
+            isValid = parseFloat(value) <= parseFloat(props.rowEditInsumo.cantidad_maxima);
+            textValid = 'La cantidad debe ser menor o igual a ' + props.rowEditInsumo.cantidad_maxima
         }
 
         if (rules.asignada && isValid) {

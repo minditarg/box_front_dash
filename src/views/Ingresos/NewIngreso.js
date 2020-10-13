@@ -377,7 +377,8 @@ class NewIngreso extends Component {
                 ...elem,
                 identificador: elem.codigo + elem.numero,
                 insertado: true,
-                cantidad: cantidad
+                cantidad: cantidad,
+                cantidad_maxima:cantidad
             }
         })
         console.log(insumos);
