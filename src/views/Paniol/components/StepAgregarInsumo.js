@@ -99,6 +99,11 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                 setIsLoading(false);
                     let resultado = [...res.result];
                     resultado = resultado.map(elem=>{
+                      elem.cantidad_modulo_insumo = elem.cantidad_modulo_insumo && Number(elem.cantidad_modulo_insumo) 
+                      elem.cantidad_asignada = elem.cantidad_asignada && Number(elem.cantidad_asignada)
+                      elem.cantidad = elem.cantidad && Number(elem.cantidad)
+                      elem.costo = elem.costo && Number(elem.costo)
+
                       let disponible;
                       if(props.devolucion)
                         disponible = elem.cantidad_asignada;

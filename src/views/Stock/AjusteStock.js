@@ -76,6 +76,7 @@ class AjusteStock extends Component {
         insumos: [],
         insumoSeleccionado: 0,
         rowDetalle: null,
+        isLoading: false,
         orderForm: {
             codigo: {
                 elementType: 'input',
@@ -127,6 +128,9 @@ class AjusteStock extends Component {
     }
 
     getInsumos = () => {
+        this.setState({
+            isLoading: true
+        })
         Database.get('/list-insumos',this,null,true)
             .then(res => {
 
@@ -141,11 +145,16 @@ class AjusteStock extends Component {
                       })
 
                     this.setState({
-                        insumos: resultado
+                        insumos: resultado,
+                        isLoading: false
                     })
 
             },err => {
-              toast.error(err.message);
+                this.setState({
+                    isLoading: false
+                })
+
+                toast.error(err.message);
             })
     }
 
@@ -217,7 +226,10 @@ class AjusteStock extends Component {
     }
 
     openDialog() {
-        this.setState({ open: true });
+        this.setState({
+            insumos: [], 
+            open: true });
+        this.getInsumos();    
     }
 
     closeDialog() {
@@ -253,7 +265,6 @@ class AjusteStock extends Component {
 
 
     componentDidMount() {
-        this.getInsumos();
     }
 
     render() {
@@ -298,6 +309,7 @@ class AjusteStock extends Component {
                             <DialogTitle>Seleccionar Insumo</DialogTitle>
                             <DialogContent>
                                 <MaterialTable
+                                    isLoading={this.state.isLoading}
                                     columns={columnsInsumos}
                                     data={this.state.insumos}
                                     title="Insumo"
